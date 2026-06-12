@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" width="720" height="240">
+  <rect width="720" height="240" fill="#F4EEDC"></rect>
+  <g font-family="Anton, Impact, sans-serif" fill="#0B0B0B">
+    <text x="360" y="108" font-size="104" text-anchor="middle" letter-spacing="-2">C&#39;EST</text>
+    <text x="360" y="200" font-size="128" text-anchor="middle" letter-spacing="-3">COINCHÉ!</text>
+  </g>
+</svg>

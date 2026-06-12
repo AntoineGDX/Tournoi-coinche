@@ -1,0 +1,173 @@
+/* ==========================================================================
+   C'EST COINCHÉ — Design Tokens
+   Palette: jaune électrique, noir profond, blanc cassé + accents sud
+   Type: typographies condensées lourdes (Anton, Archivo Narrow, Inter)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Narrow:wght@400;500;600;700&family=Archivo+Black&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---- Brand palette ----------------------------------------------------- */
+  --cc-jaune:        #F7D417;
+  --cc-jaune-deep:   #E8B800;
+  --cc-noir:         #0B0B0B;
+  --cc-noir-soft:    #1A1A1A;
+  --cc-blanc:        #F4EEDC;
+  --cc-blanc-pur:    #FFFFFF;
+
+  /* ---- Accents méditerranéens ------------------------------------------- */
+  --cc-rouge:        #D93A26;
+  --cc-vert:         #2E6B3A;
+  --cc-terracotta:   #C77650;
+  --cc-ciel:         #8BB8C7;
+
+  /* ---- Semantic ---------------------------------------------------------- */
+  --cc-bg:           var(--cc-blanc);
+  --cc-bg-alt:       var(--cc-jaune);
+  --cc-bg-inverse:   var(--cc-noir);
+  --cc-fg:           var(--cc-noir);
+  --cc-fg-muted:     #4A4A4A;
+  --cc-fg-inverse:   var(--cc-blanc);
+  --cc-accent:       var(--cc-jaune);
+  --cc-danger:       var(--cc-rouge);
+
+  /* ---- Spacing ----------------------------------------------------------- */
+  --cc-sp-1:  4px;
+  --cc-sp-2:  8px;
+  --cc-sp-3: 12px;
+  --cc-sp-4: 16px;
+  --cc-sp-5: 24px;
+  --cc-sp-6: 32px;
+  --cc-sp-7: 48px;
+  --cc-sp-8: 64px;
+  --cc-sp-9: 96px;
+
+  /* ---- Radii — intentionnellement faibles, vibe bold/brut --------------- */
+  --cc-radius-xs:  2px;
+  --cc-radius-sm:  4px;
+  --cc-radius-md:  6px;
+  --cc-radius-lg: 10px;
+  --cc-radius-pill: 999px;
+
+  /* ---- Borders — épaisses, visibles -------------------------------------- */
+  --cc-border-thin:   1.5px solid var(--cc-noir);
+  --cc-border:        2.5px solid var(--cc-noir);
+  --cc-border-thick:  4px solid var(--cc-noir);
+
+  /* ---- Shadows — dures, offset, pas de flou ("stamped") ------------------ */
+  --cc-shadow-xs: 2px 2px 0 var(--cc-noir);
+  --cc-shadow-sm: 4px 4px 0 var(--cc-noir);
+  --cc-shadow-md: 6px 6px 0 var(--cc-noir);
+  --cc-shadow-lg: 10px 10px 0 var(--cc-noir);
+
+  /* ---- Typography families ------------------------------------------------ */
+  --cc-ff-display:  'Anton', 'Impact', 'Haettenschweiler', 'Oswald', sans-serif;
+  --cc-ff-headline: 'Archivo Black', 'Archivo Narrow', sans-serif;
+  --cc-ff-body:     'Archivo Narrow', 'Inter', sans-serif;
+  --cc-ff-ui:       'Inter', -apple-system, sans-serif;
+  --cc-ff-mono:     'DM Mono', 'SF Mono', monospace;
+
+  /* ---- Type scale ---------------------------------------------------------*/
+  --cc-fs-mega:   120px;
+  --cc-fs-h1:      72px;
+  --cc-fs-h2:      48px;
+  --cc-fs-h3:      32px;
+  --cc-fs-h4:      24px;
+  --cc-fs-lead:    20px;
+  --cc-fs-body:    16px;
+  --cc-fs-sm:      14px;
+  --cc-fs-xs:      12px;
+
+  /* ---- Motion -------------------------------------------------------------*/
+  --cc-ease:       cubic-bezier(0.2, 0.8, 0.2, 1);
+  --cc-ease-snap:  cubic-bezier(0.5, 1.4, 0.4, 1);
+  --cc-dur-fast:   120ms;
+  --cc-dur:        220ms;
+  --cc-dur-slow:   360ms;
+}
+
+/* ==========================================================================
+   Base semantic typography
+   ========================================================================== */
+
+.cc-mega, h1.cc-mega {
+  font-family: var(--cc-ff-display);
+  font-size: var(--cc-fs-mega);
+  line-height: 0.88;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  font-weight: 400;
+  margin: 0;
+}
+
+.cc-h1, h1 {
+  font-family: var(--cc-ff-display);
+  font-size: var(--cc-fs-h1);
+  line-height: 0.92;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  font-weight: 400;
+  margin: 0;
+}
+
+.cc-h2, h2 {
+  font-family: var(--cc-ff-display);
+  font-size: var(--cc-fs-h2);
+  line-height: 0.96;
+  text-transform: uppercase;
+  font-weight: 400;
+  margin: 0;
+}
+
+.cc-h3, h3 {
+  font-family: var(--cc-ff-headline);
+  font-size: var(--cc-fs-h3);
+  line-height: 1.05;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  font-weight: 900;
+  margin: 0;
+}
+
+.cc-h4, h4 {
+  font-family: var(--cc-ff-headline);
+  font-size: var(--cc-fs-h4);
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-weight: 900;
+  margin: 0;
+}
+
+.cc-lead {
+  font-family: var(--cc-ff-body);
+  font-size: var(--cc-fs-lead);
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.cc-p, p {
+  font-family: var(--cc-ff-body);
+  font-size: var(--cc-fs-body);
+  line-height: 1.55;
+  margin: 0 0 1em 0;
+}
+
+.cc-eyebrow {
+  font-family: var(--cc-ff-headline);
+  font-size: var(--cc-fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 900;
+}
+
+.cc-mono, code, pre, kbd {
+  font-family: var(--cc-ff-mono);
+  font-size: 0.9em;
+}
+
+/* Utility */
+.cc-uppercase { text-transform: uppercase; }
+.cc-bg-jaune { background: var(--cc-jaune); }
+.cc-bg-noir  { background: var(--cc-noir); color: var(--cc-blanc); }
+.cc-bg-blanc { background: var(--cc-blanc); }

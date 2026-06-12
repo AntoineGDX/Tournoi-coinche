@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" fill="#F7D417"></rect>
+  <rect x="12" y="12" width="176" height="176" fill="none" stroke="#0B0B0B" stroke-width="6"></rect>
+  <g font-family="Anton, Impact, sans-serif" fill="#0B0B0B" text-anchor="middle">
+    <text x="100" y="78" font-size="42" letter-spacing="-1">C&#39;EST</text>
+    <text x="100" y="138" font-size="60" letter-spacing="-2">COIN</text>
+    <text x="100" y="182" font-size="24" letter-spacing="4">— CHÉ! —</text>
+  </g>
+</svg>

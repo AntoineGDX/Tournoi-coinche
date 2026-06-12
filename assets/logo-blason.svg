@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 420" width="360" height="420">
+  <defs>
+    <clipPath id="shield">
+      <path d="M30 30 L330 30 L330 230 Q330 340 180 390 Q30 340 30 230 Z"></path>
+    </clipPath>
+  </defs>
+
+  <path d="M30 30 L330 30 L330 230 Q330 340 180 390 Q30 340 30 230 Z" fill="#F7D417" stroke="#0B0B0B" stroke-width="8"></path>
+
+  <g clip-path="url(#shield)">
+    <rect x="30" y="30" width="300" height="68" fill="#0B0B0B"></rect>
+    <text x="180" y="82" font-family="Anton, Impact, sans-serif" font-size="56" fill="#F7D417" text-anchor="middle" letter-spacing="2">C&#39;EST</text>
+
+    <g transform="translate(180 200)">
+      <g transform="translate(-60 0) rotate(-15)">
+        <path d="M0 -50 C -35 -15, -50 10, -25 25 C -10 32, 0 20, 0 20 C 0 20, 10 32, 25 25 C 50 10, 35 -15, 0 -50 Z" fill="#0B0B0B"></path>
+        <rect x="-5" y="15" width="10" height="28" fill="#0B0B0B"></rect>
+        <path d="M-15 43 L15 43 L10 35 L-10 35 Z" fill="#0B0B0B"></path>
+      </g>
+      <g transform="translate(60 0) rotate(15)">
+        <path d="M0 -30 C -20 -55, -55 -40, -45 -5 C -38 20, 0 45, 0 45 C 0 45, 38 20, 45 -5 C 55 -40, 20 -55, 0 -30 Z" fill="#D93A26"></path>
+      </g>
+    </g>
+
+    <text x="180" y="340" font-family="Anton, Impact, sans-serif" font-size="64" fill="#0B0B0B" text-anchor="middle" letter-spacing="-1">COINCHÉ</text>
+    <text x="180" y="374" font-family="Archivo Black, sans-serif" font-size="18" fill="#0B0B0B" text-anchor="middle" letter-spacing="4">• NICE • 1ère ÉDITION •</text>
+  </g>
+</svg>
