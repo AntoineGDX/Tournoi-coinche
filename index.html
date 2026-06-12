@@ -65,7 +65,7 @@
         <span class="eyebrow">La coinche en 3 minutes</span>
         <h2>Tu connais pas ? On t'explique.</h2>
       </div>
-      <button class="btn ghost">LIRE LE RÈGLEMENT COMPLET →</button>
+      <button class="btn ghost" data-nav="faq">LIRE LE RÈGLEMENT COMPLET →</button>
     </div>
     <div class="rules-grid">
       <div class="rule">
@@ -175,7 +175,10 @@
       </div>
 
       <div>
-        <form class="signup-form">
+        <form class="signup-form" action="https://formsubmit.co/antoine.goudinoux37@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="Nouvelle inscription — C'est Coinché !">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
           <label>NOM DE LA DOUBLETTE</label>
           <input required placeholder="Ex: Les coincheurs de Riquier" name="teamname">
           <div class="row">
@@ -373,25 +376,25 @@
         <li><a data-nav="rules">Règles</a></li>
         <li><a data-nav="program">Programme</a></li>
         <li><a data-nav="signup">Inscription</a></li>
-        <li>Règlement complet</li>
+        <li><a data-nav="faq">Règlement complet</a></li>
       </ul>
     </div>
     <div>
       <h4>Shop</h4>
       <ul>
         <li><a data-nav="shop">T-shirts</a></li>
-        <li>Panier</li>
-        <li>Livraison</li>
-        <li>Retrait sur place</li>
+        <li><a data-nav="shop">Panier</a></li>
+        <li><a data-nav="faq">Livraison</a></li>
+        <li><a data-nav="faq">Retrait sur place</a></li>
       </ul>
     </div>
     <div>
       <h4>Contact</h4>
       <ul>
         <li>@cestcoinche</li>
-        <li>hello@cestcoinche.fr</li>
+        <li><a href="mailto:antoine.goudinoux37@gmail.com">hello@cestcoinche.fr</a></li>
         <li>Discord</li>
-        <li>Presse</li>
+        <li><a href="mailto:antoine.goudinoux37@gmail.com?subject=Presse%20-%20C%27est%20Coinch%C3%A9">Presse</a></li>
       </ul>
     </div>
   </div>
@@ -404,7 +407,7 @@
 <!-- ---- Cart bar ---- -->
 <div class="cartbar">
   <div class="label"><b>0 article</b> dans le panier · 0€</div>
-  <button class="btn sm">CHECKOUT →</button>
+  <button class="btn sm checkout-btn">CHECKOUT →</button>
 </div>
 
 <script src="js/main.js"></script>
