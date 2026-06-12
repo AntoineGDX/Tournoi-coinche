@@ -1,24 +1,27 @@
-// C'EST COINCHÉ — équipes inscrites (chargées depuis data/teams.json)
+// C'EST COINCHÉ — équipes inscrites (chargées depuis Supabase, vue teams_public)
 document.addEventListener('DOMContentLoaded', async () => {
   const countEl = document.getElementById('teams-count');
   const listEl = document.getElementById('teams-list');
   const emptyEl = document.getElementById('teams-empty');
+  const maxTeams = 32;
 
   try {
-    const res = await fetch('data/teams.json');
-    const data = await res.json();
-    const teams = data.teams || [];
-    const max = data.maxTeams || 32;
+    const { data: teams, error } = await ccAuth.client
+      .from('teams_public')
+      .select('team_name')
+      .order('created_at');
 
-    countEl.innerHTML = `<b>${teams.length}</b> / ${max} doublettes inscrites`;
+    if (error) throw error;
+
+    countEl.innerHTML = `<b>${teams.length}</b> / ${maxTeams} doublettes inscrites`;
 
     if (teams.length === 0) {
       emptyEl.classList.remove('hidden');
       return;
     }
 
-    listEl.innerHTML = teams.map((name, i) => `
-      <li><span class="num">${String(i + 1).padStart(2, '0')}</span><span>${name}</span></li>
+    listEl.innerHTML = teams.map((t, i) => `
+      <li><span class="num">${String(i + 1).padStart(2, '0')}</span><span>${t.team_name}</span></li>
     `).join('');
   } catch (err) {
     countEl.textContent = '';

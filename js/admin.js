@@ -1,53 +1,46 @@
-// C'EST COINCHÉ — admin : édition de l'arbre du tournoi via l'API GitHub
-document.addEventListener('DOMContentLoaded', () => {
-  const OWNER = 'AntoineGDX';
-  const REPO = 'Tournoi-coinche';
-  const PATH = 'data/bracket.json';
-  const BRANCH = 'main';
-  const API = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`;
-
+// C'EST COINCHÉ — admin : édition de l'arbre + suivi des paiements (Supabase)
+document.addEventListener('DOMContentLoaded', async () => {
   const gate = document.getElementById('admin-gate');
   const editor = document.getElementById('admin-editor');
-  const tokenInput = document.getElementById('admin-token');
+  const emailInput = document.getElementById('admin-email');
+  const passwordInput = document.getElementById('admin-password');
   const connectBtn = document.getElementById('admin-connect');
   const gateStatus = document.getElementById('admin-gate-status');
+  const logoutBtn = document.getElementById('nav-logout');
+
   const roundsEl = document.getElementById('admin-rounds');
   const saveBtn = document.getElementById('admin-save');
-  const logoutBtn = document.getElementById('admin-logout');
   const saveStatus = document.getElementById('admin-save-status');
+  const teamNamesEl = document.getElementById('admin-team-names');
+  const teamsEl = document.getElementById('admin-teams');
+  const teamsStatus = document.getElementById('admin-teams-status');
 
-  let bracketData = null;
-  let bracketSha = null;
+  let matches = null;
 
-  function b64DecodeUnicode(str) {
-    return decodeURIComponent(atob(str.replace(/\n/g, '')).split('').map(c =>
-      '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-    ).join(''));
-  }
-
-  function b64EncodeUnicode(str) {
-    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (m, p1) =>
-      String.fromCharCode('0x' + p1)
-    ));
-  }
-
-  function authHeaders(token) {
-    return {
-      'Authorization': `Bearer ${token}`,
-      'Accept': 'application/vnd.github+json'
-    };
+  function teamNameInput(value, round, match, field) {
+    const safe = (value || '').replace(/"/g, '&quot;');
+    return `<input type="text" list="admin-team-names" placeholder="Équipe" value="${safe}" data-id="${round}" data-match="${match}" data-field="${field}">`;
   }
 
   function renderEditor() {
-    roundsEl.innerHTML = bracketData.rounds.map((round, ri) => `
+    const roundsMap = new Map();
+    matches.forEach(m => {
+      if (!roundsMap.has(m.round_order)) {
+        roundsMap.set(m.round_order, { name: m.round_name, matches: [] });
+      }
+      roundsMap.get(m.round_order).matches.push(m);
+    });
+    const rounds = [...roundsMap.entries()].sort((a, b) => a[0] - b[0]).map(([, r]) => r);
+
+    roundsEl.innerHTML = rounds.map(round => `
       <div class="admin-round">
         <h4>${round.name}</h4>
-        ${round.matches.map((m, mi) => `
+        ${round.matches.map(m => `
           <div class="admin-match">
-            <input type="text" placeholder="Équipe 1" value="${(m.team1 || '').replace(/"/g, '&quot;')}" data-round="${ri}" data-match="${mi}" data-field="team1">
-            <input type="number" class="score" placeholder="—" value="${m.score1 ?? ''}" data-round="${ri}" data-match="${mi}" data-field="score1">
-            <input type="text" placeholder="Équipe 2" value="${(m.team2 || '').replace(/"/g, '&quot;')}" data-round="${ri}" data-match="${mi}" data-field="team2">
-            <input type="number" class="score" placeholder="—" value="${m.score2 ?? ''}" data-round="${ri}" data-match="${mi}" data-field="score2">
+            ${teamNameInput(m.team1_name, m.id, m.id, 'team1_name')}
+            <input type="number" class="score" placeholder="—" value="${m.score1 ?? ''}" data-id="${m.id}" data-field="score1">
+            ${teamNameInput(m.team2_name, m.id, m.id, 'team2_name')}
+            <input type="number" class="score" placeholder="—" value="${m.score2 ?? ''}" data-id="${m.id}" data-field="score2">
           </div>
         `).join('')}
       </div>
@@ -55,93 +48,127 @@ document.addEventListener('DOMContentLoaded', () => {
 
     roundsEl.querySelectorAll('input').forEach(input => {
       input.addEventListener('input', () => {
-        const ri = +input.dataset.round;
-        const mi = +input.dataset.match;
+        const id = input.dataset.id;
         const field = input.dataset.field;
+        const m = matches.find(mm => mm.id === id);
         if (field === 'score1' || field === 'score2') {
-          bracketData.rounds[ri].matches[mi][field] = input.value === '' ? null : Number(input.value);
+          m[field] = input.value === '' ? null : Number(input.value);
         } else {
-          bracketData.rounds[ri].matches[mi][field] = input.value;
+          m[field] = input.value;
         }
       });
     });
   }
 
-  async function loadBracket(token) {
-    gateStatus.textContent = 'Connexion…';
-    gateStatus.className = 'admin-status';
-    const res = await fetch(`${API}?ref=${BRANCH}`, { headers: authHeaders(token) });
-    if (!res.ok) {
-      throw new Error(res.status === 401 ? 'Jeton invalide ou expiré.' : `Erreur GitHub (${res.status})`);
-    }
-    const json = await res.json();
-    bracketSha = json.sha;
-    bracketData = JSON.parse(b64DecodeUnicode(json.content));
+  async function loadMatches() {
+    const { data, error } = await ccAuth.client.from('matches').select('*').order('round_order').order('match_order');
+    if (error) throw error;
+    matches = data;
     renderEditor();
-    gate.classList.add('hidden');
-    editor.classList.remove('hidden');
   }
 
-  connectBtn.addEventListener('click', async () => {
-    const token = tokenInput.value.trim();
-    if (!token) return;
-    try {
-      await loadBracket(token);
-      sessionStorage.setItem('cc_admin_token', token);
-    } catch (err) {
-      gateStatus.textContent = err.message;
-      gateStatus.className = 'admin-status err';
-    }
-  });
+  async function loadTeamNames() {
+    const { data, error } = await ccAuth.client.from('teams_public').select('team_name').order('created_at');
+    if (error) throw error;
+    teamNamesEl.innerHTML = data.map(t => `<option value="${t.team_name.replace(/"/g, '&quot;')}"></option>`).join('');
+  }
 
-  logoutBtn.addEventListener('click', () => {
-    sessionStorage.removeItem('cc_admin_token');
-    editor.classList.add('hidden');
-    gate.classList.remove('hidden');
-    tokenInput.value = '';
-    gateStatus.textContent = '';
-  });
+  async function loadTeams() {
+    const { data, error } = await ccAuth.client.from('teams').select('*').order('created_at');
+    if (error) throw error;
+
+    if (data.length === 0) {
+      teamsEl.innerHTML = '<p class="fine">Aucune équipe inscrite pour le moment.</p>';
+      return;
+    }
+
+    teamsEl.innerHTML = data.map(t => `
+      <div class="admin-team-row">
+        <span class="name">${t.team_name}</span>
+        <span>${t.payment_status === 'paid' ? '<span class="badge paid">Payé</span>' : '<span class="badge pending">En attente</span>'}</span>
+        <button class="btn ghost" data-team-id="${t.id}" data-status="${t.payment_status}">
+          ${t.payment_status === 'paid' ? 'MARQUER NON PAYÉ' : 'MARQUER COMME PAYÉ'}
+        </button>
+      </div>
+    `).join('');
+
+    teamsEl.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.teamId;
+        const newStatus = btn.dataset.status === 'paid' ? 'pending' : 'paid';
+        btn.disabled = true;
+        const { error } = await ccAuth.client.from('teams').update({ payment_status: newStatus }).eq('id', id);
+        if (error) {
+          teamsStatus.textContent = "Erreur lors de la mise à jour du paiement.";
+          teamsStatus.className = 'admin-status err';
+          btn.disabled = false;
+          return;
+        }
+        await loadTeams();
+      });
+    });
+  }
 
   saveBtn.addEventListener('click', async () => {
-    const token = sessionStorage.getItem('cc_admin_token');
     saveStatus.textContent = 'Enregistrement…';
     saveStatus.className = 'admin-status';
-
-    bracketData.updated = new Date().toISOString().slice(0, 10);
-    const content = b64EncodeUnicode(JSON.stringify(bracketData, null, 2) + '\n');
-
     try {
-      const res = await fetch(API, {
-        method: 'PUT',
-        headers: { ...authHeaders(token), 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: 'Mise à jour de l\'arbre du tournoi',
-          content,
-          sha: bracketSha,
-          branch: BRANCH
-        })
-      });
-      if (!res.ok) {
-        throw new Error(res.status === 409 ? 'Conflit : recharge la page (un autre changement a été enregistré).' : `Erreur GitHub (${res.status})`);
+      for (const m of matches) {
+        const { error } = await ccAuth.client.from('matches').update({
+          team1_name: m.team1_name,
+          team2_name: m.team2_name,
+          score1: m.score1,
+          score2: m.score2
+        }).eq('id', m.id);
+        if (error) throw error;
       }
-      const json = await res.json();
-      bracketSha = json.content.sha;
-      saveStatus.textContent = 'Enregistré ✓ — visible sur le site dans ~1 minute.';
+      saveStatus.textContent = 'Enregistré ✓ — visible sur l\'arbre immédiatement.';
       saveStatus.className = 'admin-status ok';
     } catch (err) {
-      saveStatus.textContent = err.message;
+      saveStatus.textContent = "Erreur lors de l'enregistrement.";
       saveStatus.className = 'admin-status err';
     }
   });
 
-  // Auto-reconnect if a token is already stored for this session
-  const storedToken = sessionStorage.getItem('cc_admin_token');
-  if (storedToken) {
-    tokenInput.value = storedToken;
-    loadBracket(storedToken).catch(err => {
-      sessionStorage.removeItem('cc_admin_token');
-      gateStatus.textContent = err.message;
-      gateStatus.className = 'admin-status err';
-    });
+  async function showEditor() {
+    gate.classList.add('hidden');
+    editor.classList.remove('hidden');
+    logoutBtn.classList.remove('hidden');
+    try {
+      await Promise.all([loadMatches(), loadTeamNames(), loadTeams()]);
+    } catch (err) {
+      saveStatus.textContent = "Erreur de chargement des données.";
+      saveStatus.className = 'admin-status err';
+    }
   }
+
+  async function checkAccess() {
+    const session = await ccAuth.getSession();
+    if (!session) return;
+    const isAdmin = await ccAuth.isAdmin(session.user.id);
+    if (isAdmin) {
+      await showEditor();
+    } else {
+      gateStatus.textContent = "Ce compte n'a pas les droits admin.";
+      gateStatus.className = 'admin-status err';
+      logoutBtn.classList.remove('hidden');
+    }
+  }
+
+  connectBtn.addEventListener('click', async () => {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    if (!email || !password) return;
+    gateStatus.textContent = 'Connexion…';
+    gateStatus.className = 'admin-status';
+    const { error } = await ccAuth.signIn(email, password);
+    if (error) {
+      gateStatus.textContent = 'Email ou mot de passe incorrect.';
+      gateStatus.className = 'admin-status err';
+      return;
+    }
+    await checkAccess();
+  });
+
+  await checkAccess();
 });

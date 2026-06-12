@@ -20,6 +20,8 @@ img{display:block;max-width:100%}
 .nav-cta:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--cc-noir)}
 .nav-cta.cart{background:var(--cc-rouge);color:var(--cc-blanc);display:none}
 .nav-cta.cart.on{display:inline-flex}
+.nav-cta.outline{background:transparent;color:var(--cc-noir);box-shadow:none}
+.nav-cta.outline:hover{background:var(--cc-noir);color:var(--cc-jaune)}
 
 /* ---- Btn ---- */
 .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 22px;font-family:var(--cc-ff-headline);font-size:13px;text-transform:uppercase;letter-spacing:.1em;border:2.5px solid var(--cc-noir);cursor:pointer;font-weight:900;background:var(--cc-jaune);color:var(--cc-noir);box-shadow:4px 4px 0 var(--cc-noir);transition:transform 120ms var(--cc-ease-snap),box-shadow 120ms var(--cc-ease-snap)}
@@ -214,6 +216,16 @@ footer li:hover{color:var(--cc-jaune)}
 .admin-note{max-width:680px;margin:40px auto 0;background:var(--cc-noir);color:var(--cc-blanc);padding:20px 24px;border:2.5px solid var(--cc-noir);font-size:13px;line-height:1.6}
 .admin-note b{color:var(--cc-jaune)}
 
+/* ---- Mon équipe ---- */
+.badge{display:inline-block;padding:6px 14px;font-family:var(--cc-ff-headline);font-size:11px;text-transform:uppercase;letter-spacing:.15em;border:2px solid var(--cc-noir)}
+.badge.paid{background:var(--cc-vert);color:var(--cc-blanc)}
+.badge.pending{background:var(--cc-jaune)}
+.team-info{background:var(--cc-blanc-pur);border:2.5px solid var(--cc-noir);box-shadow:6px 6px 0 var(--cc-noir);padding:24px;margin-bottom:24px}
+.team-info h3{margin-bottom:6px}
+.team-info dl{display:grid;grid-template-columns:160px 1fr;gap:10px 16px;margin-top:14px;font-size:15px}
+.team-info dt{font-family:var(--cc-ff-headline);font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.6;align-self:center}
+.matches-list{margin-top:10px}
+
 /* ---- Admin page ---- */
 .admin{background:var(--cc-blanc)}
 .admin-gate{max-width:480px;margin:0 auto;background:var(--cc-noir);color:var(--cc-blanc);padding:30px;border:2.5px solid var(--cc-noir);box-shadow:8px 8px 0 var(--cc-jaune)}
@@ -234,8 +246,14 @@ footer li:hover{color:var(--cc-jaune)}
 .admin-status.ok{color:var(--cc-vert)}
 .admin-status.err{color:var(--cc-rouge)}
 
+.admin-teams{margin-top:16px}
+.admin-team-row{display:grid;grid-template-columns:1fr 140px 160px;gap:10px;align-items:center;border:2px solid var(--cc-noir);padding:10px 14px;margin-bottom:8px;background:var(--cc-blanc-pur);font-size:14px}
+.admin-team-row .name{font-family:var(--cc-ff-headline);text-transform:uppercase;letter-spacing:.05em}
+.admin-team-row .btn{padding:8px 14px;font-size:11px;width:auto}
+
 @media (max-width:620px){
   .admin-match{grid-template-columns:1fr 60px}
+  .admin-team-row{grid-template-columns:1fr;text-align:center}
 }
 
 @media (max-width:860px){

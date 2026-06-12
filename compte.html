@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Inscription — C'est Coinché !</title>
-<meta name="description" content="Inscris ta doublette pour le tournoi de coinche C'est Coinché ! au 109 à Nice. 20€ la paire.">
+<title>Mon compte — C'est Coinché !</title>
+<meta name="description" content="Connexion à ton compte C'est Coinché !">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/site.css">
@@ -22,7 +22,6 @@
       <a href="index.html#program">Programme</a>
       <a href="equipes.html">Équipes</a>
       <a href="index.html#info">Infos</a>
-      <a href="index.html#shop">Shop</a>
       <a href="index.html#faq">FAQ</a>
     </div>
     <div class="nav-auth" style="display:flex;gap:10px">
@@ -36,49 +35,40 @@
 
 <!-- ---- Page hero ---- -->
 <section class="page-hero">
-  <span class="eyebrow">Inscription</span>
-  <h1>Inscris ta<br>doublette.</h1>
-  <p>32 places. Remplis le formulaire ci-dessous, puis règle les 20€ via HelloAsso. On te confirme ta place par email.</p>
+  <span class="eyebrow">Mon compte</span>
+  <h1>Connexion.</h1>
+  <p>Connecte-toi pour retrouver les infos de ta doublette, ton statut de paiement et tes prochains matchs.</p>
 </section>
 
-<!-- ---- Inscription ---- -->
+<!-- ---- Connexion / Inscription ---- -->
 <section class="inscription">
   <div class="wrap">
-    <div class="inscription-grid">
-      <div>
-        <form class="signup-form" id="inscription-form">
-          <label>NOM DE LA DOUBLETTE</label>
-          <input required placeholder="Ex: Les coincheurs de Riquier" name="teamname">
+    <div style="max-width:480px;margin:0 auto">
 
-          <div class="row">
-            <div><label>JOUEUR 1</label><input required placeholder="Prénom Nom" name="player1"></div>
-            <div><label>JOUEUR 2</label><input required placeholder="Prénom Nom" name="player2"></div>
-          </div>
-
-          <label>EMAIL DE CONTACT</label>
-          <input required type="email" placeholder="toi@email.fr" name="email">
-
-          <label>EMAIL SECONDAIRE (FACULTATIF)</label>
-          <input type="email" placeholder="ton.binome@email.fr" name="email2">
-
-          <label>MOT DE PASSE DU COMPTE</label>
-          <input required type="password" placeholder="8 caractères minimum" name="password" minlength="8">
-
-          <button class="submit" type="submit">VALIDER L'INSCRIPTION</button>
-          <p class="fine" id="inscription-status">Crée un compte pour suivre ton inscription et tes matchs. Paiement des 20€ via HelloAsso, voir ci-contre.</p>
-        </form>
+      <div style="display:flex;gap:10px;margin-bottom:20px">
+        <button class="btn" id="tab-login" type="button">SE CONNECTER</button>
+        <button class="btn ghost" id="tab-signup" type="button">CRÉER UN COMPTE</button>
       </div>
 
-      <div>
-        <div class="pay-card">
-          <h3>20€ · Paiement HelloAsso</h3>
-          <p>Une fois ton formulaire envoyé, finalise ton inscription en réglant les 20€ de la doublette via HelloAsso (paiement sécurisé, sans frais pour les participants).</p>
-          <a class="btn lg" href="https://www.helloasso.com/" target="_blank" rel="noopener">PAYER SUR HELLOASSO →</a>
-          <p class="fine" style="margin-top:14px;color:var(--cc-blanc);opacity:.6">Lien à mettre à jour par l'organisateur avec la page de campagne HelloAsso.</p>
-        </div>
-        <p style="margin-top:24px;max-width:420px">Le tarif couvre les deux jours, l'accès buvette à prix potes, et une coinche carte imprimée numérotée pour ta doublette.</p>
-        <p style="margin-top:14px;max-width:420px">T'as pas de binôme ? Écris-nous à <a href="mailto:antoine.goudinoux37@gmail.com">antoine.goudinoux37@gmail.com</a>, on t'en trouve un.</p>
-      </div>
+      <form class="signup-form" id="form-login">
+        <label>EMAIL</label>
+        <input required type="email" name="email" placeholder="toi@email.fr">
+        <label>MOT DE PASSE</label>
+        <input required type="password" name="password" placeholder="••••••••">
+        <button class="submit" type="submit">SE CONNECTER</button>
+        <p class="fine" id="login-status"></p>
+      </form>
+
+      <form class="signup-form hidden" id="form-signup">
+        <label>EMAIL</label>
+        <input required type="email" name="email" placeholder="toi@email.fr">
+        <label>MOT DE PASSE</label>
+        <input required type="password" name="password" placeholder="8 caractères minimum" minlength="8">
+        <button class="submit" type="submit">CRÉER MON COMPTE</button>
+        <p class="fine" id="signup-status"></p>
+        <p class="fine">Pour inscrire ta doublette, rends-toi ensuite sur la page <a href="inscription.html" style="color:var(--cc-jaune)">Inscription</a>.</p>
+      </form>
+
     </div>
   </div>
 </section>
@@ -129,6 +119,6 @@
 <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/auth.js"></script>
-<script src="js/inscription.js"></script>
+<script src="js/compte.js"></script>
 </body>
 </html>
