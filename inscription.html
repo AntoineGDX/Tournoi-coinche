@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Inscription — C'est Coinché !</title>
+<meta name="description" content="Inscris ta doublette pour le tournoi de coinche C'est Coinché ! au 109 à Nice. 20€ la paire.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<!-- ---- Nav ---- -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html" style="text-decoration:none;color:inherit">
+      <span class="sq">C</span>
+      <span>C'EST COINCHÉ!</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#rules">La coinche</a>
+      <a href="index.html#program">Programme</a>
+      <a href="index.html#info">Infos</a>
+      <a href="index.html#shop">Shop</a>
+      <a href="index.html#faq">FAQ</a>
+    </div>
+    <div style="display:flex;gap:10px">
+      <a class="nav-cta" href="inscription.html">Je m'inscris</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ---- Page hero ---- -->
+<section class="page-hero">
+  <span class="eyebrow">Inscription</span>
+  <h1>Inscris ta<br>doublette.</h1>
+  <p>32 places. Remplis le formulaire ci-dessous, puis règle les 20€ via HelloAsso. On te confirme ta place par email.</p>
+</section>
+
+<!-- ---- Inscription ---- -->
+<section class="inscription">
+  <div class="wrap">
+    <div class="inscription-grid">
+      <div>
+        <form class="signup-form" action="https://formsubmit.co/antoine.goudinoux37@gmail.com" method="POST">
+          <input type="hidden" name="_subject" value="Nouvelle inscription — C'est Coinché !">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_next" value="https://antoinegdx.github.io/Tournoi-coinche/merci.html">
+
+          <label>NOM DE LA DOUBLETTE</label>
+          <input required placeholder="Ex: Les coincheurs de Riquier" name="teamname">
+
+          <div class="row">
+            <div><label>JOUEUR 1</label><input required placeholder="Prénom Nom" name="player1"></div>
+            <div><label>JOUEUR 2</label><input required placeholder="Prénom Nom" name="player2"></div>
+          </div>
+
+          <label>EMAIL DE CONTACT</label>
+          <input required type="email" placeholder="toi@email.fr" name="email">
+
+          <label>EMAIL SECONDAIRE (FACULTATIF)</label>
+          <input type="email" placeholder="ton.binome@email.fr" name="email2">
+
+          <button class="submit" type="submit">VALIDER L'INSCRIPTION</button>
+          <p class="fine">Paiement des 20€ via HelloAsso, voir ci-contre.</p>
+        </form>
+      </div>
+
+      <div>
+        <div class="pay-card">
+          <h3>20€ · Paiement HelloAsso</h3>
+          <p>Une fois ton formulaire envoyé, finalise ton inscription en réglant les 20€ de la doublette via HelloAsso (paiement sécurisé, sans frais pour les participants).</p>
+          <a class="btn lg" href="https://www.helloasso.com/" target="_blank" rel="noopener">PAYER SUR HELLOASSO →</a>
+          <p class="fine" style="margin-top:14px;color:var(--cc-blanc);opacity:.6">Lien à mettre à jour par l'organisateur avec la page de campagne HelloAsso.</p>
+        </div>
+        <p style="margin-top:24px;max-width:420px">Le tarif couvre les deux jours, l'accès buvette à prix potes, et une coinche carte imprimée numérotée pour ta doublette.</p>
+        <p style="margin-top:14px;max-width:420px">T'as pas de binôme ? Écris-nous à <a href="mailto:antoine.goudinoux37@gmail.com">antoine.goudinoux37@gmail.com</a>, on t'en trouve un.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---- Footer ---- -->
+<footer>
+  <div class="foot-inner">
+    <div>
+      <div class="foot-wm">C'EST<br>COINCHÉ!</div>
+      <p class="foot-desc">1ère édition. Un tournoi de coinche entre potes, au 109, à Nice. On se voit sur place.</p>
+    </div>
+    <div>
+      <h4>Le tournoi</h4>
+      <ul>
+        <li><a href="index.html#rules">Règles</a></li>
+        <li><a href="index.html#program">Programme</a></li>
+        <li><a href="inscription.html">Inscription</a></li>
+        <li><a href="reglement.html">Règlement complet</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="index.html#shop">T-shirts</a></li>
+        <li><a href="index.html#shop">Panier</a></li>
+        <li><a href="index.html#faq">Livraison</a></li>
+        <li><a href="index.html#faq">Retrait sur place</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <ul>
+        <li>@cestcoinche</li>
+        <li><a href="mailto:antoine.goudinoux37@gmail.com">hello@cestcoinche.fr</a></li>
+        <li>Discord</li>
+        <li><a href="mailto:antoine.goudinoux37@gmail.com?subject=Presse%20-%20C%27est%20Coinch%C3%A9">Presse</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-legal">
+    <span>© 2026 C'est Coinché · Nice</span>
+    <span>Mentions légales · CGV · RGPD</span>
+  </div>
+</footer>
+
+</body>
+</html>

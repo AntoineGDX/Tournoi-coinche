@@ -69,46 +69,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* ---- Signup form ---- */
-  const form = document.querySelector('.signup-form');
-  const success = document.querySelector('.success');
-  const successEmail = document.querySelector('.success .email');
-  const successNum = document.querySelector('.success .num');
-  const retryBtn = document.querySelector('.success .btn');
-
-  if (form) {
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      const email = form.querySelector('input[type="email"]').value || 'ton email';
-      const submitBtn = form.querySelector('.submit');
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'ENVOI EN COURS…';
-
-      try {
-        const res = await fetch(form.action, {
-          method: 'POST',
-          body: new FormData(form),
-          headers: { 'Accept': 'application/json' }
-        });
-        if (!res.ok) throw new Error('Submit failed');
-
-        successEmail.textContent = email;
-        successNum.textContent = '#' + String(Math.floor(Math.random() * 32) + 1).padStart(2, '0');
-        form.classList.add('hidden');
-        success.classList.remove('hidden');
-      } catch (err) {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'VALIDER · 20€';
-        alert("Oups, l'inscription n'a pas pu être envoyée. Réessaie ou écris-nous directement à antoine.goudinoux37@gmail.com.");
-      }
-    });
-  }
-
-  if (retryBtn) {
-    retryBtn.addEventListener('click', () => {
-      form.reset();
-      form.classList.remove('hidden');
-      success.classList.add('hidden');
-    });
-  }
 });

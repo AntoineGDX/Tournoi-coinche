@@ -26,7 +26,7 @@
     </div>
     <div style="display:flex;gap:10px">
       <button class="nav-cta cart">PANIER · 0</button>
-      <button class="nav-cta" data-nav="signup">Je m'inscris</button>
+      <a class="nav-cta" href="inscription.html">Je m'inscris</a>
     </div>
   </div>
 </nav>
@@ -51,7 +51,7 @@
       <div class="cell"><div class="k">Bonus</div><div class="v">DJ Goud · Buvette</div></div>
     </div>
     <div class="hero-ctas">
-      <button class="btn lg" data-nav="signup">INSCRIS TA DOUBLETTE</button>
+      <a class="btn lg" href="inscription.html">INSCRIS TA DOUBLETTE</a>
       <button class="btn lg inverse" data-nav="program">VOIR LE PROGRAMME</button>
     </div>
   </div>
@@ -65,7 +65,7 @@
         <span class="eyebrow">La coinche en 3 minutes</span>
         <h2>Tu connais pas ? On t'explique.</h2>
       </div>
-      <button class="btn ghost" data-nav="faq">LIRE LE RÈGLEMENT COMPLET →</button>
+      <a class="btn ghost" href="reglement.html">LIRE LE RÈGLEMENT COMPLET →</a>
     </div>
     <div class="rules-grid">
       <div class="rule">
@@ -148,14 +148,18 @@
         <p>L'ancien abattoir transformé en pôle culturel. Salle principale + extérieur, parfait pour un tournoi qui respire.</p>
         <ul>
           <li><b>Adresse</b><span>89 Route de Turin, 06300 Nice</span></li>
-          <li><b>Tram</b><span>L1 · arrêt Saint-Roch</span></li>
-          <li><b>Bus</b><span>5 · 7 · 40</span></li>
+          <li><b>Tram</b><span>L1 · arrêt Vauban (+ bus 14)</span></li>
+          <li><b>Bus</b><span>7 · 14 · 19 · 88 · LR116</span></li>
           <li><b>Parking</b><span>Sur place + rue</span></li>
           <li><b>Accessibilité</b><span>PMR · oui</span></li>
         </ul>
       </div>
       <div class="map">
-        <div class="pin">LE 109 ♠</div>
+        <iframe
+          src="https://www.google.com/maps?q=Le+109,+89+Route+de+Turin,+06300+Nice&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Carte — Le 109, 89 Route de Turin, 06300 Nice"></iframe>
         <div class="addr">89 RTE DE TURIN · 06300 NICE</div>
       </div>
     </div>
@@ -174,28 +178,12 @@
         <p style="margin-top:20px;max-width:420px">Le tarif couvre les deux jours, l'accès buvette à prix potes, et une coinche carte imprimée numérotée pour ta doublette.</p>
       </div>
 
-      <div>
-        <form class="signup-form" action="https://formsubmit.co/antoine.goudinoux37@gmail.com" method="POST">
-          <input type="hidden" name="_subject" value="Nouvelle inscription — C'est Coinché !">
-          <input type="hidden" name="_template" value="table">
-          <input type="hidden" name="_captcha" value="false">
-          <label>NOM DE LA DOUBLETTE</label>
-          <input required placeholder="Ex: Les coincheurs de Riquier" name="teamname">
-          <div class="row">
-            <div><label>JOUEUR 1</label><input required placeholder="Prénom Nom" name="player1"></div>
-            <div><label>JOUEUR 2</label><input required placeholder="Prénom Nom" name="player2"></div>
-          </div>
-          <label>EMAIL DE CONTACT</label>
-          <input required type="email" placeholder="toi@email.fr" name="email">
-          <button class="submit" type="submit">VALIDER · 20€</button>
-          <p class="fine">Paiement via Stripe à l'étape suivante.</p>
-        </form>
-
-        <div class="success hidden">
-          <h3>C'est dans la poche.</h3>
-          <p style="font-size:16px;margin-top:6px">On t'a envoyé la confirmation à <b class="email">ton email</b>.<br>Ton numéro de doublette : <b class="num">#00</b></p>
-          <button class="btn" style="margin-top:14px">INSCRIRE UNE AUTRE DOUBLETTE</button>
-        </div>
+      <div class="pay-card" style="margin-top:0">
+        <h3>Comment ça marche ?</h3>
+        <p>1. Tu remplis le formulaire d'inscription avec les infos de ta doublette.<br>
+        2. Tu règles les 20€ via HelloAsso (paiement sécurisé, sans frais pour toi).<br>
+        3. On te confirme ta place par email — c'est dans la poche.</p>
+        <a class="btn lg" href="inscription.html" style="margin-top:18px">INSCRIS TA DOUBLETTE →</a>
       </div>
     </div>
   </div>
@@ -375,8 +363,8 @@
       <ul>
         <li><a data-nav="rules">Règles</a></li>
         <li><a data-nav="program">Programme</a></li>
-        <li><a data-nav="signup">Inscription</a></li>
-        <li><a data-nav="faq">Règlement complet</a></li>
+        <li><a href="inscription.html">Inscription</a></li>
+        <li><a href="reglement.html">Règlement complet</a></li>
       </ul>
     </div>
     <div>
