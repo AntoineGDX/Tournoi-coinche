@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Merci ! — C'est Coinché !</title>
-<meta name="description" content="Ton inscription au tournoi C'est Coinché ! a bien été reçue.">
+<title>Équipes inscrites — C'est Coinché !</title>
+<meta name="description" content="Liste des doublettes inscrites au tournoi C'est Coinché ! au 109 à Nice.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/site.css">
@@ -22,7 +22,6 @@
       <a href="index.html#program">Programme</a>
       <a href="equipes.html">Équipes</a>
       <a href="index.html#info">Infos</a>
-      <a href="index.html#shop">Shop</a>
       <a href="index.html#faq">FAQ</a>
     </div>
     <div style="display:flex;gap:10px">
@@ -33,21 +32,18 @@
 
 <!-- ---- Page hero ---- -->
 <section class="page-hero">
-  <span class="eyebrow">Inscription envoyée</span>
-  <h1>C'est dans<br>la poche.</h1>
-  <p>Ton formulaire d'inscription a bien été reçu. Il ne reste plus qu'à finaliser le paiement.</p>
+  <span class="eyebrow">Inscriptions</span>
+  <h1>Les doublettes<br>inscrites.</h1>
+  <p>La liste se met à jour au fil des inscriptions. T'es inscrit·e et tu ne te vois pas encore ? Laisse-nous quelques heures pour mettre à jour la page.</p>
 </section>
 
-<!-- ---- Merci ---- -->
-<section class="merci">
+<!-- ---- Équipes ---- -->
+<section class="teams">
   <div class="wrap">
-    <div class="success">
-      <h3>Merci !</h3>
-      <p style="font-size:16px;margin-top:6px">On a bien reçu les infos de ta doublette. Tu vas recevoir un email de confirmation à l'adresse indiquée.</p>
-      <p style="font-size:16px;margin-top:10px"><b>Dernière étape :</b> règle les 20€ de la doublette via HelloAsso pour valider définitivement ta place.</p>
-      <a class="btn lg" href="https://www.helloasso.com/" target="_blank" rel="noopener" style="margin-top:18px">PAYER SUR HELLOASSO →</a>
-    </div>
-    <p style="margin-top:30px"><a href="index.html">← Retour à l'accueil</a></p>
+    <p class="teams-count" id="teams-count"></p>
+    <ul class="teams-list" id="teams-list"></ul>
+    <p class="teams-empty hidden" id="teams-empty">Pas encore d'équipe inscrite — sois la première doublette de la liste !</p>
+    <p style="text-align:center;margin-top:30px"><a href="arbre.html">→ Voir l'arbre du tournoi</a></p>
   </div>
 </section>
 
@@ -94,5 +90,6 @@
   </div>
 </footer>
 
+<script src="js/teams.js"></script>
 </body>
 </html>
