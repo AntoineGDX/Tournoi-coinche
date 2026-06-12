@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Admin — Arbre du tournoi — C'est Coinché !</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<!-- ---- Nav ---- -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html" style="text-decoration:none;color:inherit">
+      <span class="sq">C</span>
+      <span>C'EST COINCHÉ!</span>
+    </a>
+    <div class="nav-links">
+      <a href="arbre.html">← Retour à l'arbre</a>
+    </div>
+    <div></div>
+  </div>
+</nav>
+
+<!-- ---- Page hero ---- -->
+<section class="page-hero">
+  <span class="eyebrow">Admin</span>
+  <h1>Arbre du<br>tournoi.</h1>
+  <p>Édite les équipes et les scores de chaque match. Les changements sont enregistrés directement sur le site (via GitHub).</p>
+</section>
+
+<!-- ---- Admin ---- -->
+<section class="admin">
+  <div class="wrap">
+
+    <div class="admin-gate" id="admin-gate">
+      <h3 style="color:var(--cc-jaune);margin-bottom:6px">Connexion</h3>
+      <label>JETON D'ACCÈS GITHUB</label>
+      <input type="password" id="admin-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+      <button class="btn" id="admin-connect">SE CONNECTER</button>
+      <p id="admin-gate-status" class="admin-status"></p>
+      <p>
+        Crée un jeton sur <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens</a> :
+        type « Fine-grained », accès limité au dépôt <b>Tournoi-coinche</b>, permission <b>Contents : Read and write</b>.
+        Le jeton n'est conservé que dans cet onglet (jamais envoyé ailleurs qu'à GitHub) — il disparaît à la fermeture de l'onglet.
+      </p>
+    </div>
+
+    <div class="admin-editor hidden" id="admin-editor">
+      <div id="admin-rounds"></div>
+      <div class="admin-actions">
+        <button class="btn lg" id="admin-save">ENREGISTRER LES RÉSULTATS</button>
+        <button class="btn ghost" id="admin-logout">SE DÉCONNECTER</button>
+      </div>
+      <p id="admin-save-status" class="admin-status" style="margin-top:14px"></p>
+    </div>
+
+  </div>
+</section>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
