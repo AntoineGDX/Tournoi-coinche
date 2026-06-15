@@ -131,9 +131,12 @@ create table partner_requests (
   from_team_id uuid not null references teams(id) on delete cascade,
   to_team_id uuid not null references teams(id) on delete cascade,
   status text not null default 'pending' check (status in ('pending','accepted','declined','cancelled')),
-  created_at timestamptz not null default now(),
-  unique(from_team_id, to_team_id)
+  created_at timestamptz not null default now()
 );
+
+-- Une seule demande "pending" à la fois entre deux équipes données — mais on
+-- peut en proposer une nouvelle après une séparation, un refus ou une annulation.
+create unique index partner_requests_pending_unique on partner_requests(from_team_id, to_team_id) where status = 'pending';
 
 alter table partner_requests enable row level security;
 
