@@ -27,11 +27,21 @@ alter table teams enable row level security;
 create policy "select own team" on teams
   for select using (auth.uid() = user_id);
 
+-- Fonction security definer pour éviter la récursion RLS (une policy sur
+-- `teams` ne doit pas faire de sous-requête directe sur `teams`).
+create or replace function my_partner_team_id()
+returns uuid
+language sql
+security definer
+stable
+set search_path = public
+as $$
+  select partner_team_id from teams where user_id = auth.uid()
+$$;
+
 -- Permet à chacun des deux membres d'une doublette associée de voir la fiche de son binôme
 create policy "select partner team" on teams
-  for select using (
-    exists (select 1 from teams mine where mine.user_id = auth.uid() and mine.partner_team_id = teams.id)
-  );
+  for select using (id = my_partner_team_id());
 
 create policy "insert own team" on teams
   for insert with check (auth.uid() = user_id);
