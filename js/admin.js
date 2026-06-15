@@ -17,6 +17,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const requestsEl = document.getElementById('admin-requests');
   const requestsStatus = document.getElementById('admin-requests-status');
 
+  const productsEl = document.getElementById('admin-products');
+  const productsStatus = document.getElementById('admin-products-status');
+  const addProductBtn = document.getElementById('add-product');
+
   let matches = null;
   let teams = null;
 
@@ -147,6 +151,148 @@ document.addEventListener('DOMContentLoaded', async () => {
     `).join('');
   }
 
+  async function loadProducts() {
+    const { data, error } = await ccAuth.client.from('products').select('*').order('sort_order');
+    if (error) throw error;
+
+    if (data.length === 0) {
+      productsEl.innerHTML = '<p class="fine">Aucun article dans le shop pour le moment.</p>';
+      return;
+    }
+
+    productsEl.innerHTML = data.map(p => `
+      <div class="admin-product-row" data-product-id="${p.id}">
+        ${p.image_url ? `<img class="thumb" src="${p.image_url}" alt="${p.name}">` : '<div class="thumb"></div>'}
+        <div class="fields">
+          <input type="text" data-field="name" placeholder="Nom" value="${(p.name || '').replace(/"/g, '&quot;')}">
+          <input type="number" data-field="price" placeholder="Prix (€)" value="${p.price}">
+          <input type="text" data-field="slug" placeholder="Slug" value="${(p.slug || '').replace(/"/g, '&quot;')}">
+          <input type="text" data-field="sizes" placeholder="Tailles (ex: S,M,L,XL)" value="${(p.sizes || []).join(',')}">
+          <textarea data-field="description" placeholder="Description">${p.description || ''}</textarea>
+          <input type="text" data-field="visual_text" placeholder="Visuel : texte" value="${(p.visual_text || '').replace(/"/g, '&quot;')}">
+          <input type="text" data-field="visual_subtitle" placeholder="Visuel : sous-titre" value="${(p.visual_subtitle || '').replace(/"/g, '&quot;')}">
+          <select data-field="visual_bg">
+            <option value="y" ${p.visual_bg === 'y' ? 'selected' : ''}>Fond jaune</option>
+            <option value="n" ${p.visual_bg === 'n' ? 'selected' : ''}>Fond noir</option>
+            <option value="w" ${p.visual_bg === 'w' ? 'selected' : ''}>Fond blanc</option>
+          </select>
+          <input type="file" data-field="image" accept="image/*">
+        </div>
+        <div class="actions">
+          <button class="btn sm" data-action="save">ENREGISTRER</button>
+          <button class="btn sm red" data-action="delete">SUPPRIMER</button>
+        </div>
+      </div>
+    `).join('');
+
+    productsEl.querySelectorAll('.admin-product-row').forEach(row => {
+      const id = row.dataset.productId;
+
+      row.querySelector('[data-action="save"]').addEventListener('click', async () => {
+        const btn = row.querySelector('[data-action="save"]');
+        btn.disabled = true;
+        productsStatus.textContent = 'Enregistrement…';
+        productsStatus.className = 'admin-status';
+
+        const update = {
+          name: row.querySelector('[data-field="name"]').value.trim(),
+          price: Number(row.querySelector('[data-field="price"]').value) || 0,
+          slug: row.querySelector('[data-field="slug"]').value.trim(),
+          sizes: row.querySelector('[data-field="sizes"]').value.split(',').map(s => s.trim()).filter(Boolean),
+          description: row.querySelector('[data-field="description"]').value.trim(),
+          visual_text: row.querySelector('[data-field="visual_text"]').value.trim(),
+          visual_subtitle: row.querySelector('[data-field="visual_subtitle"]').value.trim(),
+          visual_bg: row.querySelector('[data-field="visual_bg"]').value
+        };
+
+        const file = row.querySelector('[data-field="image"]').files[0];
+        if (file) {
+          const path = `${id}-${Date.now()}-${file.name}`;
+          const { error: uploadError } = await ccAuth.client.storage.from('product-images').upload(path, file, { upsert: true });
+          if (!uploadError) {
+            const { data: pub } = ccAuth.client.storage.from('product-images').getPublicUrl(path);
+            update.image_url = pub.publicUrl;
+          }
+        }
+
+        const { error } = await ccAuth.client.from('products').update(update).eq('id', id);
+        if (error) {
+          productsStatus.textContent = "Erreur lors de l'enregistrement de l'article.";
+          productsStatus.className = 'admin-status err';
+          btn.disabled = false;
+          return;
+        }
+        productsStatus.textContent = 'Article enregistré ✓';
+        productsStatus.className = 'admin-status ok';
+        await loadProducts();
+      });
+
+      row.querySelector('[data-action="delete"]').addEventListener('click', async () => {
+        if (!confirm('Supprimer définitivement cet article du shop ?')) return;
+        const { error } = await ccAuth.client.from('products').delete().eq('id', id);
+        if (error) {
+          productsStatus.textContent = "Erreur lors de la suppression.";
+          productsStatus.className = 'admin-status err';
+          return;
+        }
+        await loadProducts();
+      });
+    });
+  }
+
+  addProductBtn.addEventListener('click', async () => {
+    const name = document.getElementById('new-product-name').value.trim();
+    const slug = document.getElementById('new-product-slug').value.trim();
+    const price = Number(document.getElementById('new-product-price').value) || 0;
+    if (!name || !slug) {
+      productsStatus.textContent = 'Nom et slug sont obligatoires.';
+      productsStatus.className = 'admin-status err';
+      return;
+    }
+
+    addProductBtn.disabled = true;
+    productsStatus.textContent = 'Ajout…';
+    productsStatus.className = 'admin-status';
+
+    const insertData = {
+      name,
+      slug,
+      price,
+      sizes: document.getElementById('new-product-sizes').value.split(',').map(s => s.trim()).filter(Boolean),
+      description: document.getElementById('new-product-description').value.trim(),
+      visual_text: document.getElementById('new-product-visual-text').value.trim(),
+      visual_subtitle: document.getElementById('new-product-visual-subtitle').value.trim(),
+      visual_bg: document.getElementById('new-product-visual-bg').value
+    };
+
+    const { data: inserted, error } = await ccAuth.client.from('products').insert(insertData).select().single();
+    if (error) {
+      productsStatus.textContent = "Erreur lors de l'ajout de l'article.";
+      productsStatus.className = 'admin-status err';
+      addProductBtn.disabled = false;
+      return;
+    }
+
+    const file = document.getElementById('new-product-image').files[0];
+    if (file) {
+      const path = `${inserted.id}-${Date.now()}-${file.name}`;
+      const { error: uploadError } = await ccAuth.client.storage.from('product-images').upload(path, file, { upsert: true });
+      if (!uploadError) {
+        const { data: pub } = ccAuth.client.storage.from('product-images').getPublicUrl(path);
+        await ccAuth.client.from('products').update({ image_url: pub.publicUrl }).eq('id', inserted.id);
+      }
+    }
+
+    ['new-product-name', 'new-product-slug', 'new-product-price', 'new-product-sizes', 'new-product-description', 'new-product-visual-text', 'new-product-visual-subtitle', 'new-product-image'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+
+    productsStatus.textContent = 'Article ajouté ✓';
+    productsStatus.className = 'admin-status ok';
+    addProductBtn.disabled = false;
+    await loadProducts();
+  });
+
   saveBtn.addEventListener('click', async () => {
     saveStatus.textContent = 'Enregistrement…';
     saveStatus.className = 'admin-status';
@@ -183,6 +329,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
       requestsStatus.textContent = "Erreur de chargement des demandes de binôme.";
       requestsStatus.className = 'admin-status err';
+    }
+    try {
+      await loadProducts();
+    } catch (err) {
+      productsStatus.textContent = "Erreur de chargement des articles du shop.";
+      productsStatus.className = 'admin-status err';
     }
   }
 

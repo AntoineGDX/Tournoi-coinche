@@ -65,6 +65,29 @@
       <div class="admin-requests" id="admin-requests"></div>
       <p id="admin-requests-status" class="admin-status"></p>
 
+      <h3 style="margin:40px 0 10px">Produits / Shop</h3>
+      <div class="admin-products" id="admin-products"></div>
+      <div class="admin-product-new">
+        <h4 style="margin:0 0 10px">Ajouter un article</h4>
+        <div class="fields">
+          <input type="text" id="new-product-name" placeholder="Nom (ex: Wordmark)">
+          <input type="number" id="new-product-price" placeholder="Prix (€)">
+          <input type="text" id="new-product-slug" placeholder="Slug (ex: wordmark)">
+          <input type="text" id="new-product-sizes" placeholder="Tailles (ex: S,M,L,XL)">
+          <textarea id="new-product-description" placeholder="Description"></textarea>
+          <input type="text" id="new-product-visual-text" placeholder="Visuel : texte (ex: C'est&lt;br&gt;coinché.)">
+          <input type="text" id="new-product-visual-subtitle" placeholder="Visuel : sous-titre">
+          <select id="new-product-visual-bg">
+            <option value="y">Fond jaune</option>
+            <option value="n">Fond noir</option>
+            <option value="w">Fond blanc</option>
+          </select>
+          <input type="file" id="new-product-image" accept="image/*">
+        </div>
+        <button class="btn" id="add-product" style="margin-top:12px">AJOUTER L'ARTICLE</button>
+      </div>
+      <p id="admin-products-status" class="admin-status" style="margin-top:10px"></p>
+
     </div>
 
   </div>

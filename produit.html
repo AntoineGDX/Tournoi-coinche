@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>CGV — C'est Coinché !</title>
+<title>Produit — C'est Coinché !</title>
 <meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
@@ -36,43 +36,41 @@
 
 <!-- ---- Page hero ---- -->
 <section class="page-hero">
-  <span class="eyebrow">Informations légales</span>
-  <h1>Conditions<br>générales de vente.</h1>
-  <p>Inscriptions au tournoi, paiement et politique d'annulation.</p>
+  <span class="eyebrow">Shop</span>
+  <h1 id="product-title">Article</h1>
+  <p><a href="shop.html" style="text-decoration:underline">← Retour au shop</a></p>
 </section>
 
-<!-- ---- Article ---- -->
-<section class="rules" style="background:var(--cc-blanc)">
-  <div class="wrap article">
+<!-- ---- Produit ---- -->
+<section class="shop">
+  <div class="wrap">
 
-    <div class="callout">
-      <p><b>À compléter :</b> ces conditions sont un point de départ et doivent être adaptées au statut réel de l'organisateur (particulier, association ou auto-entrepreneur) et relues avant publication finale.</p>
-    </div>
+    <p id="product-loading" class="fine">Chargement…</p>
+    <p id="product-not-found" class="fine" hidden>Cet article n'existe pas ou n'est plus disponible.</p>
 
-    <h3>1. Objet</h3>
-    <p>Les présentes conditions générales de vente régissent les inscriptions au tournoi de coinche « C'est Coinché ! » organisé au 109, à Nice, ainsi que les commandes de produits associés (t-shirts).</p>
+    <div class="product-detail hidden" id="product-detail">
+      <div class="tshirt" style="cursor:default">
+        <div class="visual y" id="product-visual">
+          <div>
+            <div class="t" id="product-visual-text"></div>
+            <div class="s" id="product-visual-subtitle"></div>
+          </div>
+        </div>
+      </div>
 
-    <h3>2. Inscription au tournoi</h3>
-    <ul>
-      <li>L'inscription se fait en ligne via le formulaire d'inscription du site, en solo (10€) ou en doublette (20€).</li>
-      <li>L'inscription n'est définitive qu'après réception du paiement via HelloAsso.</li>
-      <li>Le tarif couvre la participation au tournoi, l'accès buvette à prix réduit et une carte de coinche numérotée par doublette.</li>
-    </ul>
+      <div class="product-info">
+        <h2 id="product-name" style="margin:0"></h2>
+        <div class="price" id="product-price" style="font-family:var(--cc-ff-display);font-size:32px;margin-top:6px"></div>
+        <p id="product-description" style="margin-top:16px"></p>
 
-    <h3>3. Paiement</h3>
-    <p>Le paiement est géré par la plateforme tierce <b>HelloAsso</b>, qui propose un paiement sécurisé sans frais obligatoires pour le participant. C'est Coinché ! ne stocke aucune donnée bancaire.</p>
+        <div id="product-sizes-block" hidden>
+          <label style="display:block;font-family:var(--cc-ff-headline);font-size:10px;text-transform:uppercase;letter-spacing:.18em;margin:20px 0 8px">Taille</label>
+          <div class="size-options" id="product-sizes"></div>
+        </div>
 
-    <h3>4. Annulation et remboursement</h3>
-    <ul>
-      <li>En cas d'annulation du tournoi par l'organisateur, les inscriptions seront intégralement remboursées.</li>
-      <li>En cas de désistement d'un participant, contacter l'organisateur par email — le remboursement est étudié au cas par cas selon le délai avant l'événement.</li>
-    </ul>
-
-    <h3>5. Produits (t-shirts)</h3>
-    <p>Les visuels présentés dans la section « Shop » sont indicatifs. Les modalités de commande, de paiement et de retrait/livraison seront précisées avant l'ouverture des commandes.</p>
-
-    <div class="callout">
-      <p>Une question sur une inscription ou un paiement ? Écris-nous à <a href="mailto:antoine.goudinoux37@gmail.com">antoine.goudinoux37@gmail.com</a>.</p>
+        <button class="btn lg" id="add-to-cart" style="margin-top:24px">AJOUTER AU PANIER</button>
+        <p class="fine hidden" id="add-to-cart-status" style="margin-top:10px"></p>
+      </div>
     </div>
 
   </div>
@@ -99,8 +97,7 @@
     <div>
       <h4>Shop</h4>
       <ul>
-        <li><a href="index.html#shop">T-shirts</a></li>
-        <li><a href="index.html#shop">Panier</a></li>
+        <li><a href="shop.html">T-shirts</a></li>
         <li><a href="index.html#faq">Livraison</a></li>
         <li><a href="index.html#faq">Retrait sur place</a></li>
       </ul>
@@ -119,9 +116,17 @@
   </div>
 </footer>
 
+<!-- ---- Cart bar ---- -->
+<div class="cartbar">
+  <div class="label"><b>0 article</b> dans le panier · 0€</div>
+  <button class="btn sm checkout-btn">COMMANDER →</button>
+</div>
+
 <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/player.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/produit.js"></script>
 </body>
 </html>

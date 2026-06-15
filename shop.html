@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>CGV — C'est Coinché !</title>
-<meta name="robots" content="noindex,nofollow">
+<title>Shop — C'est Coinché !</title>
+<meta name="description" content="Le shop C'est Coinché ! : t-shirts en série limitée, à retirer sur place ou à livrer.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/site.css">
@@ -36,45 +36,16 @@
 
 <!-- ---- Page hero ---- -->
 <section class="page-hero">
-  <span class="eyebrow">Informations légales</span>
-  <h1>Conditions<br>générales de vente.</h1>
-  <p>Inscriptions au tournoi, paiement et politique d'annulation.</p>
+  <span class="eyebrow">Shop · capsule limitée</span>
+  <h1>Porte la<br>coinche.</h1>
+  <p>Visuels typo bold, imprimés sérigraphie sur coton bio. Série limitée. Retrait sur place ou livraison 4,90€.</p>
 </section>
 
-<!-- ---- Article ---- -->
-<section class="rules" style="background:var(--cc-blanc)">
-  <div class="wrap article">
-
-    <div class="callout">
-      <p><b>À compléter :</b> ces conditions sont un point de départ et doivent être adaptées au statut réel de l'organisateur (particulier, association ou auto-entrepreneur) et relues avant publication finale.</p>
-    </div>
-
-    <h3>1. Objet</h3>
-    <p>Les présentes conditions générales de vente régissent les inscriptions au tournoi de coinche « C'est Coinché ! » organisé au 109, à Nice, ainsi que les commandes de produits associés (t-shirts).</p>
-
-    <h3>2. Inscription au tournoi</h3>
-    <ul>
-      <li>L'inscription se fait en ligne via le formulaire d'inscription du site, en solo (10€) ou en doublette (20€).</li>
-      <li>L'inscription n'est définitive qu'après réception du paiement via HelloAsso.</li>
-      <li>Le tarif couvre la participation au tournoi, l'accès buvette à prix réduit et une carte de coinche numérotée par doublette.</li>
-    </ul>
-
-    <h3>3. Paiement</h3>
-    <p>Le paiement est géré par la plateforme tierce <b>HelloAsso</b>, qui propose un paiement sécurisé sans frais obligatoires pour le participant. C'est Coinché ! ne stocke aucune donnée bancaire.</p>
-
-    <h3>4. Annulation et remboursement</h3>
-    <ul>
-      <li>En cas d'annulation du tournoi par l'organisateur, les inscriptions seront intégralement remboursées.</li>
-      <li>En cas de désistement d'un participant, contacter l'organisateur par email — le remboursement est étudié au cas par cas selon le délai avant l'événement.</li>
-    </ul>
-
-    <h3>5. Produits (t-shirts)</h3>
-    <p>Les visuels présentés dans la section « Shop » sont indicatifs. Les modalités de commande, de paiement et de retrait/livraison seront précisées avant l'ouverture des commandes.</p>
-
-    <div class="callout">
-      <p>Une question sur une inscription ou un paiement ? Écris-nous à <a href="mailto:antoine.goudinoux37@gmail.com">antoine.goudinoux37@gmail.com</a>.</p>
-    </div>
-
+<!-- ---- Shop ---- -->
+<section class="shop">
+  <div class="wrap">
+    <div class="shop-grid" id="shop-grid"></div>
+    <p class="fine" id="shop-empty" style="text-align:center;opacity:.6;margin-top:30px" hidden>Aucun article disponible pour le moment.</p>
   </div>
 </section>
 
@@ -99,8 +70,7 @@
     <div>
       <h4>Shop</h4>
       <ul>
-        <li><a href="index.html#shop">T-shirts</a></li>
-        <li><a href="index.html#shop">Panier</a></li>
+        <li><a href="shop.html">T-shirts</a></li>
         <li><a href="index.html#faq">Livraison</a></li>
         <li><a href="index.html#faq">Retrait sur place</a></li>
       </ul>
@@ -119,9 +89,17 @@
   </div>
 </footer>
 
+<!-- ---- Cart bar ---- -->
+<div class="cartbar">
+  <div class="label"><b>0 article</b> dans le panier · 0€</div>
+  <button class="btn sm checkout-btn">COMMANDER →</button>
+</div>
+
 <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/player.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/shop.js"></script>
 </body>
 </html>
