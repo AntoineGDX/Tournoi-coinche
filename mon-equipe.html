@@ -68,6 +68,24 @@
           </dl>
         </div>
 
+        <div class="team-info" style="margin-top:20px">
+          <span class="eyebrow">Paramètres</span>
+          <h3>Mon équipe</h3>
+
+          <label for="input-team-name">NOM DE L'ÉQUIPE</label>
+          <div style="display:flex;gap:10px;margin-top:6px">
+            <input id="input-team-name" style="flex:1">
+            <button class="btn sm" id="save-team-name">ENREGISTRER</button>
+          </div>
+          <p class="fine hidden" id="team-name-status"></p>
+
+          <div class="check-row" style="margin-top:20px">
+            <input type="checkbox" id="notify-binome">
+            <label for="notify-binome">Recevoir un email quand une demande de binôme est reçue, acceptée ou refusée</label>
+          </div>
+          <p class="fine hidden" id="notify-status"></p>
+        </div>
+
         <div id="binome-cta" class="pay-card hidden">
           <h3>Trouve ton binôme</h3>
           <p>Tu es inscrit·e en solo. Rends-toi dans l'espace binôme pour proposer ou accepter une association avec un·e autre joueur·euse.</p>

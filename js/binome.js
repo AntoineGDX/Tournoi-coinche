@@ -26,12 +26,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   content.classList.remove('hidden');
 
+  let requests = [];
+
   function displayName(seeker) {
     return seeker.team_name || seeker.player1_name;
   }
 
   async function load() {
-    const [{ data: seekers, error: seekersError }, { data: requests, error: requestsError }] = await Promise.all([
+    const [{ data: seekers, error: seekersError }, { data: requestsData, error: requestsError }] = await Promise.all([
       ccAuth.client.from('solo_seekers').select('*'),
       ccAuth.client.from('partner_requests').select('*')
     ]);
@@ -42,6 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
+    requests = requestsData;
     const seekersById = new Map(seekers.map(s => [s.id, s]));
     const pending = requests.filter(r => r.status === 'pending');
 
@@ -134,10 +137,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  function notify(event, fromTeamId, toTeamId) {
+    ccAuth.client.functions.invoke('partner-notify', {
+      body: { event, fromTeamId, toTeamId }
+    }).catch(err => console.error('Notification binôme non envoyée :', err));
+  }
+
   async function accept(requestId, btn) {
     btn.disabled = true;
     statusEl.textContent = 'Validation du binôme…';
     statusEl.className = 'fine';
+    const req = requests.find(r => r.id === requestId);
+    if (req) notify('request_accepted', req.from_team_id, team.id);
     const { error } = await ccAuth.client.rpc('accept_partner_request', { request_id: requestId });
     if (error) {
       statusEl.textContent = "Erreur lors de l'acceptation : " + error.message;
@@ -150,6 +161,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function decline(requestId, btn) {
     btn.disabled = true;
+    const req = requests.find(r => r.id === requestId);
     const { error } = await ccAuth.client.from('partner_requests').update({ status: 'declined' }).eq('id', requestId);
     if (error) {
       statusEl.textContent = "Erreur lors du refus.";
@@ -157,6 +169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       btn.disabled = false;
       return;
     }
+    if (req) notify('request_declined', req.from_team_id, team.id);
     await load();
   }
 
@@ -184,6 +197,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       btn.disabled = false;
       return;
     }
+    notify('request_received', team.id, seekerId);
     statusEl.textContent = 'Proposition envoyée !';
     statusEl.className = 'fine ok';
     await load();

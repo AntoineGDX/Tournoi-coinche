@@ -45,6 +45,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('binome-cta').classList.remove('hidden');
   }
 
+  // Paramètres : nom de l'équipe
+  const teamNameInput = document.getElementById('input-team-name');
+  const saveTeamNameBtn = document.getElementById('save-team-name');
+  const teamNameStatus = document.getElementById('team-name-status');
+  teamNameInput.value = team.team_name;
+
+  saveTeamNameBtn.addEventListener('click', async () => {
+    const newName = teamNameInput.value.trim();
+    if (!newName) return;
+    saveTeamNameBtn.disabled = true;
+    const { error } = await ccAuth.client.from('teams').update({ team_name: newName }).eq('id', team.id);
+    teamNameStatus.classList.remove('hidden');
+    if (error) {
+      teamNameStatus.textContent = "Erreur lors de l'enregistrement.";
+      teamNameStatus.className = 'fine err';
+    } else {
+      team.team_name = newName;
+      document.getElementById('team-name').textContent = newName;
+      teamNameStatus.textContent = 'Nom enregistré ✓';
+      teamNameStatus.className = 'fine ok';
+    }
+    saveTeamNameBtn.disabled = false;
+  });
+
+  // Paramètres : préférence de notification binôme
+  const notifyCheckbox = document.getElementById('notify-binome');
+  const notifyStatus = document.getElementById('notify-status');
+  notifyCheckbox.checked = team.notify_binome_requests;
+
+  notifyCheckbox.addEventListener('change', async () => {
+    const { error } = await ccAuth.client.from('teams').update({ notify_binome_requests: notifyCheckbox.checked }).eq('id', team.id);
+    notifyStatus.classList.remove('hidden');
+    if (error) {
+      notifyCheckbox.checked = !notifyCheckbox.checked;
+      notifyStatus.textContent = "Erreur lors de l'enregistrement.";
+      notifyStatus.className = 'fine err';
+    } else {
+      notifyStatus.textContent = 'Préférence enregistrée ✓';
+      notifyStatus.className = 'fine ok';
+    }
+  });
+
   if (!isPaid) {
     const amount = team.registration_type === 'solo' ? '10€' : '20€';
     document.getElementById('pay-reminder-text').textContent =

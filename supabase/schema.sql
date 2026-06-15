@@ -16,6 +16,7 @@ create table teams (
   email2 text,
   registration_type text not null default 'doublette' check (registration_type in ('solo','doublette')),
   looking_for_partner boolean not null default false,
+  notify_binome_requests boolean not null default true,
   payment_status text not null default 'pending' check (payment_status in ('pending','paid')),
   created_at timestamptz not null default now()
 );
@@ -139,6 +140,10 @@ create policy "update own or received request" on partner_requests
     exists (select 1 from teams t where t.id = from_team_id and t.user_id = auth.uid())
     or exists (select 1 from teams t where t.id = to_team_id and t.user_id = auth.uid())
   );
+
+-- Permet à l'admin de voir toutes les demandes de binôme
+create policy "admins can select all partner requests" on partner_requests
+  for select using (exists (select 1 from admins a where a.user_id = auth.uid()));
 
 -- ============================================================
 -- Acceptation d'une demande : fusionne les deux solos en une doublette

@@ -14,8 +14,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const teamNamesEl = document.getElementById('admin-team-names');
   const teamsEl = document.getElementById('admin-teams');
   const teamsStatus = document.getElementById('admin-teams-status');
+  const requestsEl = document.getElementById('admin-requests');
+  const requestsStatus = document.getElementById('admin-requests-status');
 
   let matches = null;
+  let teams = null;
 
   function teamNameInput(value, round, match, field) {
     const safe = (value || '').replace(/"/g, '&quot;');
@@ -76,6 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function loadTeams() {
     const { data, error } = await ccAuth.client.from('teams').select('*').order('created_at');
     if (error) throw error;
+    teams = data;
 
     if (data.length === 0) {
       teamsEl.innerHTML = '<p class="fine">Aucune équipe inscrite pour le moment.</p>';
@@ -110,6 +114,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  const statusLabels = {
+    pending: 'En attente',
+    accepted: 'Acceptée',
+    declined: 'Refusée',
+    cancelled: 'Annulée'
+  };
+
+  async function loadPartnerRequests() {
+    const { data, error } = await ccAuth.client.from('partner_requests').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+
+    if (data.length === 0) {
+      requestsEl.innerHTML = '<p class="fine">Aucune demande de binôme pour le moment.</p>';
+      return;
+    }
+
+    const teamsById = new Map(teams.map(t => [t.id, t]));
+    const teamName = id => {
+      const t = teamsById.get(id);
+      return t ? (t.team_name || t.player1_name) : 'Équipe supprimée';
+    };
+
+    requestsEl.innerHTML = data.map(r => `
+      <div class="admin-request-row">
+        <span class="name">${teamName(r.from_team_id)}</span>
+        <span class="name">→ ${teamName(r.to_team_id)}</span>
+        <span><span class="badge ${r.status}">${statusLabels[r.status] || r.status}</span></span>
+        <span class="fine">${new Date(r.created_at).toLocaleString('fr-FR')}</span>
+      </div>
+    `).join('');
+  }
+
   saveBtn.addEventListener('click', async () => {
     saveStatus.textContent = 'Enregistrement…';
     saveStatus.className = 'admin-status';
@@ -140,6 +176,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (err) {
       saveStatus.textContent = "Erreur de chargement des données.";
       saveStatus.className = 'admin-status err';
+    }
+    try {
+      await loadPartnerRequests();
+    } catch (err) {
+      requestsStatus.textContent = "Erreur de chargement des demandes de binôme.";
+      requestsStatus.className = 'admin-status err';
     }
   }
 
