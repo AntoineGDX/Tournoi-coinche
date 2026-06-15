@@ -182,6 +182,8 @@ declare
   req partner_requests%rowtype;
   to_team teams%rowtype;
   from_team teams%rowtype;
+  new_name text;
+  n int := 1;
 begin
   select * into req from partner_requests where id = request_id and status = 'pending';
   if req is null then
@@ -195,18 +197,24 @@ begin
 
   select * into from_team from teams where id = req.from_team_id;
 
+  loop
+    new_name := 'MIX ' || n;
+    exit when not exists (select 1 from teams where team_name = new_name);
+    n := n + 1;
+  end loop;
+
   update teams set
     registration_type = 'doublette',
     looking_for_partner = false,
     partner_team_id = from_team.id,
-    team_name = to_team.team_name
+    team_name = new_name
   where id = to_team.id;
 
   update teams set
     registration_type = 'doublette',
     looking_for_partner = false,
     partner_team_id = to_team.id,
-    team_name = to_team.team_name
+    team_name = new_name
   where id = from_team.id;
 
   update partner_requests set status = 'accepted' where id = request_id;
