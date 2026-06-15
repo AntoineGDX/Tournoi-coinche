@@ -45,6 +45,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('binome-cta').classList.remove('hidden');
   }
 
+  if (team.registration_type === 'doublette') {
+    document.getElementById('binome-unavailable-block').classList.remove('hidden');
+  }
+
   // Paramètres : nom de l'équipe
   const teamNameInput = document.getElementById('input-team-name');
   const saveTeamNameBtn = document.getElementById('save-team-name');
@@ -85,6 +89,37 @@ document.addEventListener('DOMContentLoaded', async () => {
       notifyStatus.textContent = 'Préférence enregistrée ✓';
       notifyStatus.className = 'fine ok';
     }
+  });
+
+  // Paramètres : binôme plus disponible → repasse en solo (recherche de binôme)
+  const becomeSoloBtn = document.getElementById('become-solo');
+  const becomeSoloStatus = document.getElementById('become-solo-status');
+
+  becomeSoloBtn.addEventListener('click', async () => {
+    if (!confirm("Confirmer : ton équipe repasse en solo (10€), les infos de ton binôme actuel sont retirées et tu apparais dans l'espace binôme. Continuer ?")) return;
+
+    becomeSoloBtn.disabled = true;
+    const { error } = await ccAuth.client.from('teams').update({
+      registration_type: 'solo',
+      looking_for_partner: true,
+      player2_name: null,
+      email2: null
+    }).eq('id', team.id);
+
+    if (error) {
+      becomeSoloStatus.classList.remove('hidden');
+      becomeSoloStatus.textContent = "Erreur lors de la mise à jour.";
+      becomeSoloStatus.className = 'fine err';
+      becomeSoloBtn.disabled = false;
+      return;
+    }
+
+    await ccAuth.client.from('partner_requests')
+      .update({ status: 'cancelled' })
+      .eq('status', 'pending')
+      .or(`from_team_id.eq.${team.id},to_team_id.eq.${team.id}`);
+
+    window.location.reload();
   });
 
   if (!isPaid) {

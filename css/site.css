@@ -236,7 +236,7 @@ footer li:hover{color:var(--cc-jaune)}
 .team-info dl{display:grid;grid-template-columns:160px 1fr;gap:10px 16px;margin-top:14px;font-size:15px}
 .team-info dt{font-family:var(--cc-ff-headline);font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.6;align-self:center}
 .team-info label{display:block;font-family:var(--cc-ff-headline);font-size:10px;text-transform:uppercase;letter-spacing:.18em;margin:14px 0 6px;color:var(--cc-noir);opacity:.6}
-.team-info input[type="text"],.team-info input:not([type]){padding:11px 14px;font-family:var(--cc-ff-body);font-size:15px;background:var(--cc-blanc);border:2.5px solid var(--cc-noir);color:var(--cc-noir);outline:none}
+.team-info input[type="text"],.team-info input[type="email"],.team-info input:not([type]){width:100%;padding:11px 14px;font-family:var(--cc-ff-body);font-size:15px;background:var(--cc-blanc);border:2.5px solid var(--cc-noir);color:var(--cc-noir);outline:none}
 .team-info input:focus{background:var(--cc-jaune);border-color:var(--cc-jaune)}
 .team-info .check-row label{color:var(--cc-noir);margin:0}
 .matches-list{margin-top:10px}

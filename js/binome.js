@@ -203,5 +203,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     await load();
   }
 
+  // "J'ai trouvé mon binôme moi-même" → passe directement en doublette
+  const foundPlayer2 = document.getElementById('found-player2');
+  const foundEmail2 = document.getElementById('found-email2');
+  const foundSubmit = document.getElementById('found-submit');
+  const foundStatus = document.getElementById('found-status');
+
+  foundSubmit.addEventListener('click', async () => {
+    const player2 = foundPlayer2.value.trim();
+    const email2 = foundEmail2.value.trim();
+    if (!player2) {
+      foundStatus.classList.remove('hidden');
+      foundStatus.textContent = 'Indique le nom de ton binôme.';
+      foundStatus.className = 'fine err';
+      return;
+    }
+
+    foundSubmit.disabled = true;
+    const { error } = await ccAuth.client.from('teams').update({
+      registration_type: 'doublette',
+      looking_for_partner: false,
+      player2_name: player2,
+      email2: email2 || null
+    }).eq('id', team.id);
+
+    if (error) {
+      foundStatus.classList.remove('hidden');
+      foundStatus.textContent = "Erreur lors de l'enregistrement.";
+      foundStatus.className = 'fine err';
+      foundSubmit.disabled = false;
+      return;
+    }
+
+    await ccAuth.client.from('partner_requests')
+      .update({ status: 'cancelled' })
+      .eq('status', 'pending')
+      .or(`from_team_id.eq.${team.id},to_team_id.eq.${team.id}`);
+
+    window.location.href = 'mon-equipe.html';
+  });
+
   await load();
 });
