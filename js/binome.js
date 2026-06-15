@@ -32,6 +32,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     return seeker.team_name || seeker.player1_name;
   }
 
+  // Présentation (bio) pour aider à trouver un binôme par affinité
+  const bioInput = document.getElementById('bio-input');
+  const bioSave = document.getElementById('bio-save');
+  const bioStatus = document.getElementById('bio-status');
+
+  bioInput.value = team.partner_bio || '';
+
+  bioSave.addEventListener('click', async () => {
+    bioSave.disabled = true;
+    const { error } = await ccAuth.client.from('teams').update({ partner_bio: bioInput.value.trim() }).eq('id', team.id);
+    bioStatus.classList.remove('hidden');
+    if (error) {
+      bioStatus.textContent = "Erreur lors de l'enregistrement.";
+      bioStatus.className = 'fine err';
+    } else {
+      team.partner_bio = bioInput.value.trim();
+      bioStatus.textContent = 'Présentation enregistrée ✓';
+      bioStatus.className = 'fine ok';
+    }
+    bioSave.disabled = false;
+  });
+
   async function load() {
     const [{ data: seekers, error: seekersError }, { data: requestsData, error: requestsError }] = await Promise.all([
       ccAuth.client.from('solo_seekers').select('*'),
@@ -129,6 +151,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         <div class="actions">
           <button class="btn sm" data-action="propose" data-id="${s.id}">PROPOSER LE BINÔME</button>
         </div>
+        ${s.partner_bio ? `<p class="bio">${s.partner_bio.replace(/</g, '&lt;')}</p>` : ''}
       </div>
     `).join('');
 

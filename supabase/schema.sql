@@ -17,6 +17,7 @@ create table teams (
   registration_type text not null default 'doublette' check (registration_type in ('solo','doublette')),
   looking_for_partner boolean not null default false,
   notify_binome_requests boolean not null default true,
+  partner_bio text,
   payment_status text not null default 'pending' check (payment_status in ('pending','paid')),
   partner_team_id uuid references teams(id) on delete set null,
   created_at timestamptz not null default now()
@@ -64,7 +65,7 @@ grant select on teams_public to anon, authenticated;
 -- Espace binôme : joueurs solo en recherche de binôme
 -- ============================================================
 create view solo_seekers as
-  select id, team_name, player1_name, created_at from teams
+  select id, team_name, player1_name, partner_bio, created_at from teams
   where registration_type = 'solo' and looking_for_partner = true;
 
 grant select on solo_seekers to authenticated;

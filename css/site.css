@@ -252,8 +252,10 @@ footer li:hover{color:var(--cc-jaune)}
 }
 .team-info dt{font-family:var(--cc-ff-headline);font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.6;align-self:center}
 .team-info label{display:block;font-family:var(--cc-ff-headline);font-size:10px;text-transform:uppercase;letter-spacing:.18em;margin:14px 0 6px;color:var(--cc-noir);opacity:.6}
-.team-info input[type="text"],.team-info input[type="email"],.team-info input:not([type]){width:100%;padding:11px 14px;font-family:var(--cc-ff-body);font-size:15px;background:var(--cc-blanc);border:2.5px solid var(--cc-noir);color:var(--cc-noir);outline:none}
-.team-info input:focus{background:var(--cc-jaune);border-color:var(--cc-jaune)}
+.team-info input[type="text"],.team-info input[type="email"],.team-info input:not([type]),.team-info textarea{width:100%;padding:11px 14px;font-family:var(--cc-ff-body);font-size:15px;background:var(--cc-blanc);border:2.5px solid var(--cc-noir);color:var(--cc-noir);outline:none;resize:vertical}
+.team-info input:focus,.team-info textarea:focus{background:var(--cc-jaune);border-color:var(--cc-jaune)}
+.binome-row{flex-wrap:wrap}
+.binome-row .bio{flex-basis:100%;font-family:var(--cc-ff-body);font-size:13px;opacity:.75;margin-top:4px}
 .team-info .check-row label{color:var(--cc-noir);margin:0}
 .matches-list{margin-top:10px}
 .binome-row{display:flex;justify-content:space-between;align-items:center;gap:14px;background:var(--cc-blanc-pur);border:2.5px solid var(--cc-noir);box-shadow:4px 4px 0 var(--cc-noir);padding:12px 16px;margin-bottom:10px}

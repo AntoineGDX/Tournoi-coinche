@@ -57,7 +57,16 @@
 
       <div id="binome-content" class="hidden">
 
-        <h3>Demandes reçues</h3>
+        <div class="team-info">
+          <span class="eyebrow">Pour t'aider à trouver un binôme par affinité</span>
+          <h3>Ta présentation</h3>
+          <p class="fine" style="opacity:.7">Âge, région, niveau, ambiance recherchée… ce que tu écris ici est visible par les autres joueur·euses solo dans la liste ci-dessous.</p>
+          <textarea id="bio-input" rows="3" placeholder="Ex : 28 ans, Nice, niveau intermédiaire, je cherche plutôt une ambiance détendue."></textarea>
+          <button class="btn sm" id="bio-save" style="margin-top:10px">ENREGISTRER MA PRÉSENTATION</button>
+          <p class="fine hidden" id="bio-status"></p>
+        </div>
+
+        <h3 style="margin-top:30px">Demandes reçues</h3>
         <div class="matches-list" id="received-list"></div>
         <p class="fine hidden" id="no-received">Aucune demande reçue pour le moment.</p>
 
