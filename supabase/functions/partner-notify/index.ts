@@ -17,7 +17,10 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const FROM_ADDRESS = "C'est Coinché <notifications@cestcoinche.fr>";
+// TODO: une fois un domaine vérifié sur Resend, remplacer par
+// "C'est Coinché <notifications@cestcoinche.fr>" (ou ton domaine).
+// "onboarding@resend.dev" ne peut envoyer que vers l'email du compte Resend.
+const FROM_ADDRESS = "C'est Coinché <onboarding@resend.dev>";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
