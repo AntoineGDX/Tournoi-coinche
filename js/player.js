@@ -14,15 +14,27 @@ document.addEventListener('DOMContentLoaded', () => {
     <button id="music-toggle" title="Lecture / Pause">▶</button>
     <button id="music-next" title="Piste suivante">»</button>
     <span class="track" id="music-track"></span>
+    <input type="range" id="music-volume" min="0" max="1" step="0.01" title="Volume">
   `;
   document.body.appendChild(player);
 
   const audio = new Audio();
-  audio.volume = 0.5;
   audio.loop = false;
 
   const toggleBtn = document.getElementById('music-toggle');
   const trackEl = document.getElementById('music-track');
+  const volumeSlider = document.getElementById('music-volume');
+
+  let volume = parseFloat(localStorage.getItem('cc-music-volume'));
+  if (isNaN(volume) || volume < 0 || volume > 1) volume = 0.15;
+  audio.volume = volume;
+  volumeSlider.value = volume;
+
+  volumeSlider.addEventListener('input', () => {
+    volume = parseFloat(volumeSlider.value);
+    audio.volume = volume;
+    localStorage.setItem('cc-music-volume', volume);
+  });
 
   let index = parseInt(localStorage.getItem('cc-music-track') || '0', 10);
   if (isNaN(index) || index < 0 || index >= PLAYLIST.length) index = 0;

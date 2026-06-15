@@ -298,6 +298,8 @@ footer li:hover{color:var(--cc-jaune)}
 .music-player button{background:var(--cc-jaune);color:var(--cc-noir);border:2px solid var(--cc-jaune);width:32px;height:32px;display:grid;place-items:center;cursor:pointer;font-size:13px;line-height:1;flex:none}
 .music-player button:hover{background:var(--cc-blanc)}
 .music-player .track{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.music-player input[type=range]{width:70px;accent-color:var(--cc-jaune);cursor:pointer;flex:none}
 @media (max-width:620px){
   .music-player .track{display:none}
+  .music-player input[type=range]{width:50px}
 }
