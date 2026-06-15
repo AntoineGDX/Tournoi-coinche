@@ -126,7 +126,7 @@ Deno.serve(async (req) => {
         fromTeam.email,
         "Ta demande de binôme a été acceptée — C'est Coinché !",
         `<p>Salut ${fromTeam.player1_name},</p>
-         <p><b>${toTeam.player1_name}</b> a accepté de faire équipe avec toi. Votre doublette est désormais enregistrée pour le tournoi.</p>
+         <p><b>${toTeam.player1_name}</b> a accepté de faire équipe avec toi. Votre doublette <b>${fromTeam.team_name}</b> est désormais enregistrée pour le tournoi.</p>
          <p><a href="https://antoinegdx.github.io/Tournoi-coinche/mon-equipe.html">Voir mon équipe →</a></p>`,
       );
     } else if (event === "request_declined" && fromTeam.notify_binome_requests) {
