@@ -52,11 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     : '<span class="badge pending">En attente</span>';
 
   if (isSolo) {
-    document.getElementById('team-player2').textContent = 'En recherche de binôme';
-    document.getElementById('team-email2-row').classList.add('hidden');
-    document.getElementById('team-email2').classList.add('hidden');
-    document.getElementById('team-partner-payment-row').classList.add('hidden');
-    document.getElementById('team-partner-payment').classList.add('hidden');
+    document.getElementById('player2-dl').classList.add('hidden');
     document.getElementById('binome-cta').classList.remove('hidden');
   } else {
     document.getElementById('team-player2').textContent = partner ? partner.player1_name : team.player2_name;
@@ -180,7 +176,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('pay-reminder').classList.remove('hidden');
   }
 
-  // Prochains matchs
+  // Prochains matchs — uniquement pour les doublettes complètes
+  if (isSolo) {
+    document.getElementById('next-matches').classList.add('hidden');
+    return;
+  }
+
   const { data: matches } = await ccAuth.client
     .from('matches')
     .select('*')
