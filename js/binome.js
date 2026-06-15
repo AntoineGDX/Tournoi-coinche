@@ -113,10 +113,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       const name = seeker ? displayName(seeker) : 'Joueur·euse';
       return `<div class="binome-row">
         <span class="name">${name}</span>
+        ${seeker && seeker.partner_level ? `<span class="badge info">${LEVEL_LABELS[seeker.partner_level]}</span>` : ''}
         <div class="actions">
           <button class="btn sm" data-action="accept" data-id="${r.id}">ACCEPTER</button>
           <button class="btn sm ghost" data-action="decline" data-id="${r.id}">REFUSER</button>
         </div>
+        ${seeker && seeker.partner_bio ? `<p class="bio">${seeker.partner_bio.replace(/</g, '&lt;')}</p>` : ''}
       </div>`;
     }).join('');
 
