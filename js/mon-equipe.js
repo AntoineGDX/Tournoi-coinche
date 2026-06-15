@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('player2-dl').classList.add('hidden');
     document.getElementById('binome-cta').classList.remove('hidden');
     document.getElementById('team-name-block').classList.add('hidden');
+    document.getElementById('settings-title').classList.add('hidden');
   } else {
     document.getElementById('team-player2').textContent = partner ? partner.player1_name : team.player2_name;
     document.getElementById('team-email2').textContent = partner ? partner.email : (team.email2 || '—');
