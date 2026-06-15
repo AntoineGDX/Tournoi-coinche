@@ -8,15 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const blockPlayer2 = document.getElementById('block-player2');
   const inputPlayer2 = document.getElementById('input-player2');
   const blockEmail2 = document.getElementById('block-email2');
-  const labelTeamname = document.getElementById('label-teamname');
+  const blockTeamname = document.getElementById('block-teamname');
   const inputTeamname = document.getElementById('input-teamname');
   const accountCheckRow = document.getElementById('account-check-row');
   const createAccountCheckbox = document.getElementById('create-account');
   const passwordBlock = document.getElementById('password-block');
   const inputPassword = document.getElementById('input-password');
   const soloNote = document.getElementById('solo-note');
-  const payAmount = document.getElementById('pay-amount');
-  const payDesc = document.getElementById('pay-desc');
   const noBinomeHint = document.getElementById('no-binome-hint');
 
   function currentType() {
@@ -39,21 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     blockEmail2.classList.toggle('hidden', isSolo);
 
+    blockTeamname.classList.toggle('hidden', isSolo);
     inputTeamname.required = !isSolo;
-    labelTeamname.textContent = isSolo ? 'NOM DE LA DOUBLETTE (FACULTATIF)' : 'NOM DE LA DOUBLETTE';
-    inputTeamname.placeholder = isSolo ? 'Facultatif — sera défini avec ton binôme' : 'Ex: Les coincheurs de Riquier';
 
     accountCheckRow.classList.toggle('hidden', isSolo);
     soloNote.classList.toggle('hidden', !isSolo);
     noBinomeHint.classList.toggle('hidden', isSolo);
-
-    if (isSolo) {
-      payAmount.textContent = '10€ · Paiement HelloAsso';
-      payDesc.textContent = "Une fois ton formulaire envoyé, règle ta part de 10€ via HelloAsso (paiement sécurisé, sans frais pour les participants). Quand tu auras trouvé ton binôme, les deux parts de 10€ formeront les 20€ de la doublette.";
-    } else {
-      payAmount.textContent = '20€ · Paiement HelloAsso';
-      payDesc.textContent = "Une fois ton formulaire envoyé, finalise ton inscription en réglant les 20€ de la doublette via HelloAsso (paiement sécurisé, sans frais pour les participants).";
-    }
 
     updatePasswordVisibility();
   }

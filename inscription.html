@@ -38,7 +38,7 @@
 <section class="page-hero">
   <span class="eyebrow">Inscription</span>
   <h1>Inscris ta<br>doublette.</h1>
-  <p>32 places. Remplis le formulaire ci-dessous, puis règle les 20€ via HelloAsso. On te confirme ta place par email.</p>
+  <p>32 places. Remplis le formulaire ci-dessous, puis finalise ton inscription sur la page de paiement. On te confirme ta place par email.</p>
 </section>
 
 <!-- ---- Inscription ---- -->
@@ -54,8 +54,10 @@
             <label for="regtype-solo">SOLO<br>je cherche un binôme<span class="price">10€</span></label>
           </div>
 
-          <label id="label-teamname">NOM DE LA DOUBLETTE</label>
-          <input required placeholder="Ex: Les coincheurs de Riquier" name="teamname" id="input-teamname">
+          <div id="block-teamname">
+            <label id="label-teamname">NOM DE LA DOUBLETTE</label>
+            <input required placeholder="Ex: Les coincheurs de Riquier" name="teamname" id="input-teamname">
+          </div>
 
           <div class="row" id="row-players">
             <div><label>JOUEUR 1</label><input required placeholder="Prénom Nom" name="player1"></div>
@@ -83,18 +85,14 @@
           <p class="solo-note hidden" id="solo-note">Un compte est nécessaire en solo : c'est lui qui te donne accès à l'espace de recherche de binôme, où tu pourras proposer ou accepter une association avec un·e autre joueur·euse solo.</p>
 
           <button class="submit" type="submit">VALIDER L'INSCRIPTION</button>
-          <p class="fine" id="inscription-status">Paiement via HelloAsso, voir ci-contre.</p>
+          <p class="fine" id="inscription-status">Tu seras redirigé·e vers la page de paiement une fois le formulaire validé.</p>
         </form>
       </div>
 
       <div>
-        <div class="pay-card">
-          <h3 id="pay-amount">20€ · Paiement HelloAsso</h3>
-          <p id="pay-desc">Une fois ton formulaire envoyé, finalise ton inscription en réglant les 20€ de la doublette via HelloAsso (paiement sécurisé, sans frais pour les participants).</p>
-          <a class="btn lg" href="https://www.helloasso.com/" target="_blank" rel="noopener">PAYER SUR HELLOASSO →</a>
-          <p class="fine" style="margin-top:14px;color:var(--cc-blanc);opacity:.6">Lien à mettre à jour par l'organisateur avec la page de campagne HelloAsso.</p>
-        </div>
-        <p style="margin-top:24px;max-width:420px">Le tarif couvre les deux jours, l'accès buvette à prix potes, et une coinche carte imprimée numérotée pour ta doublette.</p>
+        <h3>Comment ça marche ?</h3>
+        <p style="margin-top:14px;max-width:420px">Une fois ton formulaire envoyé, tu seras redirigé·e vers une page de paiement (10€ en solo, 20€ en doublette) via HelloAsso, paiement sécurisé sans frais pour les participants.</p>
+        <p style="margin-top:14px;max-width:420px">Le tarif couvre les deux jours, l'accès buvette à prix potes, et une coinche carte imprimée numérotée pour ta doublette.</p>
         <p style="margin-top:14px;max-width:420px" id="no-binome-hint">T'as pas de binôme ? Choisis "SOLO" ci-contre : tu pourras en trouver un dans l'espace de recherche de binôme une fois ton compte créé.</p>
       </div>
     </div>
