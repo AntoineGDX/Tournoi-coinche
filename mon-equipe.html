@@ -83,14 +83,16 @@
           <span class="eyebrow">Paramètres</span>
           <h3>Mon équipe</h3>
 
-          <label for="input-team-name">NOM DE L'ÉQUIPE</label>
-          <div style="display:flex;gap:10px;margin-top:6px;align-items:center">
-            <span id="team-name-display" style="flex:1"></span>
-            <input id="input-team-name" class="hidden" style="flex:1">
-            <button class="btn sm" id="edit-team-name">MODIFIER</button>
-            <button class="btn sm hidden" id="save-team-name">ENREGISTRER</button>
+          <div id="team-name-block">
+            <label for="input-team-name">NOM DE L'ÉQUIPE</label>
+            <div style="display:flex;gap:10px;margin-top:6px;align-items:center">
+              <span id="team-name-display" style="flex:1"></span>
+              <input id="input-team-name" class="hidden" style="flex:1">
+              <button class="btn sm" id="edit-team-name">MODIFIER</button>
+              <button class="btn sm hidden" id="save-team-name">ENREGISTRER</button>
+            </div>
+            <p class="fine hidden" id="team-name-status"></p>
           </div>
-          <p class="fine hidden" id="team-name-status"></p>
 
           <div class="check-row" style="margin-top:20px">
             <input type="checkbox" id="notify-binome">
