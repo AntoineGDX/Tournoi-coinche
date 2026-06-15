@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Équipes inscrites — C'est Coinché !</title>
-<meta name="description" content="Liste des doublettes inscrites au tournoi C'est Coinché ! au 109 à Nice.">
+<title>Politique de confidentialité (RGPD) — C'est Coinché !</title>
+<meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/site.css">
@@ -22,6 +22,7 @@
       <a href="index.html#program">Programme</a>
       <a href="equipes.html">Équipes</a>
       <a href="index.html#info">Infos</a>
+      <a href="index.html#shop">Shop</a>
       <a href="index.html#faq">FAQ</a>
     </div>
     <div class="nav-auth" style="display:flex;gap:10px">
@@ -35,18 +36,42 @@
 
 <!-- ---- Page hero ---- -->
 <section class="page-hero">
-  <span class="eyebrow">Inscriptions</span>
-  <h1>Les doublettes<br>inscrites.</h1>
-  <p>La liste se met à jour au fil des inscriptions. T'es inscrit·e et tu ne te vois pas encore ? Laisse-nous quelques heures pour mettre à jour la page.</p>
+  <span class="eyebrow">Informations légales</span>
+  <h1>Données<br>personnelles.</h1>
+  <p>Ce que nous collectons, pourquoi, et comment exercer tes droits.</p>
 </section>
 
-<!-- ---- Équipes ---- -->
-<section class="teams">
-  <div class="wrap">
-    <p class="teams-count" id="teams-count"></p>
-    <ul class="teams-list" id="teams-list"></ul>
-    <p class="teams-empty hidden" id="teams-empty">Pas encore d'équipe inscrite — sois la première doublette de la liste !</p>
-    <p style="text-align:center;margin-top:30px"><a href="arbre.html">→ Voir l'arbre du tournoi</a></p>
+<!-- ---- Article ---- -->
+<section class="rules" style="background:var(--cc-blanc)">
+  <div class="wrap article">
+
+    <div class="callout">
+      <p><b>À compléter :</b> ce texte décrit le traitement de données tel qu'implémenté sur le site (compte joueur, inscriptions, espace binôme). À adapter si de nouveaux traitements sont ajoutés (newsletter, paiement direct, etc.).</p>
+    </div>
+
+    <h3>1. Données collectées</h3>
+    <p>Lors de la création d'un compte et de l'inscription au tournoi, nous collectons : nom du ou des joueur·euses, adresse(s) email, nom d'équipe, statut de paiement, et préférences de notification.</p>
+
+    <h3>2. Finalité du traitement</h3>
+    <ul>
+      <li>Gérer les inscriptions et le suivi des paiements au tournoi.</li>
+      <li>Permettre l'organisation des doublettes (espace binôme) et l'envoi de notifications par email liées à ces demandes.</li>
+      <li>Afficher la liste des équipes inscrites et l'arbre du tournoi.</li>
+      <li>Communiquer des informations pratiques liées au tournoi.</li>
+    </ul>
+
+    <h3>3. Hébergement et sous-traitants</h3>
+    <p>Les données sont stockées via <b>Supabase</b> (base de données et authentification). Les emails de notification sont envoyés via <b>Resend</b>. Le site est hébergé sur <b>GitHub Pages</b>. Les paiements sont traités par <b>HelloAsso</b>, qui dispose de sa propre politique de confidentialité.</p>
+
+    <h3>4. Durée de conservation</h3>
+    <p>Les données sont conservées le temps nécessaire à l'organisation du tournoi et au suivi administratif, puis supprimées sur demande ou dans un délai raisonnable après l'événement.</p>
+
+    <h3>5. Tes droits</h3>
+    <p>Conformément au RGPD, tu disposes d'un droit d'accès, de rectification, d'effacement et d'opposition concernant tes données personnelles. Pour exercer ces droits, écris-nous à <a href="mailto:antoine.goudinoux37@gmail.com">antoine.goudinoux37@gmail.com</a>.</p>
+
+    <h3>6. Cookies</h3>
+    <p>Le site utilise uniquement les cookies/stockage local nécessaires au fonctionnement du compte joueur (session d'authentification). Aucun cookie publicitaire ou de tracking tiers n'est utilisé.</p>
+
   </div>
 </section>
 
@@ -94,6 +119,5 @@
 <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/auth.js"></script>
-<script src="js/teams.js"></script>
 </body>
 </html>

@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Équipes inscrites — C'est Coinché !</title>
-<meta name="description" content="Liste des doublettes inscrites au tournoi C'est Coinché ! au 109 à Nice.">
+<title>CGV — C'est Coinché !</title>
+<meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/site.css">
@@ -22,6 +22,7 @@
       <a href="index.html#program">Programme</a>
       <a href="equipes.html">Équipes</a>
       <a href="index.html#info">Infos</a>
+      <a href="index.html#shop">Shop</a>
       <a href="index.html#faq">FAQ</a>
     </div>
     <div class="nav-auth" style="display:flex;gap:10px">
@@ -35,18 +36,45 @@
 
 <!-- ---- Page hero ---- -->
 <section class="page-hero">
-  <span class="eyebrow">Inscriptions</span>
-  <h1>Les doublettes<br>inscrites.</h1>
-  <p>La liste se met à jour au fil des inscriptions. T'es inscrit·e et tu ne te vois pas encore ? Laisse-nous quelques heures pour mettre à jour la page.</p>
+  <span class="eyebrow">Informations légales</span>
+  <h1>Conditions<br>générales de vente.</h1>
+  <p>Inscriptions au tournoi, paiement et politique d'annulation.</p>
 </section>
 
-<!-- ---- Équipes ---- -->
-<section class="teams">
-  <div class="wrap">
-    <p class="teams-count" id="teams-count"></p>
-    <ul class="teams-list" id="teams-list"></ul>
-    <p class="teams-empty hidden" id="teams-empty">Pas encore d'équipe inscrite — sois la première doublette de la liste !</p>
-    <p style="text-align:center;margin-top:30px"><a href="arbre.html">→ Voir l'arbre du tournoi</a></p>
+<!-- ---- Article ---- -->
+<section class="rules" style="background:var(--cc-blanc)">
+  <div class="wrap article">
+
+    <div class="callout">
+      <p><b>À compléter :</b> ces conditions sont un point de départ et doivent être adaptées au statut réel de l'organisateur (particulier, association ou auto-entrepreneur) et relues avant publication finale.</p>
+    </div>
+
+    <h3>1. Objet</h3>
+    <p>Les présentes conditions générales de vente régissent les inscriptions au tournoi de coinche « C'est Coinché ! » organisé au 109, à Nice, ainsi que les commandes de produits associés (t-shirts).</p>
+
+    <h3>2. Inscription au tournoi</h3>
+    <ul>
+      <li>L'inscription se fait en ligne via le formulaire d'inscription du site, en solo (10€) ou en doublette (20€).</li>
+      <li>L'inscription n'est définitive qu'après réception du paiement via HelloAsso.</li>
+      <li>Le tarif couvre la participation au tournoi, l'accès buvette à prix réduit et une carte de coinche numérotée par doublette.</li>
+    </ul>
+
+    <h3>3. Paiement</h3>
+    <p>Le paiement est géré par la plateforme tierce <b>HelloAsso</b>, qui propose un paiement sécurisé sans frais obligatoires pour le participant. C'est Coinché ! ne stocke aucune donnée bancaire.</p>
+
+    <h3>4. Annulation et remboursement</h3>
+    <ul>
+      <li>En cas d'annulation du tournoi par l'organisateur, les inscriptions seront intégralement remboursées.</li>
+      <li>En cas de désistement d'un participant, contacter l'organisateur par email — le remboursement est étudié au cas par cas selon le délai avant l'événement.</li>
+    </ul>
+
+    <h3>5. Produits (t-shirts)</h3>
+    <p>Les visuels présentés dans la section « Shop » sont indicatifs. Les modalités de commande, de paiement et de retrait/livraison seront précisées avant l'ouverture des commandes.</p>
+
+    <div class="callout">
+      <p>Une question sur une inscription ou un paiement ? Écris-nous à <a href="mailto:antoine.goudinoux37@gmail.com">antoine.goudinoux37@gmail.com</a>.</p>
+    </div>
+
   </div>
 </section>
 
@@ -94,6 +122,5 @@
 <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/auth.js"></script>
-<script src="js/teams.js"></script>
 </body>
 </html>

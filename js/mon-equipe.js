@@ -78,10 +78,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Paramètres : nom de l'équipe
+  const teamNameDisplay = document.getElementById('team-name-display');
   const teamNameInput = document.getElementById('input-team-name');
+  const editTeamNameBtn = document.getElementById('edit-team-name');
   const saveTeamNameBtn = document.getElementById('save-team-name');
   const teamNameStatus = document.getElementById('team-name-status');
+  teamNameDisplay.textContent = team.team_name;
   teamNameInput.value = team.team_name;
+
+  editTeamNameBtn.addEventListener('click', () => {
+    teamNameInput.value = team.team_name;
+    teamNameDisplay.classList.add('hidden');
+    editTeamNameBtn.classList.add('hidden');
+    teamNameInput.classList.remove('hidden');
+    saveTeamNameBtn.classList.remove('hidden');
+  });
 
   saveTeamNameBtn.addEventListener('click', async () => {
     const newName = teamNameInput.value.trim();
@@ -95,6 +106,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
       team.team_name = newName;
       document.getElementById('team-name').textContent = newName;
+      teamNameDisplay.textContent = newName;
+      teamNameInput.classList.add('hidden');
+      saveTeamNameBtn.classList.add('hidden');
+      teamNameDisplay.classList.remove('hidden');
+      editTeamNameBtn.classList.remove('hidden');
       teamNameStatus.textContent = 'Nom enregistré ✓';
       teamNameStatus.className = 'fine ok';
     }

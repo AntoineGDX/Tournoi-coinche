@@ -74,9 +74,11 @@
           <h3>Mon équipe</h3>
 
           <label for="input-team-name">NOM DE L'ÉQUIPE</label>
-          <div style="display:flex;gap:10px;margin-top:6px">
-            <input id="input-team-name" style="flex:1">
-            <button class="btn sm" id="save-team-name">ENREGISTRER</button>
+          <div style="display:flex;gap:10px;margin-top:6px;align-items:center">
+            <span id="team-name-display" style="flex:1"></span>
+            <input id="input-team-name" class="hidden" style="flex:1">
+            <button class="btn sm" id="edit-team-name">MODIFIER</button>
+            <button class="btn sm hidden" id="save-team-name">ENREGISTRER</button>
           </div>
           <p class="fine hidden" id="team-name-status"></p>
 
@@ -145,16 +147,14 @@
     <div>
       <h4>Contact</h4>
       <ul>
-        <li>@cestcoinche</li>
         <li><a href="mailto:antoine.goudinoux37@gmail.com">hello@cestcoinche.fr</a></li>
-        <li>Discord</li>
         <li><a href="mailto:antoine.goudinoux37@gmail.com?subject=Presse%20-%20C%27est%20Coinch%C3%A9">Presse</a></li>
       </ul>
     </div>
   </div>
   <div class="foot-legal">
     <span>© 2026 C'est Coinché · Nice</span>
-    <span>Mentions légales · CGV · RGPD</span>
+    <span><a href="mentions-legales.html">Mentions légales</a> · <a href="cgv.html">CGV</a> · <a href="rgpd.html">RGPD</a></span>
   </div>
 </footer>
 

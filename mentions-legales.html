@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Équipes inscrites — C'est Coinché !</title>
-<meta name="description" content="Liste des doublettes inscrites au tournoi C'est Coinché ! au 109 à Nice.">
+<title>Mentions légales — C'est Coinché !</title>
+<meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/site.css">
@@ -22,6 +22,7 @@
       <a href="index.html#program">Programme</a>
       <a href="equipes.html">Équipes</a>
       <a href="index.html#info">Infos</a>
+      <a href="index.html#shop">Shop</a>
       <a href="index.html#faq">FAQ</a>
     </div>
     <div class="nav-auth" style="display:flex;gap:10px">
@@ -35,18 +36,36 @@
 
 <!-- ---- Page hero ---- -->
 <section class="page-hero">
-  <span class="eyebrow">Inscriptions</span>
-  <h1>Les doublettes<br>inscrites.</h1>
-  <p>La liste se met à jour au fil des inscriptions. T'es inscrit·e et tu ne te vois pas encore ? Laisse-nous quelques heures pour mettre à jour la page.</p>
+  <span class="eyebrow">Informations légales</span>
+  <h1>Mentions<br>légales.</h1>
+  <p>Identité de l'éditeur du site et conditions d'utilisation.</p>
 </section>
 
-<!-- ---- Équipes ---- -->
-<section class="teams">
-  <div class="wrap">
-    <p class="teams-count" id="teams-count"></p>
-    <ul class="teams-list" id="teams-list"></ul>
-    <p class="teams-empty hidden" id="teams-empty">Pas encore d'équipe inscrite — sois la première doublette de la liste !</p>
-    <p style="text-align:center;margin-top:30px"><a href="arbre.html">→ Voir l'arbre du tournoi</a></p>
+<!-- ---- Article ---- -->
+<section class="rules" style="background:var(--cc-blanc)">
+  <div class="wrap article">
+
+    <div class="callout">
+      <p><b>À compléter :</b> les informations ci-dessous sont des exemples à remplacer par les coordonnées réelles de l'organisateur (statut — particulier, association ou auto-entrepreneur — nom, adresse, numéro de déclaration ou SIRET le cas échéant).</p>
+    </div>
+
+    <h3>1. Éditeur du site</h3>
+    <p>Le site « C'est Coinché ! » est édité par : <b>[Nom / raison sociale à compléter]</b>, <b>[adresse à compléter]</b>, <b>[email de contact : antoine.goudinoux37@gmail.com]</b>.</p>
+
+    <h3>2. Hébergement</h3>
+    <p>Le site est hébergé par <b>GitHub, Inc.</b> (GitHub Pages), 88 Colin P Kelly Jr St, San Francisco, CA 94107, États-Unis.</p>
+    <p>La base de données et les fonctions associées au compte joueur sont hébergées par <b>Supabase Inc.</b> (970 Toa Payoh North #07-04, Singapore 318992).</p>
+
+    <h3>3. Propriété intellectuelle</h3>
+    <p>L'ensemble des contenus présents sur ce site (textes, visuels, logo, charte graphique) est la propriété de l'organisateur du tournoi « C'est Coinché ! », sauf mention contraire. Toute reproduction sans autorisation est interdite.</p>
+
+    <h3>4. Responsabilité</h3>
+    <p>L'organisateur s'efforce de fournir des informations aussi précises que possible, mais ne peut être tenu responsable des erreurs, omissions ou indisponibilités du site.</p>
+
+    <div class="callout">
+      <p>Une question sur ces mentions ? Écris-nous à <a href="mailto:antoine.goudinoux37@gmail.com">antoine.goudinoux37@gmail.com</a>.</p>
+    </div>
+
   </div>
 </section>
 
@@ -94,6 +113,5 @@
 <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/auth.js"></script>
-<script src="js/teams.js"></script>
 </body>
 </html>

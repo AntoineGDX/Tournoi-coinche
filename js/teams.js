@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const countEl = document.getElementById('teams-count');
   const listEl = document.getElementById('teams-list');
   const emptyEl = document.getElementById('teams-empty');
-  const maxTeams = 32;
 
   try {
     const { data: allTeams, error } = await ccAuth.client
@@ -19,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const doublettes = teams.filter(t => !(t.registration_type === 'solo' && t.looking_for_partner));
     const seekers = teams.filter(t => t.registration_type === 'solo' && t.looking_for_partner);
 
-    countEl.innerHTML = `<b>${doublettes.length}</b> / ${maxTeams} doublettes inscrites`
+    countEl.innerHTML = `<b>${doublettes.length}</b> doublette${doublettes.length > 1 ? 's' : ''} inscrite${doublettes.length > 1 ? 's' : ''}`
       + (seekers.length > 0 ? ` · <b>${seekers.length}</b> joueur·euse${seekers.length > 1 ? 's' : ''} solo en recherche de binôme` : '');
 
     // Les joueur·euses solo en recherche de binôme n'ont pas de nom d'équipe
