@@ -8,12 +8,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const { data: teams, error } = await ccAuth.client
       .from('teams_public')
-      .select('team_name')
+      .select('team_name, registration_type, looking_for_partner')
       .order('created_at');
 
     if (error) throw error;
 
-    countEl.innerHTML = `<b>${teams.length}</b> / ${maxTeams} doublettes inscrites`;
+    const doublettes = teams.filter(t => !(t.registration_type === 'solo' && t.looking_for_partner));
+    const seekers = teams.filter(t => t.registration_type === 'solo' && t.looking_for_partner);
+
+    countEl.innerHTML = `<b>${doublettes.length}</b> / ${maxTeams} doublettes inscrites`
+      + (seekers.length > 0 ? ` · <b>${seekers.length}</b> joueur·euse${seekers.length > 1 ? 's' : ''} solo en recherche de binôme` : '');
 
     if (teams.length === 0) {
       emptyEl.classList.remove('hidden');
@@ -21,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     listEl.innerHTML = teams.map((t, i) => `
-      <li><span class="num">${String(i + 1).padStart(2, '0')}</span><span>${t.team_name}</span></li>
+      <li><span class="num">${String(i + 1).padStart(2, '0')}</span><span>${t.team_name}</span>${t.registration_type === 'solo' && t.looking_for_partner ? '<span class="badge info" style="margin-left:10px">Cherche un binôme</span>' : ''}</li>
     `).join('');
   } catch (err) {
     countEl.textContent = '';

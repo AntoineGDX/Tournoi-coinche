@@ -47,37 +47,55 @@
     <div class="inscription-grid">
       <div>
         <form class="signup-form" id="inscription-form">
-          <label>NOM DE LA DOUBLETTE</label>
-          <input required placeholder="Ex: Les coincheurs de Riquier" name="teamname">
+          <div class="type-toggle">
+            <input type="radio" name="regtype" id="regtype-doublette" value="doublette" checked>
+            <label for="regtype-doublette">DOUBLETTE<br>j'ai mon binôme<span class="price">20€</span></label>
+            <input type="radio" name="regtype" id="regtype-solo" value="solo">
+            <label for="regtype-solo">SOLO<br>je cherche un binôme<span class="price">10€</span></label>
+          </div>
 
-          <div class="row">
+          <label id="label-teamname">NOM DE LA DOUBLETTE</label>
+          <input required placeholder="Ex: Les coincheurs de Riquier" name="teamname" id="input-teamname">
+
+          <div class="row" id="row-players">
             <div><label>JOUEUR 1</label><input required placeholder="Prénom Nom" name="player1"></div>
-            <div><label>JOUEUR 2</label><input required placeholder="Prénom Nom" name="player2"></div>
+            <div id="block-player2"><label>JOUEUR 2</label><input required placeholder="Prénom Nom" name="player2" id="input-player2"></div>
           </div>
 
           <label>EMAIL DE CONTACT</label>
           <input required type="email" placeholder="toi@email.fr" name="email">
 
-          <label>EMAIL SECONDAIRE (FACULTATIF)</label>
-          <input type="email" placeholder="ton.binome@email.fr" name="email2">
+          <div id="block-email2">
+            <label>EMAIL SECONDAIRE (FACULTATIF)</label>
+            <input type="email" placeholder="ton.binome@email.fr" name="email2">
+          </div>
 
-          <label>MOT DE PASSE DU COMPTE</label>
-          <input required type="password" placeholder="8 caractères minimum" name="password" minlength="8">
+          <div class="check-row" id="account-check-row">
+            <input type="checkbox" id="create-account" name="create_account" checked>
+            <label for="create-account">Créer un compte pour suivre mon inscription et mes matchs</label>
+          </div>
+
+          <div id="password-block">
+            <label>MOT DE PASSE DU COMPTE</label>
+            <input type="password" placeholder="8 caractères minimum" name="password" minlength="8" id="input-password">
+          </div>
+
+          <p class="solo-note hidden" id="solo-note">Un compte est nécessaire en solo : c'est lui qui te donne accès à l'espace de recherche de binôme, où tu pourras proposer ou accepter une association avec un·e autre joueur·euse solo.</p>
 
           <button class="submit" type="submit">VALIDER L'INSCRIPTION</button>
-          <p class="fine" id="inscription-status">Crée un compte pour suivre ton inscription et tes matchs. Paiement des 20€ via HelloAsso, voir ci-contre.</p>
+          <p class="fine" id="inscription-status">Paiement via HelloAsso, voir ci-contre.</p>
         </form>
       </div>
 
       <div>
         <div class="pay-card">
-          <h3>20€ · Paiement HelloAsso</h3>
-          <p>Une fois ton formulaire envoyé, finalise ton inscription en réglant les 20€ de la doublette via HelloAsso (paiement sécurisé, sans frais pour les participants).</p>
+          <h3 id="pay-amount">20€ · Paiement HelloAsso</h3>
+          <p id="pay-desc">Une fois ton formulaire envoyé, finalise ton inscription en réglant les 20€ de la doublette via HelloAsso (paiement sécurisé, sans frais pour les participants).</p>
           <a class="btn lg" href="https://www.helloasso.com/" target="_blank" rel="noopener">PAYER SUR HELLOASSO →</a>
           <p class="fine" style="margin-top:14px;color:var(--cc-blanc);opacity:.6">Lien à mettre à jour par l'organisateur avec la page de campagne HelloAsso.</p>
         </div>
         <p style="margin-top:24px;max-width:420px">Le tarif couvre les deux jours, l'accès buvette à prix potes, et une coinche carte imprimée numérotée pour ta doublette.</p>
-        <p style="margin-top:14px;max-width:420px">T'as pas de binôme ? Écris-nous à <a href="mailto:antoine.goudinoux37@gmail.com">antoine.goudinoux37@gmail.com</a>, on t'en trouve un.</p>
+        <p style="margin-top:14px;max-width:420px" id="no-binome-hint">T'as pas de binôme ? Choisis "SOLO" ci-contre : tu pourras en trouver un dans l'espace de recherche de binôme une fois ton compte créé.</p>
       </div>
     </div>
   </div>

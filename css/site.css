@@ -102,9 +102,20 @@ form label{display:block;font-family:var(--cc-ff-headline);font-size:10px;text-t
 form input{width:100%;padding:11px 14px;font-family:var(--cc-ff-body);font-size:15px;background:var(--cc-blanc);border:2.5px solid var(--cc-blanc);color:var(--cc-noir);outline:none}
 form input:focus{background:var(--cc-jaune);border-color:var(--cc-jaune)}
 form .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+form .row.solo{grid-template-columns:1fr}
 form .submit{margin-top:22px;width:100%;background:var(--cc-jaune);color:var(--cc-noir);padding:16px;font-family:var(--cc-ff-headline);font-size:14px;letter-spacing:.12em;text-transform:uppercase;border:2.5px solid var(--cc-jaune);cursor:pointer}
 form .submit:hover{background:var(--cc-blanc);border-color:var(--cc-blanc)}
 form .fine{font-size:11px;opacity:.6;margin-top:10px;font-family:'Archivo Black';letter-spacing:.15em;text-transform:uppercase}
+.type-toggle{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}
+.type-toggle input{position:absolute;opacity:0;pointer-events:none}
+.type-toggle label{display:block;margin:0;padding:14px;text-align:center;font-family:var(--cc-ff-headline);font-size:12px;letter-spacing:.1em;text-transform:none;color:var(--cc-blanc);background:transparent;border:2.5px solid var(--cc-blanc);cursor:pointer;transition:background 120ms var(--cc-ease-snap),color 120ms var(--cc-ease-snap)}
+.type-toggle label .price{display:block;font-family:var(--cc-ff-display);font-size:22px;margin-top:4px}
+.type-toggle input:checked + label{background:var(--cc-jaune);color:var(--cc-noir);border-color:var(--cc-jaune)}
+.check-row{display:flex;align-items:flex-start;gap:10px;margin:18px 0 0}
+.check-row input{width:auto;margin:3px 0 0;accent-color:var(--cc-jaune)}
+.check-row label{margin:0;color:var(--cc-blanc);font-family:var(--cc-ff-body);font-size:13px;text-transform:none;letter-spacing:normal}
+.solo-note{font-size:13px;line-height:1.5;color:var(--cc-blanc);opacity:.85;margin:18px 0 0;padding:12px 14px;border:2px solid var(--cc-jaune)}
+.badge.info{background:var(--cc-blanc);color:var(--cc-noir)}
 .success{background:var(--cc-jaune);color:var(--cc-noir);padding:30px;border:2.5px solid var(--cc-noir);box-shadow:8px 8px 0 var(--cc-rouge)}
 .success h3{font-family:var(--cc-ff-display);font-size:56px;line-height:.9;text-transform:uppercase;margin:0 0 10px}
 .success .num{font-family:'Anton';font-size:28px}
@@ -225,6 +236,9 @@ footer li:hover{color:var(--cc-jaune)}
 .team-info dl{display:grid;grid-template-columns:160px 1fr;gap:10px 16px;margin-top:14px;font-size:15px}
 .team-info dt{font-family:var(--cc-ff-headline);font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.6;align-self:center}
 .matches-list{margin-top:10px}
+.binome-row{display:flex;justify-content:space-between;align-items:center;gap:14px;background:var(--cc-blanc-pur);border:2.5px solid var(--cc-noir);box-shadow:4px 4px 0 var(--cc-noir);padding:12px 16px;margin-bottom:10px}
+.binome-row .name{font-family:var(--cc-ff-body);font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.binome-row .actions{display:flex;gap:8px;flex-shrink:0}
 
 /* ---- Admin page ---- */
 .admin{background:var(--cc-blanc)}
@@ -245,9 +259,11 @@ footer li:hover{color:var(--cc-jaune)}
 .admin-status{font-family:var(--cc-ff-headline);font-size:13px;text-transform:uppercase;letter-spacing:.1em}
 .admin-status.ok{color:var(--cc-vert)}
 .admin-status.err{color:var(--cc-rouge)}
+.fine.ok{color:var(--cc-vert);opacity:1}
+.fine.err{color:var(--cc-rouge);opacity:1}
 
 .admin-teams{margin-top:16px}
-.admin-team-row{display:grid;grid-template-columns:1fr 140px 160px;gap:10px;align-items:center;border:2px solid var(--cc-noir);padding:10px 14px;margin-bottom:8px;background:var(--cc-blanc-pur);font-size:14px}
+.admin-team-row{display:grid;grid-template-columns:1fr 110px 140px 160px;gap:10px;align-items:center;border:2px solid var(--cc-noir);padding:10px 14px;margin-bottom:8px;background:var(--cc-blanc-pur);font-size:14px}
 .admin-team-row .name{font-family:var(--cc-ff-headline);text-transform:uppercase;letter-spacing:.05em}
 .admin-team-row .btn{padding:8px 14px;font-size:11px;width:auto}
 

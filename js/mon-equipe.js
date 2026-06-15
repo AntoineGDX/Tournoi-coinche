@@ -25,19 +25,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   teamContent.classList.remove('hidden');
 
+  const isSolo = team.registration_type === 'solo' && team.looking_for_partner;
+
   document.getElementById('team-name').textContent = team.team_name;
   document.getElementById('team-player1').textContent = team.player1_name;
-  document.getElementById('team-player2').textContent = team.player2_name;
+  document.getElementById('team-player2').textContent = isSolo ? 'En recherche de binôme' : team.player2_name;
   document.getElementById('team-email').textContent = team.email;
   document.getElementById('team-email2').textContent = team.email2 || '—';
 
   const isPaid = team.payment_status === 'paid';
-  document.getElementById('team-status-label').textContent = isPaid ? 'Inscription confirmée' : 'Inscription en attente de paiement';
+  let statusLabel = isPaid ? 'Inscription confirmée' : 'Inscription en attente de paiement';
+  if (isSolo) statusLabel = 'Solo · en recherche de binôme' + (isPaid ? '' : ' · paiement en attente');
+  document.getElementById('team-status-label').textContent = statusLabel;
   document.getElementById('team-payment').innerHTML = isPaid
     ? '<span class="badge paid">Payé</span>'
     : '<span class="badge pending">En attente</span>';
 
+  if (isSolo) {
+    document.getElementById('binome-cta').classList.remove('hidden');
+  }
+
   if (!isPaid) {
+    const amount = team.registration_type === 'solo' ? '10€' : '20€';
+    document.getElementById('pay-reminder-text').textContent =
+      `Ton inscription est enregistrée mais le paiement des ${amount} n'a pas encore été confirmé. Règle-le via HelloAsso si tu ne l'as pas encore fait.`;
     document.getElementById('pay-reminder').classList.remove('hidden');
   }
 

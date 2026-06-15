@@ -2,8 +2,8 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>Merci ! — C'est Coinché !</title>
-<meta name="description" content="Ton inscription au tournoi C'est Coinché ! a bien été reçue.">
+<title>Espace binôme — C'est Coinché !</title>
+<meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/site.css">
@@ -22,7 +22,6 @@
       <a href="index.html#program">Programme</a>
       <a href="equipes.html">Équipes</a>
       <a href="index.html#info">Infos</a>
-      <a href="index.html#shop">Shop</a>
       <a href="index.html#faq">FAQ</a>
     </div>
     <div class="nav-auth" style="display:flex;gap:10px">
@@ -36,33 +35,44 @@
 
 <!-- ---- Page hero ---- -->
 <section class="page-hero">
-  <span class="eyebrow">Inscription envoyée</span>
-  <h1>C'est dans<br>la poche.</h1>
-  <p>Ton formulaire d'inscription a bien été reçu. Il ne reste plus qu'à finaliser le paiement.</p>
+  <span class="eyebrow">Espace binôme</span>
+  <h1>Trouve ton<br>binôme.</h1>
+  <p>Propose une association à un·e autre joueur·euse solo, ou réponds aux demandes que tu as reçues.</p>
 </section>
 
-<!-- ---- Merci ---- -->
-<section class="merci">
+<!-- ---- Espace binôme ---- -->
+<section class="inscription">
   <div class="wrap">
-    <div class="success">
-      <h3>Merci !</h3>
-      <p style="font-size:16px;margin-top:6px" id="merci-intro">On a bien reçu les infos de ton inscription. Tu vas recevoir un email de confirmation à l'adresse indiquée.</p>
-      <p style="font-size:16px;margin-top:10px" id="merci-payment"><b>Dernière étape :</b> règle les 20€ de la doublette via HelloAsso pour valider définitivement ta place.</p>
-      <a class="btn lg" href="https://www.helloasso.com/" target="_blank" rel="noopener" style="margin-top:18px">PAYER SUR HELLOASSO →</a>
-      <p class="fine hidden" id="merci-binome" style="margin-top:18px;color:var(--cc-noir)">Une fois ton compte créé, rends-toi sur <a href="binome.html" style="color:var(--cc-noir)">l'espace binôme</a> pour trouver ton binôme.</p>
-    </div>
-    <p style="margin-top:30px"><a href="index.html">← Retour à l'accueil</a></p>
+    <div style="max-width:680px;margin:0 auto">
 
-    <script>
-      (function () {
-        const type = new URLSearchParams(window.location.search).get('type');
-        if (type === 'solo') {
-          document.getElementById('merci-intro').textContent = "On a bien reçu les infos de ton inscription solo. Tu vas recevoir un email de confirmation à l'adresse indiquée.";
-          document.getElementById('merci-payment').innerHTML = '<b>Dernière étape :</b> règle ta part de 10€ via HelloAsso pour valider ta place.';
-          document.getElementById('merci-binome').classList.remove('hidden');
-        }
-      })();
-    </script>
+      <p id="loading" class="fine">Chargement…</p>
+
+      <div id="not-solo" class="hidden">
+        <div class="pay-card">
+          <h3>Tu as déjà ton binôme</h3>
+          <p>Ton inscription est déjà en doublette, il n'y a rien à faire ici.</p>
+          <a class="btn lg" href="mon-equipe.html">RETOUR À MON ÉQUIPE →</a>
+        </div>
+      </div>
+
+      <div id="binome-content" class="hidden">
+
+        <h3>Demandes reçues</h3>
+        <div class="matches-list" id="received-list"></div>
+        <p class="fine hidden" id="no-received">Aucune demande reçue pour le moment.</p>
+
+        <h3 style="margin-top:30px">Mes demandes envoyées</h3>
+        <div class="matches-list" id="sent-list"></div>
+        <p class="fine hidden" id="no-sent">Tu n'as proposé d'association à personne pour le moment.</p>
+
+        <h3 style="margin-top:30px">Joueur·euses en recherche de binôme</h3>
+        <div class="matches-list" id="seekers-list"></div>
+        <p class="fine hidden" id="no-seekers">Personne d'autre n'est en recherche de binôme pour l'instant — reviens plus tard.</p>
+
+        <p class="fine" id="binome-status" style="margin-top:20px"></p>
+      </div>
+
+    </div>
   </div>
 </section>
 
@@ -112,5 +122,6 @@
 <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="js/supabase-config.js"></script>
 <script src="js/auth.js"></script>
+<script src="js/binome.js"></script>
 </body>
 </html>

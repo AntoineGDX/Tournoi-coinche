@@ -1,49 +1,36 @@
--- C'EST COINCHÉ ! — schéma Supabase
--- À exécuter une seule fois dans Supabase → SQL Editor → New query → Run.
+-- C'EST COINCHÉ ! — migration 002
+-- À exécuter dans Supabase → SQL Editor → New query → Run.
+-- Ajoute : inscription "solo" (recherche de binôme), inscription sans compte
+-- (guest checkout), et l'espace de recherche de binôme.
 
 -- ============================================================
--- Équipes (1 ligne = 1 doublette, ou 1 joueur solo en recherche de binôme)
--- user_id est optionnel : permet de s'inscrire sans créer de compte
--- (guest checkout), uniquement pour les doublettes déjà complètes.
+-- Équipes : compte optionnel, joueur 2 optionnel, type d'inscription
 -- ============================================================
-create table teams (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid unique references auth.users(id) on delete cascade,
-  team_name text not null,
-  player1_name text not null,
-  player2_name text,
-  email text not null,
-  email2 text,
-  registration_type text not null default 'doublette' check (registration_type in ('solo','doublette')),
-  looking_for_partner boolean not null default false,
-  payment_status text not null default 'pending' check (payment_status in ('pending','paid')),
-  created_at timestamptz not null default now()
-);
+alter table teams alter column user_id drop not null;
+alter table teams alter column player2_name drop not null;
 
-alter table teams enable row level security;
+alter table teams add column registration_type text not null default 'doublette'
+  check (registration_type in ('solo','doublette'));
 
-create policy "select own team" on teams
-  for select using (auth.uid() = user_id);
+alter table teams add column looking_for_partner boolean not null default false;
 
-create policy "insert own team" on teams
-  for insert with check (auth.uid() = user_id);
-
+-- Inscription sans compte (guest checkout) : uniquement pour les doublettes
+-- déjà complètes (le solo nécessite un compte pour la recherche de binôme).
 create policy "insert guest team" on teams
   for insert to anon with check (user_id is null and registration_type = 'doublette');
 
-create policy "update own team" on teams
-  for update using (auth.uid() = user_id);
+-- ============================================================
+-- Vue publique : ajoute le type d'inscription (badge "cherche un binôme")
+-- ============================================================
+drop view if exists teams_public;
 
--- ============================================================
--- Vue publique : noms d'équipe + type d'inscription (page "équipes inscrites")
--- ============================================================
 create view teams_public as
   select team_name, created_at, registration_type, looking_for_partner from teams order by created_at;
 
 grant select on teams_public to anon, authenticated;
 
 -- ============================================================
--- Espace binôme : joueurs solo en recherche de binôme
+-- Espace binôme : liste des joueurs solo en recherche
 -- ============================================================
 create view solo_seekers as
   select id, team_name, player1_name, created_at from teams
@@ -52,61 +39,7 @@ create view solo_seekers as
 grant select on solo_seekers to authenticated;
 
 -- ============================================================
--- Admins (gérée manuellement par l'organisateur via le Table Editor)
--- ============================================================
-create table admins (
-  user_id uuid primary key references auth.users(id) on delete cascade
-);
-
-alter table admins enable row level security;
-
-create policy "anyone can check admin" on admins
-  for select using (true);
-
--- Permet à un admin de marquer un paiement reçu, même sur l'équipe d'un autre
-create policy "admins can update any team" on teams
-  for update using (exists (select 1 from admins a where a.user_id = auth.uid()));
-
--- Permet à un admin de voir la liste complète des équipes (page admin)
-create policy "admins can select all teams" on teams
-  for select using (exists (select 1 from admins a where a.user_id = auth.uid()));
-
--- ============================================================
--- Arbre du tournoi
--- ============================================================
-create table matches (
-  id uuid primary key default gen_random_uuid(),
-  round_name text not null,
-  round_order int not null,
-  match_order int not null,
-  team1_name text default '',
-  team2_name text default '',
-  score1 int,
-  score2 int
-);
-
-alter table matches enable row level security;
-
-create policy "anyone can view matches" on matches
-  for select using (true);
-
-create policy "admins can write matches" on matches
-  for all using (exists (select 1 from admins a where a.user_id = auth.uid()));
-
--- Tableau initial (4 tours / 8 équipes max). Ajuste/duplique les lignes
--- "8èmes de finale" si tu as plus de 8 équipes le jour J.
-insert into matches (round_name, round_order, match_order) values
-  ('8èmes de finale', 1, 1),
-  ('8èmes de finale', 1, 2),
-  ('8èmes de finale', 1, 3),
-  ('8èmes de finale', 1, 4),
-  ('Quarts de finale', 2, 1),
-  ('Quarts de finale', 2, 2),
-  ('Demi-finale', 3, 1),
-  ('Finale', 4, 1);
-
--- ============================================================
--- Demandes d'association entre joueurs solo (espace binôme)
+-- Demandes d'association entre joueurs solo
 -- ============================================================
 create table partner_requests (
   id uuid primary key default gen_random_uuid(),

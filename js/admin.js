@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     teamsEl.innerHTML = data.map(t => `
       <div class="admin-team-row">
         <span class="name">${t.team_name}</span>
+        <span class="badge info">${t.registration_type === 'solo' ? 'Solo · 10€' : 'Doublette · 20€'}</span>
         <span>${t.payment_status === 'paid' ? '<span class="badge paid">Payé</span>' : '<span class="badge pending">En attente</span>'}</span>
         <button class="btn ghost" data-team-id="${t.id}" data-status="${t.payment_status}">
           ${t.payment_status === 'paid' ? 'MARQUER NON PAYÉ' : 'MARQUER COMME PAYÉ'}
