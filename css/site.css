@@ -292,3 +292,12 @@ footer li:hover{color:var(--cc-jaune)}
   .info-grid,.signup-grid,.inscription-grid,.foot-inner{grid-template-columns:1fr}
   .partners-grid{grid-template-columns:repeat(2,1fr)}
 }
+
+/* ---- Lecteur de musique flottant ---- */
+.music-player{position:fixed;bottom:18px;right:18px;z-index:60;display:flex;align-items:center;gap:10px;background:var(--cc-noir);color:var(--cc-jaune);border:2.5px solid var(--cc-noir);box-shadow:4px 4px 0 var(--cc-jaune);padding:10px 14px;font-family:var(--cc-ff-headline);font-size:11px;text-transform:uppercase;letter-spacing:.12em;max-width:calc(100vw - 36px)}
+.music-player button{background:var(--cc-jaune);color:var(--cc-noir);border:2px solid var(--cc-jaune);width:32px;height:32px;display:grid;place-items:center;cursor:pointer;font-size:13px;line-height:1;flex:none}
+.music-player button:hover{background:var(--cc-blanc)}
+.music-player .track{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:620px){
+  .music-player .track{display:none}
+}
