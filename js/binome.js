@@ -169,6 +169,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (seekers.length === 0) {
       list.innerHTML = '';
       empty.classList.remove('hidden');
+      empty.textContent = filterValue
+        ? "Personne en recherche de binôme à ce niveau pour l'instant."
+        : "Personne d'autre n'est en recherche de binôme pour l'instant — reviens plus tard.";
       return;
     }
     empty.classList.add('hidden');
