@@ -32,24 +32,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     return seeker.team_name || seeker.player1_name;
   }
 
-  // Présentation (bio) pour aider à trouver un binôme par affinité
+  const LEVEL_LABELS = { debutant: 'Débutant', intermediaire: 'Intermédiaire', avance: 'Avancé' };
+  const LEVEL_ORDER = ['debutant', 'intermediaire', 'avance'];
+  const levelFilter = document.getElementById('seekers-level-filter');
+  let allSeekers = [];
+
+  // Présentation (bio + niveau) pour aider à trouver un binôme par affinité
   const bioInput = document.getElementById('bio-input');
   const bioSave = document.getElementById('bio-save');
   const bioStatus = document.getElementById('bio-status');
+  const levelInputs = document.querySelectorAll('#level-toggle input[name="bio-level"]');
 
   bioInput.value = team.partner_bio || '';
+  levelInputs.forEach(input => { input.checked = input.value === team.partner_level; });
 
   bioSave.addEventListener('click', async () => {
     bioSave.disabled = true;
-    const { error } = await ccAuth.client.from('teams').update({ partner_bio: bioInput.value.trim() }).eq('id', team.id);
+    const checkedLevel = document.querySelector('#level-toggle input[name="bio-level"]:checked');
+    const partnerLevel = checkedLevel ? checkedLevel.value : null;
+    const { error } = await ccAuth.client.from('teams').update({
+      partner_bio: bioInput.value.trim(),
+      partner_level: partnerLevel
+    }).eq('id', team.id);
     bioStatus.classList.remove('hidden');
     if (error) {
       bioStatus.textContent = "Erreur lors de l'enregistrement.";
       bioStatus.className = 'fine err';
     } else {
       team.partner_bio = bioInput.value.trim();
+      team.partner_level = partnerLevel;
       bioStatus.textContent = 'Présentation enregistrée ✓';
       bioStatus.className = 'fine ok';
+      await load();
     }
     bioSave.disabled = false;
   });
@@ -79,8 +93,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     renderReceived(received, seekersById);
     renderSent(sent, seekersById);
-    renderSeekers(seekers.filter(s => s.id !== team.id && !linkedIds.has(s.id)));
+    allSeekers = seekers.filter(s => s.id !== team.id && !linkedIds.has(s.id));
+    renderSeekers();
   }
+
+  levelFilter.addEventListener('change', renderSeekers);
 
   function renderReceived(received, seekersById) {
     const list = document.getElementById('received-list');
@@ -136,9 +153,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  function renderSeekers(seekers) {
+  function renderSeekers() {
     const list = document.getElementById('seekers-list');
     const empty = document.getElementById('no-seekers');
+
+    const filterValue = levelFilter.value;
+    const seekers = allSeekers
+      .filter(s => !filterValue || s.partner_level === filterValue)
+      .sort((a, b) => {
+        const ra = a.partner_level ? LEVEL_ORDER.indexOf(a.partner_level) : LEVEL_ORDER.length;
+        const rb = b.partner_level ? LEVEL_ORDER.indexOf(b.partner_level) : LEVEL_ORDER.length;
+        return ra - rb;
+      });
+
     if (seekers.length === 0) {
       list.innerHTML = '';
       empty.classList.remove('hidden');
@@ -148,6 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     list.innerHTML = seekers.map(s => `
       <div class="binome-row">
         <span class="name">${displayName(s)}</span>
+        ${s.partner_level ? `<span class="badge info">${LEVEL_LABELS[s.partner_level]}</span>` : ''}
         <div class="actions">
           <button class="btn sm" data-action="propose" data-id="${s.id}">PROPOSER LE BINÔME</button>
         </div>

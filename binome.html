@@ -43,7 +43,7 @@
 <!-- ---- Espace binôme ---- -->
 <section class="inscription">
   <div class="wrap">
-    <div style="max-width:680px;margin:0 auto">
+    <div style="max-width:900px;margin:0 auto">
 
       <p id="loading" class="fine">Chargement…</p>
 
@@ -60,9 +60,17 @@
         <div class="team-info">
           <span class="eyebrow">Pour t'aider à trouver un binôme par affinité</span>
           <h3>Ta présentation</h3>
-          <p class="fine" style="opacity:.7">Âge, région, niveau, ambiance recherchée… ce que tu écris ici est visible par les autres joueur·euses solo dans la liste ci-dessous.</p>
-          <textarea id="bio-input" rows="3" placeholder="Ex : 28 ans, Nice, niveau intermédiaire, je cherche plutôt une ambiance détendue."></textarea>
-          <button class="btn sm" id="bio-save" style="margin-top:10px">ENREGISTRER MA PRÉSENTATION</button>
+          <p class="fine" style="opacity:.7">Âge, région, ambiance recherchée… ce que tu écris ici est visible par les autres joueur·euses solo dans la liste ci-dessous.</p>
+          <textarea id="bio-input" rows="6" placeholder="Ex : 28 ans, Nice, je cherche plutôt une ambiance détendue."></textarea>
+
+          <label style="margin-top:14px">TON NIVEAU</label>
+          <div class="level-toggle" id="level-toggle">
+            <label><input type="radio" name="bio-level" value="debutant"> Débutant</label>
+            <label><input type="radio" name="bio-level" value="intermediaire"> Intermédiaire</label>
+            <label><input type="radio" name="bio-level" value="avance"> Avancé</label>
+          </div>
+
+          <button class="btn sm" id="bio-save" style="margin-top:14px">ENREGISTRER MA PRÉSENTATION</button>
           <p class="fine hidden" id="bio-status"></p>
         </div>
 
@@ -75,6 +83,15 @@
         <p class="fine hidden" id="no-sent">Tu n'as proposé d'association à personne pour le moment.</p>
 
         <h3 style="margin-top:30px">Joueur·euses en recherche de binôme</h3>
+        <div class="seekers-filter">
+          <label for="seekers-level-filter">FILTRER PAR NIVEAU</label>
+          <select id="seekers-level-filter">
+            <option value="">Tous niveaux</option>
+            <option value="debutant">Débutant</option>
+            <option value="intermediaire">Intermédiaire</option>
+            <option value="avance">Avancé</option>
+          </select>
+        </div>
         <div class="matches-list" id="seekers-list"></div>
         <p class="fine hidden" id="no-seekers">Personne d'autre n'est en recherche de binôme pour l'instant — reviens plus tard.</p>
 
