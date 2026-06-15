@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     partner = partnerData;
   }
 
-  document.getElementById('team-name').textContent = team.team_name;
+  document.getElementById('team-name').textContent = team.team_name || team.player1_name;
   document.getElementById('team-player1').textContent = team.player1_name;
   document.getElementById('team-player2').textContent = isSolo
     ? 'En recherche de binôme'
@@ -136,7 +136,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         registration_type: 'solo',
         looking_for_partner: true,
         player2_name: null,
-        email2: null
+        email2: null,
+        team_name: ''
       }).eq('id', team.id));
 
       if (!error) {

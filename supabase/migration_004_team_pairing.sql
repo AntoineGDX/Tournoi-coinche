@@ -98,7 +98,7 @@ begin
     registration_type = 'solo',
     looking_for_partner = true,
     partner_team_id = null,
-    team_name = player1_name
+    team_name = ''
   where id = my_team.id;
 
   if partner is not null then
@@ -106,7 +106,7 @@ begin
       registration_type = 'solo',
       looking_for_partner = true,
       partner_team_id = null,
-      team_name = player1_name
+      team_name = ''
     where id = partner.id;
   end if;
 

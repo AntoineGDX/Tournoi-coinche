@@ -22,13 +22,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     countEl.innerHTML = `<b>${doublettes.length}</b> / ${maxTeams} doublettes inscrites`
       + (seekers.length > 0 ? ` · <b>${seekers.length}</b> joueur·euse${seekers.length > 1 ? 's' : ''} solo en recherche de binôme` : '');
 
-    if (teams.length === 0) {
+    // Les joueur·euses solo en recherche de binôme n'ont pas de nom d'équipe
+    // et n'apparaissent pas dans la liste des équipes inscrites.
+    if (doublettes.length === 0) {
       emptyEl.classList.remove('hidden');
       return;
     }
 
-    listEl.innerHTML = teams.map((t, i) => `
-      <li><span class="num">${String(i + 1).padStart(2, '0')}</span><span>${t.team_name}</span>${t.registration_type === 'solo' && t.looking_for_partner ? '<span class="badge info" style="margin-left:10px">Cherche un binôme</span>' : ''}</li>
+    listEl.innerHTML = doublettes.map((t, i) => `
+      <li><span class="num">${String(i + 1).padStart(2, '0')}</span><span>${t.team_name}</span></li>
     `).join('');
   } catch (err) {
     countEl.textContent = '';
