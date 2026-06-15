@@ -112,8 +112,8 @@ form .fine{font-size:11px;opacity:.6;margin-top:10px;font-family:'Archivo Black'
 .type-toggle label .price{display:block;font-family:var(--cc-ff-display);font-size:22px;margin-top:4px}
 .type-toggle input:checked + label{background:var(--cc-jaune);color:var(--cc-noir);border-color:var(--cc-jaune)}
 .check-row{display:flex;align-items:flex-start;gap:10px;margin:18px 0 0}
-.check-row input{width:auto;margin:3px 0 0;accent-color:var(--cc-jaune)}
-.check-row label{margin:0;color:var(--cc-blanc);font-family:var(--cc-ff-body);font-size:13px;text-transform:none;letter-spacing:normal}
+.check-row input{width:18px;height:18px;flex-shrink:0;margin:1px 0 0;accent-color:var(--cc-jaune);cursor:pointer}
+.check-row label{margin:0;color:var(--cc-blanc);font-family:var(--cc-ff-body);font-size:13px;line-height:1.45;text-transform:none;letter-spacing:normal;cursor:pointer}
 .solo-note{font-size:13px;line-height:1.5;color:var(--cc-blanc);opacity:.85;margin:18px 0 0;padding:12px 14px;border:2px solid var(--cc-jaune)}
 .badge.info{background:var(--cc-blanc);color:var(--cc-noir)}
 .success{background:var(--cc-jaune);color:var(--cc-noir);padding:30px;border:2.5px solid var(--cc-noir);box-shadow:8px 8px 0 var(--cc-rouge)}
