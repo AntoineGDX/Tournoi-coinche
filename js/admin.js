@@ -73,7 +73,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   async function loadTeamNames() {
     const { data, error } = await ccAuth.client.from('teams_public').select('team_name').order('created_at');
     if (error) throw error;
-    teamNamesEl.innerHTML = data.map(t => `<option value="${t.team_name.replace(/"/g, '&quot;')}"></option>`).join('');
+    const names = [...new Set(data.map(t => t.team_name))];
+    teamNamesEl.innerHTML = names.map(name => `<option value="${name.replace(/"/g, '&quot;')}"></option>`).join('');
   }
 
   async function loadTeams() {
@@ -88,8 +89,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     teamsEl.innerHTML = data.map(t => `
       <div class="admin-team-row">
-        <span class="name">${t.team_name}</span>
-        <span class="badge info">${t.registration_type === 'solo' ? 'Solo · 10€' : 'Doublette · 20€'}</span>
+        <span class="name">${t.team_name}${t.partner_team_id ? ' <span class="fine" style="opacity:.6">(binôme associé)</span>' : ''}</span>
+        <span class="badge info">${t.registration_type === 'solo' ? 'Solo · 10€' : (t.partner_team_id ? 'Doublette (binôme) · 10€' : 'Doublette · 20€')}</span>
         <span>${t.payment_status === 'paid' ? '<span class="badge paid">Payé</span>' : '<span class="badge pending">En attente</span>'}</span>
         <button class="btn ghost" data-team-id="${t.id}" data-status="${t.payment_status}">
           ${t.payment_status === 'paid' ? 'MARQUER NON PAYÉ' : 'MARQUER COMME PAYÉ'}

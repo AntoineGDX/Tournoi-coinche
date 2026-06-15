@@ -18,6 +18,7 @@ create table teams (
   looking_for_partner boolean not null default false,
   notify_binome_requests boolean not null default true,
   payment_status text not null default 'pending' check (payment_status in ('pending','paid')),
+  partner_team_id uuid references teams(id) on delete set null,
   created_at timestamptz not null default now()
 );
 
@@ -25,6 +26,12 @@ alter table teams enable row level security;
 
 create policy "select own team" on teams
   for select using (auth.uid() = user_id);
+
+-- Permet à chacun des deux membres d'une doublette associée de voir la fiche de son binôme
+create policy "select partner team" on teams
+  for select using (
+    exists (select 1 from teams mine where mine.user_id = auth.uid() and mine.partner_team_id = teams.id)
+  );
 
 create policy "insert own team" on teams
   for insert with check (auth.uid() = user_id);
@@ -39,7 +46,7 @@ create policy "update own team" on teams
 -- Vue publique : noms d'équipe + type d'inscription (page "équipes inscrites")
 -- ============================================================
 create view teams_public as
-  select team_name, created_at, registration_type, looking_for_partner from teams order by created_at;
+  select id, team_name, created_at, registration_type, looking_for_partner, partner_team_id from teams order by created_at;
 
 grant select on teams_public to anon, authenticated;
 
@@ -146,7 +153,9 @@ create policy "admins can select all partner requests" on partner_requests
   for select using (exists (select 1 from admins a where a.user_id = auth.uid()));
 
 -- ============================================================
--- Acceptation d'une demande : fusionne les deux solos en une doublette
+-- Acceptation d'une demande : associe les deux fiches solo en une doublette
+-- (les deux fiches sont conservées et restent liées via partner_team_id,
+-- chacun gardant son propre compte/paiement)
 -- ============================================================
 create or replace function accept_partner_request(request_id uuid)
 returns void
@@ -172,17 +181,18 @@ begin
   select * into from_team from teams where id = req.from_team_id;
 
   update teams set
-    player2_name = from_team.player1_name,
-    email2 = coalesce(to_team.email2, from_team.email),
     registration_type = 'doublette',
     looking_for_partner = false,
-    payment_status = case
-      when to_team.payment_status = 'paid' and from_team.payment_status = 'paid' then 'paid'
-      else 'pending'
-    end
+    partner_team_id = from_team.id,
+    team_name = to_team.team_name
   where id = to_team.id;
 
-  delete from teams where id = from_team.id;
+  update teams set
+    registration_type = 'doublette',
+    looking_for_partner = false,
+    partner_team_id = to_team.id,
+    team_name = to_team.team_name
+  where id = from_team.id;
 
   update partner_requests set status = 'accepted' where id = request_id;
   update partner_requests set status = 'cancelled'
@@ -192,3 +202,76 @@ end;
 $$;
 
 grant execute on function accept_partner_request(uuid) to authenticated;
+
+-- ============================================================
+-- Séparation d'une doublette associée : chacun redevient solo
+-- et repart en recherche de binôme (les deux fiches sont conservées)
+-- ============================================================
+create or replace function split_partner_team()
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  my_team teams%rowtype;
+  partner teams%rowtype;
+begin
+  select * into my_team from teams where user_id = auth.uid();
+  if my_team is null or my_team.partner_team_id is null then
+    raise exception 'Pas de binôme à séparer';
+  end if;
+
+  select * into partner from teams where id = my_team.partner_team_id;
+
+  update teams set
+    registration_type = 'solo',
+    looking_for_partner = true,
+    partner_team_id = null,
+    team_name = player1_name
+  where id = my_team.id;
+
+  if partner is not null then
+    update teams set
+      registration_type = 'solo',
+      looking_for_partner = true,
+      partner_team_id = null,
+      team_name = player1_name
+    where id = partner.id;
+  end if;
+
+  update partner_requests set status = 'cancelled'
+    where status = 'pending'
+    and (from_team_id in (my_team.id, my_team.partner_team_id) or to_team_id in (my_team.id, my_team.partner_team_id));
+end;
+$$;
+
+grant execute on function split_partner_team() to authenticated;
+
+-- ============================================================
+-- Renomme l'équipe : propage le nom à la fiche du binôme associé
+-- (pour que les deux fiches gardent le même nom d'équipe)
+-- ============================================================
+create or replace function rename_team(new_name text)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  my_team teams%rowtype;
+begin
+  select * into my_team from teams where user_id = auth.uid();
+  if my_team is null then
+    raise exception 'Équipe introuvable';
+  end if;
+
+  update teams set team_name = new_name where id = my_team.id;
+
+  if my_team.partner_team_id is not null then
+    update teams set team_name = new_name where id = my_team.partner_team_id;
+  end if;
+end;
+$$;
+
+grant execute on function rename_team(text) to authenticated;

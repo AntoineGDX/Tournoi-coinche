@@ -6,12 +6,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   const maxTeams = 32;
 
   try {
-    const { data: teams, error } = await ccAuth.client
+    const { data: allTeams, error } = await ccAuth.client
       .from('teams_public')
-      .select('team_name, registration_type, looking_for_partner')
+      .select('id, team_name, registration_type, looking_for_partner, partner_team_id')
       .order('created_at');
 
     if (error) throw error;
+
+    // Une doublette associée a deux fiches liées (une par compte) : n'en afficher qu'une.
+    const teams = allTeams.filter(t => !(t.partner_team_id && t.partner_team_id < t.id));
 
     const doublettes = teams.filter(t => !(t.registration_type === 'solo' && t.looking_for_partner));
     const seekers = teams.filter(t => t.registration_type === 'solo' && t.looking_for_partner);

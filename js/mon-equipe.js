@@ -27,11 +27,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const isSolo = team.registration_type === 'solo' && team.looking_for_partner;
 
+  // Doublette associée : la fiche du binôme (compte distinct) est conservée
+  // séparément et liée via partner_team_id.
+  let partner = null;
+  if (team.partner_team_id) {
+    const { data: partnerData } = await ccAuth.client
+      .from('teams')
+      .select('*')
+      .eq('id', team.partner_team_id)
+      .maybeSingle();
+    partner = partnerData;
+  }
+
   document.getElementById('team-name').textContent = team.team_name;
   document.getElementById('team-player1').textContent = team.player1_name;
-  document.getElementById('team-player2').textContent = isSolo ? 'En recherche de binôme' : team.player2_name;
+  document.getElementById('team-player2').textContent = isSolo
+    ? 'En recherche de binôme'
+    : (partner ? partner.player1_name : team.player2_name);
   document.getElementById('team-email').textContent = team.email;
-  document.getElementById('team-email2').textContent = team.email2 || '—';
+  document.getElementById('team-email2').textContent = partner ? partner.email : (team.email2 || '—');
 
   const isPaid = team.payment_status === 'paid';
   let statusLabel = isPaid ? 'Inscription confirmée' : 'Inscription en attente de paiement';
@@ -41,12 +55,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     ? '<span class="badge paid">Payé</span>'
     : '<span class="badge pending">En attente</span>';
 
+  if (partner) {
+    document.getElementById('team-partner-payment-row').classList.remove('hidden');
+    const partnerPaymentEl = document.getElementById('team-partner-payment');
+    partnerPaymentEl.classList.remove('hidden');
+    partnerPaymentEl.innerHTML = partner.payment_status === 'paid'
+      ? '<span class="badge paid">Payé</span>'
+      : '<span class="badge pending">En attente</span>';
+  }
+
   if (isSolo) {
     document.getElementById('binome-cta').classList.remove('hidden');
   }
 
   if (team.registration_type === 'doublette') {
     document.getElementById('binome-unavailable-block').classList.remove('hidden');
+    if (partner) {
+      document.getElementById('become-solo-text').textContent =
+        "Vous repasserez chacun en inscription solo (10€) et apparaîtrez dans l'espace binôme pour trouver un·e nouveau·elle partenaire.";
+      document.getElementById('become-solo').textContent = 'SE SÉPARER — REDEVENIR SOLO';
+    }
   }
 
   // Paramètres : nom de l'équipe
@@ -59,7 +87,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const newName = teamNameInput.value.trim();
     if (!newName) return;
     saveTeamNameBtn.disabled = true;
-    const { error } = await ccAuth.client.from('teams').update({ team_name: newName }).eq('id', team.id);
+    const { error } = await ccAuth.client.rpc('rename_team', { new_name: newName });
     teamNameStatus.classList.remove('hidden');
     if (error) {
       teamNameStatus.textContent = "Erreur lors de l'enregistrement.";
@@ -96,15 +124,28 @@ document.addEventListener('DOMContentLoaded', async () => {
   const becomeSoloStatus = document.getElementById('become-solo-status');
 
   becomeSoloBtn.addEventListener('click', async () => {
-    if (!confirm("Confirmer : ton équipe repasse en solo (10€), les infos de ton binôme actuel sont retirées et tu apparais dans l'espace binôme. Continuer ?")) return;
+    let error;
+    if (team.partner_team_id) {
+      if (!confirm("Confirmer : vous repassez chacun en solo (10€), votre association est annulée et vous apparaissez dans l'espace binôme pour trouver un·e nouveau·elle partenaire. Continuer ?")) return;
+      becomeSoloBtn.disabled = true;
+      ({ error } = await ccAuth.client.rpc('split_partner_team'));
+    } else {
+      if (!confirm("Confirmer : ton équipe repasse en solo (10€), les infos de ton binôme actuel sont retirées et tu apparais dans l'espace binôme. Continuer ?")) return;
+      becomeSoloBtn.disabled = true;
+      ({ error } = await ccAuth.client.from('teams').update({
+        registration_type: 'solo',
+        looking_for_partner: true,
+        player2_name: null,
+        email2: null
+      }).eq('id', team.id));
 
-    becomeSoloBtn.disabled = true;
-    const { error } = await ccAuth.client.from('teams').update({
-      registration_type: 'solo',
-      looking_for_partner: true,
-      player2_name: null,
-      email2: null
-    }).eq('id', team.id);
+      if (!error) {
+        await ccAuth.client.from('partner_requests')
+          .update({ status: 'cancelled' })
+          .eq('status', 'pending')
+          .or(`from_team_id.eq.${team.id},to_team_id.eq.${team.id}`);
+      }
+    }
 
     if (error) {
       becomeSoloStatus.classList.remove('hidden');
@@ -113,11 +154,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       becomeSoloBtn.disabled = false;
       return;
     }
-
-    await ccAuth.client.from('partner_requests')
-      .update({ status: 'cancelled' })
-      .eq('status', 'pending')
-      .or(`from_team_id.eq.${team.id},to_team_id.eq.${team.id}`);
 
     window.location.reload();
   });
