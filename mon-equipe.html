@@ -59,14 +59,18 @@
         <div class="team-info">
           <span class="eyebrow" id="team-status-label">Statut</span>
           <h3 id="team-name"></h3>
-          <dl>
-            <dt>Joueur 1</dt><dd id="team-player1"></dd>
-            <dt>Joueur 2</dt><dd id="team-player2"></dd>
-            <dt>Email</dt><dd id="team-email"></dd>
-            <dt>Email secondaire</dt><dd id="team-email2"></dd>
-            <dt>Paiement</dt><dd id="team-payment"></dd>
-            <dt id="team-partner-payment-row" class="hidden">Paiement binôme</dt><dd id="team-partner-payment" class="hidden"></dd>
-          </dl>
+          <div class="players-grid">
+            <dl>
+              <dt>Joueur 1</dt><dd id="team-player1"></dd>
+              <dt>Email</dt><dd id="team-email"></dd>
+              <dt>Paiement</dt><dd id="team-payment"></dd>
+            </dl>
+            <dl id="player2-dl">
+              <dt>Joueur 2</dt><dd id="team-player2"></dd>
+              <dt id="team-email2-row">Email</dt><dd id="team-email2"></dd>
+              <dt id="team-partner-payment-row">Paiement</dt><dd id="team-partner-payment"></dd>
+            </dl>
+          </div>
         </div>
 
         <div class="team-info" style="margin-top:20px">
@@ -90,7 +94,7 @@
 
           <div id="binome-unavailable-block" class="hidden" style="margin-top:24px;padding-top:20px;border-top:2px solid var(--cc-noir)">
             <label style="margin-top:0">MON BINÔME N'EST PLUS DISPONIBLE ?</label>
-            <p class="fine" id="become-solo-text" style="opacity:.7">Tu repasseras en inscription solo (10€) et apparaîtras dans l'espace binôme pour trouver un·e nouveau·elle partenaire. Les infos de ton binôme actuel seront retirées de ta fiche.</p>
+            <p class="fine" id="become-solo-text" style="opacity:.7">Tu repasseras en inscription solo et apparaîtras dans l'espace binôme pour trouver un·e nouveau·elle partenaire. Les infos de ton binôme actuel seront retirées de ta fiche.</p>
             <button class="btn sm" id="become-solo">REDEVENIR SOLO — CHERCHER UN BINÔME</button>
             <p class="fine hidden" id="become-solo-status"></p>
           </div>
@@ -104,7 +108,7 @@
 
         <div id="pay-reminder" class="pay-card hidden">
           <h3>Finalise ton inscription</h3>
-          <p id="pay-reminder-text">Ta doublette est enregistrée mais le paiement des 20€ n'a pas encore été confirmé. Règle-le via HelloAsso si tu ne l'as pas encore fait.</p>
+          <p id="pay-reminder-text">Ta doublette est enregistrée mais le paiement n'a pas encore été confirmé. Règle-le via HelloAsso si tu ne l'as pas encore fait.</p>
           <a class="btn lg" href="https://www.helloasso.com/" target="_blank" rel="noopener">PAYER SUR HELLOASSO →</a>
         </div>
 

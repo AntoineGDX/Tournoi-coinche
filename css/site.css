@@ -233,7 +233,11 @@ footer li:hover{color:var(--cc-jaune)}
 .badge.pending{background:var(--cc-jaune)}
 .team-info{background:var(--cc-blanc-pur);border:2.5px solid var(--cc-noir);box-shadow:6px 6px 0 var(--cc-noir);padding:24px;margin-bottom:24px}
 .team-info h3{margin-bottom:6px}
-.team-info dl{display:grid;grid-template-columns:160px 1fr;gap:10px 16px;margin-top:14px;font-size:15px}
+.team-info dl{display:grid;grid-template-columns:90px 1fr;gap:10px 16px;margin-top:14px;font-size:15px}
+.players-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+@media (max-width:620px){
+  .players-grid{grid-template-columns:1fr}
+}
 .team-info dt{font-family:var(--cc-ff-headline);font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.6;align-self:center}
 .team-info label{display:block;font-family:var(--cc-ff-headline);font-size:10px;text-transform:uppercase;letter-spacing:.18em;margin:14px 0 6px;color:var(--cc-noir);opacity:.6}
 .team-info input[type="text"],.team-info input[type="email"],.team-info input:not([type]){width:100%;padding:11px 14px;font-family:var(--cc-ff-body);font-size:15px;background:var(--cc-blanc);border:2.5px solid var(--cc-noir);color:var(--cc-noir);outline:none}
