@@ -40,11 +40,17 @@ document.addEventListener('DOMContentLoaded', () => {
   if (isNaN(index) || index < 0 || index >= PLAYLIST.length) index = 0;
   let wasPlaying = localStorage.getItem('cc-music-playing') === 'true';
 
-  function load(i, autoplay) {
+  function load(i, autoplay, startTime) {
     index = (i + PLAYLIST.length) % PLAYLIST.length;
     audio.src = PLAYLIST[index].src;
     trackEl.textContent = PLAYLIST[index].title;
     localStorage.setItem('cc-music-track', index);
+    localStorage.setItem('cc-music-time', '0');
+    if (startTime) {
+      audio.addEventListener('loadedmetadata', () => {
+        audio.currentTime = startTime;
+      }, { once: true });
+    }
     if (autoplay) {
       audio.play().catch(() => {
         wasPlaying = false;
@@ -53,6 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   }
+
+  // Mémorise la position de lecture pour reprendre au même endroit
+  // en changeant de page (au lieu de redémarrer la piste).
+  audio.addEventListener('timeupdate', () => {
+    localStorage.setItem('cc-music-time', audio.currentTime);
+  });
 
   function setPlaying(playing) {
     wasPlaying = playing;
@@ -80,7 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   audio.addEventListener('ended', () => load(index + 1, true));
 
-  load(index, false);
+  let savedTime = parseFloat(localStorage.getItem('cc-music-time'));
+  if (isNaN(savedTime) || savedTime < 0) savedTime = 0;
+
+  load(index, false, savedTime);
   if (wasPlaying) {
     audio.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
   }
