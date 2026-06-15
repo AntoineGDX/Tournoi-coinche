@@ -1,10 +1,9 @@
 // C'EST COINCHÉ — lecteur de musique flottant (présent sur toutes les pages)
 //
-// Pistes de démonstration dans assets/music/ — à remplacer par tes propres
-// fichiers mp3 (mets-les dans assets/music/ et mets à jour la liste ci-dessous).
+// Pour ajouter/changer des pistes : mets le fichier dans assets/music/
+// et ajoute/modifie une ligne ci-dessous.
 const PLAYLIST = [
-  { title: 'Piste démo 1', src: 'assets/music/demo-1.wav' },
-  { title: 'Piste démo 2', src: 'assets/music/demo-2.wav' },
+  { title: 'Ambiance C\'est Coinché', src: 'assets/music/USB002.mp3' },
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
