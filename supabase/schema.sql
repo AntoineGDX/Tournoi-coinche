@@ -227,35 +227,24 @@ security definer
 set search_path = public
 as $$
 declare
-  my_team teams%rowtype;
-  partner teams%rowtype;
+  my_id uuid;
+  partner_id uuid;
 begin
-  select * into my_team from teams where user_id = auth.uid();
-  if my_team is null or my_team.partner_team_id is null then
+  select id, partner_team_id into my_id, partner_id from teams where user_id = auth.uid();
+  if my_id is null or partner_id is null then
     raise exception 'Pas de binôme à séparer';
   end if;
-
-  select * into partner from teams where id = my_team.partner_team_id;
 
   update teams set
     registration_type = 'solo',
     looking_for_partner = true,
     partner_team_id = null,
     team_name = ''
-  where id = my_team.id;
-
-  if partner is not null then
-    update teams set
-      registration_type = 'solo',
-      looking_for_partner = true,
-      partner_team_id = null,
-      team_name = ''
-    where id = partner.id;
-  end if;
+  where id in (my_id, partner_id);
 
   update partner_requests set status = 'cancelled'
     where status = 'pending'
-    and (from_team_id in (my_team.id, my_team.partner_team_id) or to_team_id in (my_team.id, my_team.partner_team_id));
+    and (from_team_id in (my_id, partner_id) or to_team_id in (my_id, partner_id));
 end;
 $$;
 
