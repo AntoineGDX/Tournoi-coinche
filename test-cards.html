@@ -8,27 +8,19 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:#07090a; font-family:sans-serif; }
 .spacer {
-  height:100vh;
-  display:flex; align-items:center; justify-content:center;
-  color:rgba(255,255,255,.22); font-size:13px;
-  letter-spacing:.2em; text-transform:uppercase;
+  height:100vh; display:flex; align-items:center; justify-content:center;
+  color:rgba(255,255,255,.22); font-size:13px; letter-spacing:.2em; text-transform:uppercase;
 }
-#cards-section {
-  position:relative; height:100vh; overflow:hidden; background:#07090a;
-}
+#cards-section { position:relative; height:100vh; overflow:hidden; background:#07090a; }
 #stage {
   position:absolute; inset:0;
-  perspective:900px;
-  perspective-origin:50% 50%;
+  perspective:850px; perspective-origin:50% 50%;
 }
 .fc {
-  position:absolute;
-  left:50%; top:50%;
-  width:160px; height:224px;
-  margin-left:-80px; margin-top:-112px;
+  position:absolute; left:50%; top:50%;
+  width:160px; height:224px; margin-left:-80px; margin-top:-112px;
   border-radius:14px; border:3px solid;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center; gap:10px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
   opacity:0; will-change:transform,opacity;
 }
 .fy { background:#f5c842; border-color:#1a1a1a; color:#1a1a1a; }
@@ -38,7 +30,6 @@ body { background:#07090a; font-family:sans-serif; }
 .cn.br { bottom:9px; right:11px; transform:rotate(180deg); }
 .fc .suit { font-size:52px; line-height:1; }
 .fc .info { font-size:13px; font-weight:700; text-align:center; line-height:1.4; padding:0 10px; text-transform:uppercase; letter-spacing:.05em; }
-
 #vignette {
   position:absolute; inset:0;
   background:radial-gradient(ellipse 90% 80% at 50% 50%, transparent 20%, #07090a 100%);
@@ -57,35 +48,28 @@ body { background:#07090a; font-family:sans-serif; }
 
 <section id="cards-section">
   <div id="stage">
-
     <div class="fc fy" id="c1">
-      <div class="cn tl">A<br>♠</div>
-      <div class="suit">♠</div>
+      <div class="cn tl">A<br>♠</div><div class="suit">♠</div>
       <div class="info">13 & 14<br>juin 2026</div>
       <div class="cn br">A<br>♠</div>
     </div>
-
     <div class="fc fn" id="c2">
       <div class="cn tl" style="color:#f5c842">A<br>♥</div>
       <div class="suit" style="color:#f5c842">♥</div>
       <div class="info" style="color:#f5c842">Le 109<br>Nice</div>
       <div class="cn br" style="color:#f5c842">A<br>♥</div>
     </div>
-
     <div class="fc fy" id="c3">
-      <div class="cn tl">A<br>♦</div>
-      <div class="suit">♦</div>
+      <div class="cn tl">A<br>♦</div><div class="suit">♦</div>
       <div class="info">Doublette<br>· 20€ ·</div>
       <div class="cn br">A<br>♦</div>
     </div>
-
     <div class="fc fn" id="c4">
       <div class="cn tl" style="color:#f5c842">A<br>♣</div>
       <div class="suit" style="color:#f5c842">♣</div>
       <div class="info" style="color:#f5c842">DJ Set<br>Buvette</div>
       <div class="cn br" style="color:#f5c842">A<br>♣</div>
     </div>
-
   </div>
   <div id="vignette"></div>
   <div id="label">C'EST COINCHÉ · Nice · 1ère édition</div>
@@ -99,68 +83,64 @@ body { background:#07090a; font-family:sans-serif; }
 gsap.registerPlugin(ScrollTrigger);
 
 /*
-  3 phases :
-  A — ARRIVÉE  (rapide) : chaque carte vient d'un coin différent, loin et petite
-  B — VITRINE  (lente)  : toutes les 4 côte à côte, même taille, bien lisibles
-                          Cette phase occupe ~40% du scroll total → sensation de pause
-  C — DÉPART   (rapide) : chaque carte repart en vrille dans une direction différente
+  Structure :
+  0.00 → 0.18  c1 : bas-gauche loin → traverse → sort haut-droite (interrompue à mi-chemin)
+  0.14 → 0.32  c2 : haut-droite très loin → traverse
+  0.28 → 0.46  c3 : droite loin → traverse
+  0.42 → 0.57  c4 : bas-droite → traverse
 
-  Positions côte à côte (4 cartes 160px + 20px gap = 740px total) :
-    c1 : x = -285   c2 : x = -95   c3 : x = +95   c4 : x = +285
+  0.57 → 0.67  CONVERGENCE rapide : toutes vont côte à côte
+  0.67 → 0.77  VITRINE courte (10% du scroll)
+  0.77 → 0.93  DÉPART rapide : chacune explose dans sa direction
 */
-
-const IN   = 0.22;   // durée arrivée
-const HOLD = 0.44;   // durée vitrine (longue = scroll lent = lisible)
-const OUT  = 0.18;   // durée départ
 
 const tl = gsap.timeline({
   scrollTrigger: {
     trigger: '#cards-section',
     start: 'top top',
-    end: '+=550%',
-    scrub: 1.5,
+    end: '+=700%',
+    scrub: 1.4,
     pin: true,
     anticipatePin: 1,
   }
 });
 
-/* ---- ARRIVÉE : toutes en même temps, depuis des profondeurs / coins différents ---- */
+/* -- TRAJECTOIRES : cartes volent une par une, deep z -- */
+
+// c1 : bas-gauche → traverse → s'arrête quelque part à droite
 tl
-  // c1 : vient du fond à gauche
-  .set('#c1', { x:-900, y: 300, z:-7000, rotateX: 50, rotateY:-150, rotateZ:-80, opacity:0 })
-  .to('#c1',  { x:-285, y:   0, z:    0, rotateX:  0, rotateY:   0, rotateZ: -4, opacity:1,
-                duration:IN, ease:'power3.out' }, 0)
+.set('#c1', { x:-800, y:400,  z:-7000, rotateX: 50, rotateY:-150, rotateZ:-80, opacity:0 })
+.to( '#c1', { x: 250, y:-100, z: 200,  rotateX:-80, rotateY: 120, rotateZ: 100, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.00)
 
-  // c2 : vient du fond en haut à droite, encore plus loin
-  .set('#c2', { x: 700, y:-500, z:-11000, rotateX:-80, rotateY: 200, rotateZ: 100, opacity:0 })
-  .to('#c2',  { x: -95, y:   0, z:     0, rotateX:  0, rotateY:   0, rotateZ:  3, opacity:1,
-                duration:IN, ease:'power3.out' }, 0)
+// c2 : haut-droite très loin → traverse → s'arrête quelque part à gauche
+.set('#c2', { x: 700, y:-500, z:-11000, rotateX:-80, rotateY:200, rotateZ:100, opacity:0 })
+.to( '#c2', { x:-200, y: 150, z:  200,  rotateX: 100, rotateY:-160, rotateZ:-80, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.14)
 
-  // c3 : vient du fond en bas
-  .set('#c3', { x: 100, y: 700, z:-5500, rotateX: 120, rotateY:  60, rotateZ:  60, opacity:0 })
-  .to('#c3',  { x:  95, y:   0, z:    0, rotateX:   0, rotateY:   0, rotateZ: -3, opacity:1,
-                duration:IN, ease:'power3.out' }, 0)
+// c3 : droite → traverse → s'arrête en haut
+.set('#c3', { x: 900, y: 100, z:-5500, rotateX: 80, rotateY: 60, rotateZ:-50, opacity:0 })
+.to( '#c3', { x:-100, y:-200, z:  200, rotateX:-60, rotateY:-80, rotateZ: 80, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.28)
 
-  // c4 : vient du fond à droite, distance intermédiaire
-  .set('#c4', { x: 950, y:-200, z:-8500, rotateX:-60, rotateY:-180, rotateZ:-120, opacity:0 })
-  .to('#c4',  { x: 285, y:   0, z:    0, rotateX:  0, rotateY:   0, rotateZ:  5, opacity:1,
-                duration:IN, ease:'power3.out' }, 0)
+// c4 : bas-droite → traverse → s'arrête en bas à gauche
+.set('#c4', { x: 600, y: 600, z:-8500, rotateX:-100, rotateY:-180, rotateZ:120, opacity:0 })
+.to( '#c4', { x:-300, y: 200, z:  200, rotateX:  80, rotateY:  80, rotateZ:-100, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.42)
 
-/* ---- VITRINE : quasi immobiles, légère dérive — le scroll est lent ici ---- */
-  .to('#c1', { x:-285, y: 0, z:0, rotateZ:-4, duration:HOLD, ease:'none' }, IN)
-  .to('#c2', { x: -95, y: 0, z:0, rotateZ: 3, duration:HOLD, ease:'none' }, IN)
-  .to('#c3', { x:  95, y: 0, z:0, rotateZ:-3, duration:HOLD, ease:'none' }, IN)
-  .to('#c4', { x: 285, y: 0, z:0, rotateZ: 5, duration:HOLD, ease:'none' }, IN)
+/* -- CONVERGENCE : toutes convergent côte à côte en z=0 -- */
+.to('#c1', { x:-285, y:0, z:0, rotateX:0, rotateY:0, rotateZ:-4, duration:0.10, ease:'power2.inOut' }, 0.57)
+.to('#c2', { x: -95, y:0, z:0, rotateX:0, rotateY:0, rotateZ: 2, duration:0.10, ease:'power2.inOut' }, 0.57)
+.to('#c3', { x:  95, y:0, z:0, rotateX:0, rotateY:0, rotateZ:-2, duration:0.10, ease:'power2.inOut' }, 0.57)
+.to('#c4', { x: 285, y:0, z:0, rotateX:0, rotateY:0, rotateZ: 5, duration:0.10, ease:'power2.inOut' }, 0.57)
 
-/* ---- DÉPART : chacune repart en vrille dans une direction différente ---- */
-  .to('#c1', { x:-1100, y:-400, z: 800, rotateX:-120, rotateY: 200, rotateZ:-200, opacity:0,
-               duration:OUT, ease:'power3.in' }, IN + HOLD)
-  .to('#c2', { x:  400, y: 800, z:1200, rotateX: 160, rotateY:-140, rotateZ: 180, opacity:0,
-               duration:OUT, ease:'power3.in' }, IN + HOLD)
-  .to('#c3', { x: -300, y:-700, z: 900, rotateX:-200, rotateY: 100, rotateZ:-160, opacity:0,
-               duration:OUT, ease:'power3.in' }, IN + HOLD)
-  .to('#c4', { x: 1100, y: 300, z:1000, rotateX: 100, rotateY:-220, rotateZ: 220, opacity:0,
-               duration:OUT, ease:'power3.in' }, IN + HOLD);
+/* -- VITRINE courte : légère dérive, rien ne bouge vraiment -- */
+.to('#c1', { x:-285, y:0, z:0, rotateZ:-4, duration:0.10, ease:'none' }, 0.67)
+.to('#c2', { x: -95, y:0, z:0, rotateZ: 2, duration:0.10, ease:'none' }, 0.67)
+.to('#c3', { x:  95, y:0, z:0, rotateZ:-2, duration:0.10, ease:'none' }, 0.67)
+.to('#c4', { x: 285, y:0, z:0, rotateZ: 5, duration:0.10, ease:'none' }, 0.67)
+
+/* -- DÉPART : chacune explose dans une direction différente -- */
+.to('#c1', { x:-1100, y:-500, z:800,  rotateX:-150, rotateY: 220, rotateZ:-200, opacity:0, duration:0.16, ease:'power3.in' }, 0.77)
+.to('#c2', { x:  500, y: 700, z:1000, rotateX: 180, rotateY:-160, rotateZ: 180, opacity:0, duration:0.16, ease:'power3.in' }, 0.77)
+.to('#c3', { x: -400, y:-700, z: 900, rotateX:-200, rotateY: 120, rotateZ:-170, opacity:0, duration:0.16, ease:'power3.in' }, 0.77)
+.to('#c4', { x: 1100, y: 400, z:1100, rotateX: 120, rotateY:-240, rotateZ: 220, opacity:0, duration:0.16, ease:'power3.in' }, 0.77);
 </script>
 </body>
 </html>
