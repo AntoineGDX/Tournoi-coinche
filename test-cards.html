@@ -10,13 +10,9 @@ body { background:#07090a; font-family:sans-serif; }
 
 .spacer {
   height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:rgba(255,255,255,.25);
-  font-size:13px;
-  letter-spacing:.2em;
-  text-transform:uppercase;
+  display:flex; align-items:center; justify-content:center;
+  color:rgba(255,255,255,.22); font-size:13px;
+  letter-spacing:.2em; text-transform:uppercase;
 }
 
 #cards-section {
@@ -27,91 +23,45 @@ body { background:#07090a; font-family:sans-serif; }
 }
 
 #stage {
-  position:absolute;
-  inset:0;
-  perspective:1000px;
+  position:absolute; inset:0;
+  perspective:700px;
   perspective-origin:50% 50%;
-  transform-style:preserve-3d;
 }
 
-.fly-card {
+.fc {
   position:absolute;
   left:50%; top:50%;
-  width:190px; height:266px;
-  margin-left:-95px; margin-top:-133px;
+  width:180px; height:252px;
+  margin-left:-90px; margin-top:-126px;
   border-radius:14px;
   border:3px solid;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:10px;
   opacity:0;
   will-change:transform,opacity;
+  transform-style:preserve-3d;
   backface-visibility:visible;
 }
 .fy { background:#f5c842; border-color:#1a1a1a; color:#1a1a1a; }
 .fn { background:#1a1a1a; border-color:#f5c842; color:#f5c842; }
 
-.fly-card .corner {
-  position:absolute;
-  font-size:14px;
-  font-weight:800;
-  line-height:1.2;
-  text-align:center;
-}
-.tl { top:10px; left:12px; }
-.br { bottom:10px; right:12px; transform:rotate(180deg); }
-
-.fly-card .suit { font-size:60px; line-height:1; }
-.fly-card .info {
-  font-size:16px;
-  font-weight:700;
-  text-align:center;
-  line-height:1.4;
-  padding:0 14px;
-  text-transform:uppercase;
-  letter-spacing:.04em;
-}
+.fc .cn { position:absolute; font-size:13px; font-weight:800; line-height:1.2; text-align:center; }
+.cn.tl { top:10px; left:12px; }
+.cn.br { bottom:10px; right:12px; transform:rotate(180deg); }
+.fc .suit { font-size:56px; line-height:1; }
+.fc .info { font-size:15px; font-weight:700; text-align:center; line-height:1.4; padding:0 12px; text-transform:uppercase; letter-spacing:.04em; }
 
 #vignette {
-  position:absolute;
-  inset:0;
-  background:radial-gradient(ellipse 75% 65% at 50% 50%, transparent 35%, #07090a 100%);
-  pointer-events:none;
-  z-index:10;
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse 80% 70% at 50% 50%, transparent 30%, #07090a 100%);
+  pointer-events:none; z-index:10;
 }
-
 #label {
-  position:absolute;
-  bottom:24px;
-  left:50%;
-  transform:translateX(-50%);
-  font-size:10px;
-  letter-spacing:.22em;
-  color:rgba(255,255,255,.18);
-  text-transform:uppercase;
-  z-index:20;
-  white-space:nowrap;
+  position:absolute; bottom:22px; left:50%; transform:translateX(-50%);
+  font-size:9px; letter-spacing:.24em; color:rgba(255,255,255,.15);
+  text-transform:uppercase; z-index:20; white-space:nowrap;
 }
-
-#dots {
-  position:absolute;
-  right:24px;
-  top:50%;
-  transform:translateY(-50%);
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  z-index:20;
-}
-.dot {
-  width:6px; height:6px;
-  border-radius:50%;
-  background:rgba(255,255,255,.18);
-  transition:background .3s, transform .3s;
-}
-.dot.on { background:#f5c842; transform:scale(1.6); }
 </style>
 </head>
 <body>
@@ -121,43 +71,48 @@ body { background:#07090a; font-family:sans-serif; }
 <section id="cards-section">
   <div id="stage">
 
-    <div class="fly-card fy" id="c1">
-      <div class="corner tl">A<br>♠</div>
+    <div class="fc fy" id="c1">
+      <div class="cn tl">A<br>♠</div>
       <div class="suit">♠</div>
       <div class="info">13 & 14<br>juin 2026</div>
-      <div class="corner br">A<br>♠</div>
+      <div class="cn br">A<br>♠</div>
     </div>
 
-    <div class="fly-card fn" id="c2">
-      <div class="corner tl" style="color:#f5c842">A<br>♥</div>
+    <div class="fc fn" id="c2">
+      <div class="cn tl" style="color:#f5c842">A<br>♥</div>
       <div class="suit" style="color:#f5c842">♥</div>
       <div class="info" style="color:#f5c842">Le 109<br>Nice</div>
-      <div class="corner br" style="color:#f5c842">A<br>♥</div>
+      <div class="cn br" style="color:#f5c842">A<br>♥</div>
     </div>
 
-    <div class="fly-card fy" id="c3">
-      <div class="corner tl">A<br>♦</div>
+    <div class="fc fy" id="c3">
+      <div class="cn tl">A<br>♦</div>
       <div class="suit">♦</div>
       <div class="info">Doublette<br>· 20€ ·</div>
-      <div class="corner br">A<br>♦</div>
+      <div class="cn br">A<br>♦</div>
     </div>
 
-    <div class="fly-card fn" id="c4">
-      <div class="corner tl" style="color:#f5c842">A<br>♣</div>
+    <div class="fc fn" id="c4">
+      <div class="cn tl" style="color:#f5c842">A<br>♣</div>
       <div class="suit" style="color:#f5c842">♣</div>
       <div class="info" style="color:#f5c842">DJ Set<br>Buvette</div>
-      <div class="corner br" style="color:#f5c842">A<br>♣</div>
+      <div class="cn br" style="color:#f5c842">A<br>♣</div>
+    </div>
+
+    <!-- Cartes fantômes supplémentaires pour remplir l'espace -->
+    <div class="fc fy" id="c5" style="opacity:0">
+      <div class="cn tl">2<br>♠</div>
+      <div class="suit">♠</div>
+      <div class="cn br">2<br>♠</div>
+    </div>
+    <div class="fc fn" id="c6" style="opacity:0">
+      <div class="cn tl" style="color:#f5c842">K<br>♥</div>
+      <div class="suit" style="color:#f5c842">♥</div>
+      <div class="cn br" style="color:#f5c842">K<br>♥</div>
     </div>
 
   </div>
-
   <div id="vignette"></div>
-  <div id="dots">
-    <div class="dot" id="d1"></div>
-    <div class="dot" id="d2"></div>
-    <div class="dot" id="d3"></div>
-    <div class="dot" id="d4"></div>
-  </div>
   <div id="label">C'EST COINCHÉ · Nice · 1ère édition</div>
 </section>
 
@@ -168,68 +123,61 @@ body { background:#07090a; font-family:sans-serif; }
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
-const VW = window.innerWidth;
-const VH = window.innerHeight;
-
 const tl = gsap.timeline({
   scrollTrigger: {
     trigger: '#cards-section',
     start: 'top top',
-    end: '+=500%',
-    scrub: 1.4,
+    end: '+=600%',
+    scrub: 1.8,
     pin: true,
     anticipatePin: 1,
-    onUpdate: self => {
-      const p = self.progress;
-      [
-        [0.10, 0.32],
-        [0.33, 0.55],
-        [0.56, 0.77],
-        [0.78, 0.98],
-      ].forEach(([a, b], i) => {
-        document.getElementById('d'+(i+1)).classList.toggle('on', p >= a && p <= b);
-      });
-    }
   }
 });
 
-/* ---- Durées ---- */
-const fly   = 0.20;   // vol jusqu'au centre
-const read  = 0.18;   // pause lisible
-const leave = 0.20;   // départ
+/* Chaque carte part de très loin (z négatif énorme) et traverse la caméra
+   vers z positif. x/y varient pour des trajectoires différentes.
+   Les positions de départ sont décalées dans la timeline pour qu'on voit
+   plusieurs cartes à la fois à des profondeurs différentes.
+   rotateX/Y/Z : vrille intense en vol. */
 
-/* Carte 1 — vient de gauche en tournant sur X+Z, repart à droite en dessous */
-tl
-  .fromTo('#c1',
-    { x:-VW*1.2, y: VH*0.3,  z:-500, rotateX: 80, rotateY:-40, rotateZ:-200, opacity:0 },
-    { x: 0,      y: 0,        z: 0,   rotateX:  0, rotateY:  0, rotateZ: -4,  opacity:1, duration:fly, ease:'power2.out' })
-  .to('#c1', { duration:read })
-  .to('#c1',
-    { x: VW*1.2, y: VH*0.25, z:-300, rotateX:-50, rotateY: 60, rotateZ: 180, opacity:0, duration:leave, ease:'power2.in' })
+const D  = 0.55;  // durée du voyage complet de chaque carte
+const OV = 0.28;  // overlap : plusieurs cartes visibles en même temps
 
-/* Carte 2 — vient d'en haut à droite avec spin Y complet, repart bas-gauche */
-  .fromTo('#c2',
-    { x: VW*0.9, y:-VH*1.1, z:-400, rotateX:-120, rotateY: 200, rotateZ: 60, opacity:0 },
-    { x: 0,      y: 0,       z: 0,   rotateX:   0, rotateY:   0, rotateZ:  5, opacity:1, duration:fly, ease:'power2.out' })
-  .to('#c2', { duration:read })
-  .to('#c2',
-    { x:-VW*1.0, y: VH*0.9, z:-200, rotateX: 70, rotateY:-180, rotateZ:-140, opacity:0, duration:leave, ease:'power2.in' })
+/* Carte fantôme 1 — apparaît en premier, toute petite au loin */
+tl.set('#c5', { x: -120, y:  60, z:-5500, rotateX: 40, rotateY:-80, rotateZ: 30, opacity:0 })
+  .to('#c5',  { x: -300, y:  180, z: 1400, rotateX:140, rotateY: 60, rotateZ:200, opacity:0.6,
+                duration: D, ease:'none' }, 0)
+  .to('#c5',  { opacity:0, duration:0.05 }, D - 0.05)
 
-/* Carte 3 — vient de droite en plongée Z + spin X, repart en haut à gauche */
-  .fromTo('#c3',
-    { x: VW*1.1, y:-VH*0.2, z:-900, rotateX: 160, rotateY: 60, rotateZ: 120, opacity:0 },
-    { x: 0,      y: 0,       z: 0,   rotateX:   0, rotateY:  0, rotateZ:  -3, opacity:1, duration:fly, ease:'power3.out' })
-  .to('#c3', { duration:read })
-  .to('#c3',
-    { x:-VW*0.9, y:-VH*0.8, z:-200, rotateX:-100, rotateY:-80, rotateZ:-160, opacity:0, duration:leave, ease:'power2.in' })
+/* Carte 1 ♠ — décalée, démarre alors que c5 est encore là */
+  .set('#c1', { x:  200, y: -80, z:-4800, rotateX:-60, rotateY: 120, rotateZ:-40, opacity:0 })
+  .to('#c1',  { x:  500, y:-200, z: 1200, rotateX: 80, rotateY:-200, rotateZ: 160, opacity:1,
+                duration: D, ease:'none' }, OV)
+  .to('#c1',  { opacity:0, duration:0.05 }, OV + D - 0.05)
 
-/* Carte 4 — vient d'en bas à gauche avec triple spin, repart droite */
-  .fromTo('#c4',
-    { x:-VW*0.5, y: VH*1.2, z:-600, rotateX: 220, rotateY:-160, rotateZ:-80, opacity:0 },
-    { x: 0,      y: 0,       z: 0,   rotateX:   0, rotateY:   0, rotateZ:  4, opacity:1, duration:fly, ease:'power3.out' })
-  .to('#c4', { duration:read })
-  .to('#c4',
-    { x: VW*1.2, y:-VH*0.3, z:-100, rotateX: 60, rotateY: 140, rotateZ: 200, opacity:0, duration:leave, ease:'power2.in' });
+/* Carte fantôme 2 — croise la carte 1 */
+  .set('#c6', { x: -300, y: 140, z:-6000, rotateX: 100, rotateY:  40, rotateZ: 80, opacity:0 })
+  .to('#c6',  { x: -600, y: 300, z: 1600, rotateX: 260, rotateY:-120, rotateZ:-60, opacity:0.5,
+                duration: D, ease:'none' }, OV * 1.8)
+  .to('#c6',  { opacity:0, duration:0.05 }, OV * 1.8 + D - 0.05)
+
+/* Carte 2 ♥ */
+  .set('#c2', { x: -250, y: 200, z:-5200, rotateX:  80, rotateY:-60,  rotateZ: 120, opacity:0 })
+  .to('#c2',  { x: -700, y: 450, z: 1300, rotateX:-140, rotateY:240,  rotateZ:-80,  opacity:1,
+                duration: D, ease:'none' }, OV * 2.6)
+  .to('#c2',  { opacity:0, duration:0.05 }, OV * 2.6 + D - 0.05)
+
+/* Carte 3 ♦ */
+  .set('#c3', { x:  300, y: 100, z:-5800, rotateX:-100, rotateY:160, rotateZ:-60,  opacity:0 })
+  .to('#c3',  { x:  650, y: 250, z: 1500, rotateX: 180, rotateY:-80, rotateZ: 240, opacity:1,
+                duration: D, ease:'none' }, OV * 3.4)
+  .to('#c3',  { opacity:0, duration:0.05 }, OV * 3.4 + D - 0.05)
+
+/* Carte 4 ♣ */
+  .set('#c4', { x: -100, y:-220, z:-5000, rotateX: 140, rotateY:-200, rotateZ:100, opacity:0 })
+  .to('#c4',  { x: -200, y:-500, z: 1400, rotateX:-60,  rotateY: 100, rotateZ:-180,opacity:1,
+                duration: D, ease:'none' }, OV * 4.2)
+  .to('#c4',  { opacity:0, duration:0.05 }, OV * 4.2 + D - 0.05);
 </script>
 </body>
 </html>
