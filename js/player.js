@@ -96,7 +96,26 @@ document.addEventListener('DOMContentLoaded', () => {
   if (isNaN(savedTime) || savedTime < 0) savedTime = 0;
 
   load(index, false, savedTime);
-  if (wasPlaying) {
+
+  // Tente l'autoplay immédiatement ; si le navigateur refuse (politique anti-autoplay),
+  // on attend la première interaction de l'utilisateur pour démarrer.
+  function startAudio() {
     audio.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+  }
+
+  if (wasPlaying) {
+    startAudio();
+  } else {
+    const onFirstInteraction = () => {
+      document.removeEventListener('click', onFirstInteraction);
+      document.removeEventListener('keydown', onFirstInteraction);
+      document.removeEventListener('touchstart', onFirstInteraction);
+      startAudio();
+    };
+    audio.play().then(() => setPlaying(true)).catch(() => {
+      document.addEventListener('click', onFirstInteraction);
+      document.addEventListener('keydown', onFirstInteraction);
+      document.addEventListener('touchstart', onFirstInteraction);
+    });
   }
 });
