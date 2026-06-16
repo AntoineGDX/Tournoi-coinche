@@ -7,54 +7,40 @@
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:#07090a; font-family:sans-serif; }
-
 .spacer {
   height:100vh;
   display:flex; align-items:center; justify-content:center;
   color:rgba(255,255,255,.22); font-size:13px;
   letter-spacing:.2em; text-transform:uppercase;
 }
-
 #cards-section {
-  position:relative;
-  height:100vh;
-  overflow:hidden;
-  background:#07090a;
+  position:relative; height:100vh; overflow:hidden; background:#07090a;
 }
-
 #stage {
   position:absolute; inset:0;
-  perspective:700px;
+  perspective:800px;
   perspective-origin:50% 50%;
 }
-
 .fc {
   position:absolute;
   left:50%; top:50%;
   width:180px; height:252px;
   margin-left:-90px; margin-top:-126px;
-  border-radius:14px;
-  border:3px solid;
+  border-radius:14px; border:3px solid;
   display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:10px;
-  opacity:0;
-  will-change:transform,opacity;
-  transform-style:preserve-3d;
-  backface-visibility:visible;
+  align-items:center; justify-content:center; gap:10px;
+  opacity:0; will-change:transform,opacity;
 }
 .fy { background:#f5c842; border-color:#1a1a1a; color:#1a1a1a; }
 .fn { background:#1a1a1a; border-color:#f5c842; color:#f5c842; }
-
 .fc .cn { position:absolute; font-size:13px; font-weight:800; line-height:1.2; text-align:center; }
 .cn.tl { top:10px; left:12px; }
 .cn.br { bottom:10px; right:12px; transform:rotate(180deg); }
 .fc .suit { font-size:56px; line-height:1; }
 .fc .info { font-size:15px; font-weight:700; text-align:center; line-height:1.4; padding:0 12px; text-transform:uppercase; letter-spacing:.04em; }
-
 #vignette {
   position:absolute; inset:0;
-  background:radial-gradient(ellipse 80% 70% at 50% 50%, transparent 30%, #07090a 100%);
+  background:radial-gradient(ellipse 85% 75% at 50% 50%, transparent 25%, #07090a 100%);
   pointer-events:none; z-index:10;
 }
 #label {
@@ -71,6 +57,7 @@ body { background:#07090a; font-family:sans-serif; }
 <section id="cards-section">
   <div id="stage">
 
+    <!-- Carte 1 ♠ : entre bas-gauche → sort haut-droite -->
     <div class="fc fy" id="c1">
       <div class="cn tl">A<br>♠</div>
       <div class="suit">♠</div>
@@ -78,6 +65,7 @@ body { background:#07090a; font-family:sans-serif; }
       <div class="cn br">A<br>♠</div>
     </div>
 
+    <!-- Carte 2 ♥ : entre haut-droite → sort bas-gauche -->
     <div class="fc fn" id="c2">
       <div class="cn tl" style="color:#f5c842">A<br>♥</div>
       <div class="suit" style="color:#f5c842">♥</div>
@@ -85,6 +73,7 @@ body { background:#07090a; font-family:sans-serif; }
       <div class="cn br" style="color:#f5c842">A<br>♥</div>
     </div>
 
+    <!-- Carte 3 ♦ : entre droite → sort gauche -->
     <div class="fc fy" id="c3">
       <div class="cn tl">A<br>♦</div>
       <div class="suit">♦</div>
@@ -92,23 +81,12 @@ body { background:#07090a; font-family:sans-serif; }
       <div class="cn br">A<br>♦</div>
     </div>
 
+    <!-- Carte 4 ♣ : entre bas-droite → sort haut-gauche -->
     <div class="fc fn" id="c4">
       <div class="cn tl" style="color:#f5c842">A<br>♣</div>
       <div class="suit" style="color:#f5c842">♣</div>
       <div class="info" style="color:#f5c842">DJ Set<br>Buvette</div>
       <div class="cn br" style="color:#f5c842">A<br>♣</div>
-    </div>
-
-    <!-- Cartes fantômes supplémentaires pour remplir l'espace -->
-    <div class="fc fy" id="c5" style="opacity:0">
-      <div class="cn tl">2<br>♠</div>
-      <div class="suit">♠</div>
-      <div class="cn br">2<br>♠</div>
-    </div>
-    <div class="fc fn" id="c6" style="opacity:0">
-      <div class="cn tl" style="color:#f5c842">K<br>♥</div>
-      <div class="suit" style="color:#f5c842">♥</div>
-      <div class="cn br" style="color:#f5c842">K<br>♥</div>
     </div>
 
   </div>
@@ -127,57 +105,63 @@ const tl = gsap.timeline({
   scrollTrigger: {
     trigger: '#cards-section',
     start: 'top top',
-    end: '+=600%',
-    scrub: 1.8,
+    end: '+=500%',
+    scrub: 1.6,
     pin: true,
     anticipatePin: 1,
   }
 });
 
-/* Chaque carte part de très loin (z négatif énorme) et traverse la caméra
-   vers z positif. x/y varient pour des trajectoires différentes.
-   Les positions de départ sont décalées dans la timeline pour qu'on voit
-   plusieurs cartes à la fois à des profondeurs différentes.
-   rotateX/Y/Z : vrille intense en vol. */
+/*
+  Chaque carte fait un voyage en 3 étapes :
+  1. LOIN  → minuscule, depuis un coin de l'écran
+  2. PRÈS  → taille idéale, passe devant la caméra
+  3. SORTIE → grossit encore et sort de l'autre côté
 
-const D  = 0.55;  // durée du voyage complet de chaque carte
-const OV = 0.28;  // overlap : plusieurs cartes visibles en même temps
+  perspective:800px donc :
+    z=-3500 → carte ~18% de sa taille   (minuscule)
+    z=-400  → carte ~67% (bonne taille lisible)
+    z=+600  → carte 4x sa taille         (énorme, déborde)
 
-/* Carte fantôme 1 — apparaît en premier, toute petite au loin */
-tl.set('#c5', { x: -120, y:  60, z:-5500, rotateX: 40, rotateY:-80, rotateZ: 30, opacity:0 })
-  .to('#c5',  { x: -300, y:  180, z: 1400, rotateX:140, rotateY: 60, rotateZ:200, opacity:0.6,
-                duration: D, ease:'none' }, 0)
-  .to('#c5',  { opacity:0, duration:0.05 }, D - 0.05)
+  x/y dérivent d'un côté à l'autre pour la trajectoire diagonale.
+  rotateX/Y/Z : rotation continue pendant tout le trajet.
+  Pas de pause : le scroll contrôle la vitesse, l'utilisateur s'arrête s'il veut lire.
+*/
 
-/* Carte 1 ♠ — décalée, démarre alors que c5 est encore là */
-  .set('#c1', { x:  200, y: -80, z:-4800, rotateX:-60, rotateY: 120, rotateZ:-40, opacity:0 })
-  .to('#c1',  { x:  500, y:-200, z: 1200, rotateX: 80, rotateY:-200, rotateZ: 160, opacity:1,
-                duration: D, ease:'none' }, OV)
-  .to('#c1',  { opacity:0, duration:0.05 }, OV + D - 0.05)
+const SEG = 0.28;   // durée d'un segment (en unité timeline)
+const GAP = 0.04;   // léger overlap entre cartes
 
-/* Carte fantôme 2 — croise la carte 1 */
-  .set('#c6', { x: -300, y: 140, z:-6000, rotateX: 100, rotateY:  40, rotateZ: 80, opacity:0 })
-  .to('#c6',  { x: -600, y: 300, z: 1600, rotateX: 260, rotateY:-120, rotateZ:-60, opacity:0.5,
-                duration: D, ease:'none' }, OV * 1.8)
-  .to('#c6',  { opacity:0, duration:0.05 }, OV * 1.8 + D - 0.05)
+// ---- Carte 1 ♠ : bas-gauche → haut-droite ----
+tl
+.set('#c1', { x:-600, y:350, z:-3800, rotateX: 30, rotateY:-120, rotateZ:-50, opacity:0 })
+.to('#c1',
+  { x: 80,  y:-30,  z: -300, rotateX:-40, rotateY: 80, rotateZ: 60, opacity:1, duration:SEG, ease:'power1.in' })
+.to('#c1',
+  { x: 700, y:-500, z: 1000, rotateX:-120, rotateY:220, rotateZ:160, opacity:0, duration:SEG*0.7, ease:'power2.in' })
 
-/* Carte 2 ♥ */
-  .set('#c2', { x: -250, y: 200, z:-5200, rotateX:  80, rotateY:-60,  rotateZ: 120, opacity:0 })
-  .to('#c2',  { x: -700, y: 450, z: 1300, rotateX:-140, rotateY:240,  rotateZ:-80,  opacity:1,
-                duration: D, ease:'none' }, OV * 2.6)
-  .to('#c2',  { opacity:0, duration:0.05 }, OV * 2.6 + D - 0.05)
+// ---- Carte 2 ♥ : haut-droite → bas-gauche ----
+.set('#c2', { x:650, y:-380, z:-3800, rotateX:-50, rotateY:150, rotateZ: 70, opacity:0 })
+.to('#c2',
+  { x:-60, y: 40,  z: -300, rotateX: 60, rotateY:-100, rotateZ:-80, opacity:1, duration:SEG, ease:'power1.in' },
+  SEG * 1.6 + GAP)
+.to('#c2',
+  { x:-750, y:480, z: 1000, rotateX:160, rotateY:-280, rotateZ:-200, opacity:0, duration:SEG*0.7, ease:'power2.in' })
 
-/* Carte 3 ♦ */
-  .set('#c3', { x:  300, y: 100, z:-5800, rotateX:-100, rotateY:160, rotateZ:-60,  opacity:0 })
-  .to('#c3',  { x:  650, y: 250, z: 1500, rotateX: 180, rotateY:-80, rotateZ: 240, opacity:1,
-                duration: D, ease:'none' }, OV * 3.4)
-  .to('#c3',  { opacity:0, duration:0.05 }, OV * 3.4 + D - 0.05)
+// ---- Carte 3 ♦ : droite → gauche (trajectoire plus horizontale) ----
+.set('#c3', { x:700, y: 80, z:-3800, rotateX: 80, rotateY: 60, rotateZ:-30, opacity:0 })
+.to('#c3',
+  { x: 30, y:-20,  z: -300, rotateX:-60, rotateY:-80, rotateZ: 90, opacity:1, duration:SEG, ease:'power1.in' },
+  SEG * 3.2 + GAP * 2)
+.to('#c3',
+  { x:-800, y: 120, z: 1000, rotateX:-180, rotateY:-200, rotateZ:200, opacity:0, duration:SEG*0.7, ease:'power2.in' })
 
-/* Carte 4 ♣ */
-  .set('#c4', { x: -100, y:-220, z:-5000, rotateX: 140, rotateY:-200, rotateZ:100, opacity:0 })
-  .to('#c4',  { x: -200, y:-500, z: 1400, rotateX:-60,  rotateY: 100, rotateZ:-180,opacity:1,
-                duration: D, ease:'none' }, OV * 4.2)
-  .to('#c4',  { opacity:0, duration:0.05 }, OV * 4.2 + D - 0.05);
+// ---- Carte 4 ♣ : bas-droite → haut-gauche ----
+.set('#c4', { x:550, y:400, z:-3800, rotateX:-70, rotateY:-130, rotateZ:110, opacity:0 })
+.to('#c4',
+  { x:-50, y: 30, z: -300, rotateX: 80, rotateY: 80, rotateZ:-120, opacity:1, duration:SEG, ease:'power1.in' },
+  SEG * 4.8 + GAP * 3)
+.to('#c4',
+  { x:-650, y:-420, z: 1000, rotateX:200, rotateY:240, rotateZ:-280, opacity:0, duration:SEG*0.7, ease:'power2.in' });
 </script>
 </body>
 </html>
