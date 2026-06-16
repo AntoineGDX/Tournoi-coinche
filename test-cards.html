@@ -131,37 +131,37 @@ const tl = gsap.timeline({
 const SEG = 0.28;   // durée d'un segment (en unité timeline)
 const GAP = 0.04;   // léger overlap entre cartes
 
-// ---- Carte 1 ♠ : bas-gauche → haut-droite ----
+// ---- Carte 1 ♠ : part de relativement près, bas-gauche → haut-droite ----
 tl
-.set('#c1', { x:-600, y:350, z:-3800, rotateX: 30, rotateY:-120, rotateZ:-50, opacity:0 })
+.set('#c1', { x:-500, y:300, z:-3200, rotateX: 30, rotateY:-120, rotateZ:-50, opacity:0 })
 .to('#c1',
-  { x: 80,  y:-30,  z: -300, rotateX:-40, rotateY: 80, rotateZ: 60, opacity:1, duration:SEG, ease:'power1.in' })
+  { x: 80,  y:-30,  z:-300, rotateX:-40, rotateY: 80, rotateZ: 60, opacity:1, duration:SEG, ease:'power1.in' })
 .to('#c1',
-  { x: 700, y:-500, z: 1000, rotateX:-120, rotateY:220, rotateZ:160, opacity:0, duration:SEG*0.7, ease:'power2.in' })
+  { x: 700, y:-500, z:1000, rotateX:-120, rotateY:220, rotateZ:160, opacity:0, duration:SEG*0.7, ease:'power2.in' })
 
-// ---- Carte 2 ♥ : haut-droite → bas-gauche ----
-.set('#c2', { x:650, y:-380, z:-3800, rotateX:-50, rotateY:150, rotateZ: 70, opacity:0 })
+// ---- Carte 2 ♥ : part de très loin, haut-droite → bas-gauche ----
+.set('#c2', { x:400, y:-220, z:-7500, rotateX:-50, rotateY:150, rotateZ: 70, opacity:0 })
 .to('#c2',
-  { x:-60, y: 40,  z: -300, rotateX: 60, rotateY:-100, rotateZ:-80, opacity:1, duration:SEG, ease:'power1.in' },
+  { x:-60, y: 40,  z:-300, rotateX: 60, rotateY:-100, rotateZ:-80, opacity:1, duration:SEG*1.5, ease:'power1.in' },
   SEG * 1.6 + GAP)
 .to('#c2',
-  { x:-750, y:480, z: 1000, rotateX:160, rotateY:-280, rotateZ:-200, opacity:0, duration:SEG*0.7, ease:'power2.in' })
+  { x:-750, y:480, z:1000, rotateX:160, rotateY:-280, rotateZ:-200, opacity:0, duration:SEG*0.7, ease:'power2.in' })
 
-// ---- Carte 3 ♦ : droite → gauche (trajectoire plus horizontale) ----
-.set('#c3', { x:700, y: 80, z:-3800, rotateX: 80, rotateY: 60, rotateZ:-30, opacity:0 })
+// ---- Carte 3 ♦ : part de distance moyenne, droite → gauche ----
+.set('#c3', { x:600, y: 60, z:-5000, rotateX: 80, rotateY: 60, rotateZ:-30, opacity:0 })
 .to('#c3',
-  { x: 30, y:-20,  z: -300, rotateX:-60, rotateY:-80, rotateZ: 90, opacity:1, duration:SEG, ease:'power1.in' },
-  SEG * 3.2 + GAP * 2)
+  { x: 30, y:-20,  z:-300, rotateX:-60, rotateY:-80, rotateZ: 90, opacity:1, duration:SEG*1.2, ease:'power1.in' },
+  SEG * 3.8 + GAP * 2)
 .to('#c3',
-  { x:-800, y: 120, z: 1000, rotateX:-180, rotateY:-200, rotateZ:200, opacity:0, duration:SEG*0.7, ease:'power2.in' })
+  { x:-800, y: 120, z:1000, rotateX:-180, rotateY:-200, rotateZ:200, opacity:0, duration:SEG*0.7, ease:'power2.in' })
 
-// ---- Carte 4 ♣ : bas-droite → haut-gauche ----
-.set('#c4', { x:550, y:400, z:-3800, rotateX:-70, rotateY:-130, rotateZ:110, opacity:0 })
+// ---- Carte 4 ♣ : part de très très loin, bas-droite → haut-gauche ----
+.set('#c4', { x:300, y:240, z:-9500, rotateX:-70, rotateY:-130, rotateZ:110, opacity:0 })
 .to('#c4',
-  { x:-50, y: 30, z: -300, rotateX: 80, rotateY: 80, rotateZ:-120, opacity:1, duration:SEG, ease:'power1.in' },
-  SEG * 4.8 + GAP * 3)
+  { x:-50, y: 30, z:-300, rotateX: 80, rotateY: 80, rotateZ:-120, opacity:1, duration:SEG*1.8, ease:'power1.in' },
+  SEG * 5.4 + GAP * 3)
 .to('#c4',
-  { x:-650, y:-420, z: 1000, rotateX:200, rotateY:240, rotateZ:-280, opacity:0, duration:SEG*0.7, ease:'power2.in' });
+  { x:-650, y:-420, z:1000, rotateX:200, rotateY:240, rotateZ:-280, opacity:0, duration:SEG*0.7, ease:'power2.in' });
 </script>
 </body>
 </html>
