@@ -5,292 +5,231 @@
 <title>Test cartes GSAP</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:#111; font-family: sans-serif; }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#07090a; font-family:sans-serif; }
 
-  .spacer { height: 100vh; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,.3); font-size:14px; letter-spacing:.2em; text-transform:uppercase; }
+.spacer {
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:rgba(255,255,255,.25);
+  font-size:13px;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
 
-  /* ---- Section cartes ---- */
-  #cards-section {
-    position: relative;
-    height: 100vh;
-    overflow: hidden;
-    background: #07090a;
-  }
+#cards-section {
+  position:relative;
+  height:100vh;
+  overflow:hidden;
+  background:#07090a;
+}
 
-  #cards-stage {
-    position: absolute;
-    inset: 0;
-    perspective: 1100px;
-    perspective-origin: 50% 50%;
-  }
+#stage {
+  position:absolute;
+  inset:0;
+  perspective:1000px;
+  perspective-origin:50% 50%;
+  transform-style:preserve-3d;
+}
 
-  .fly-card {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 200px;
-    height: 280px;
-    margin-left: -100px;
-    margin-top: -140px;
-    border-radius: 16px;
-    border: 3px solid;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    opacity: 0;
-    will-change: transform, opacity;
-    pointer-events: none;
-  }
+.fly-card {
+  position:absolute;
+  left:50%; top:50%;
+  width:190px; height:266px;
+  margin-left:-95px; margin-top:-133px;
+  border-radius:14px;
+  border:3px solid;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  opacity:0;
+  will-change:transform,opacity;
+  backface-visibility:visible;
+}
+.fy { background:#f5c842; border-color:#1a1a1a; color:#1a1a1a; }
+.fn { background:#1a1a1a; border-color:#f5c842; color:#f5c842; }
 
-  .fly-card.yellow { background: #f5c842; border-color: #1a1a1a; color: #1a1a1a; }
-  .fly-card.black  { background: #1a1a1a; border-color: #f5c842; color: #f5c842; }
+.fly-card .corner {
+  position:absolute;
+  font-size:14px;
+  font-weight:800;
+  line-height:1.2;
+  text-align:center;
+}
+.tl { top:10px; left:12px; }
+.br { bottom:10px; right:12px; transform:rotate(180deg); }
 
-  .fly-card .corner {
-    position: absolute;
-    font-size: 15px;
-    font-weight: 800;
-    line-height: 1.15;
-    text-align: center;
-  }
-  .fly-card .corner.tl { top: 12px; left: 14px; }
-  .fly-card .corner.br { bottom: 12px; right: 14px; transform: rotate(180deg); }
+.fly-card .suit { font-size:60px; line-height:1; }
+.fly-card .info {
+  font-size:16px;
+  font-weight:700;
+  text-align:center;
+  line-height:1.4;
+  padding:0 14px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
 
-  .fly-card .suit { font-size: 64px; line-height: 1; }
+#vignette {
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse 75% 65% at 50% 50%, transparent 35%, #07090a 100%);
+  pointer-events:none;
+  z-index:10;
+}
 
-  .fly-card .info {
-    font-size: 17px;
-    font-weight: 700;
-    text-align: center;
-    line-height: 1.4;
-    padding: 0 16px;
-    text-transform: uppercase;
-    letter-spacing: .04em;
-  }
+#label {
+  position:absolute;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:10px;
+  letter-spacing:.22em;
+  color:rgba(255,255,255,.18);
+  text-transform:uppercase;
+  z-index:20;
+  white-space:nowrap;
+}
 
-  /* Fond étoilé léger */
-  #stars {
-    position: absolute;
-    inset: 0;
-    background-image:
-      radial-gradient(1px 1px at 15% 22%, rgba(255,255,255,.35) 0%, transparent 100%),
-      radial-gradient(1px 1px at 72% 8%,  rgba(255,255,255,.25) 0%, transparent 100%),
-      radial-gradient(1px 1px at 38% 65%, rgba(255,255,255,.2)  0%, transparent 100%),
-      radial-gradient(1px 1px at 88% 44%, rgba(255,255,255,.3)  0%, transparent 100%),
-      radial-gradient(1px 1px at 6%  80%, rgba(255,255,255,.2)  0%, transparent 100%),
-      radial-gradient(1px 1px at 55% 90%, rgba(255,255,255,.25) 0%, transparent 100%),
-      radial-gradient(1px 1px at 92% 72%, rgba(255,255,255,.2)  0%, transparent 100%),
-      radial-gradient(1px 1px at 28% 35%, rgba(255,255,255,.3)  0%, transparent 100%);
-    pointer-events: none;
-  }
-
-  #vignette {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 40%, #07090a 100%);
-    pointer-events: none;
-    z-index: 10;
-  }
-
-  #section-label {
-    position: absolute;
-    bottom: 28px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 10px;
-    letter-spacing: .24em;
-    color: rgba(255,255,255,.2);
-    text-transform: uppercase;
-    z-index: 20;
-    white-space: nowrap;
-  }
-
-  /* Progress dots */
-  #progress-dots {
-    position: absolute;
-    right: 28px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 20;
-  }
-  .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.2);
-    transition: background .3s, transform .3s;
-  }
-  .dot.active {
-    background: #f5c842;
-    transform: scale(1.5);
-  }
+#dots {
+  position:absolute;
+  right:24px;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  z-index:20;
+}
+.dot {
+  width:6px; height:6px;
+  border-radius:50%;
+  background:rgba(255,255,255,.18);
+  transition:background .3s, transform .3s;
+}
+.dot.on { background:#f5c842; transform:scale(1.6); }
 </style>
 </head>
 <body>
 
 <div class="spacer">↓ Scroll pour voir l'animation</div>
 
-<!-- ===== SECTION CARTES ===== -->
 <section id="cards-section">
-  <div id="stars"></div>
+  <div id="stage">
 
-  <div id="cards-stage">
-
-    <!-- Carte 1 : ♠ Date — entre par la gauche, sort par la droite -->
-    <div class="fly-card yellow" id="c1">
+    <div class="fly-card fy" id="c1">
       <div class="corner tl">A<br>♠</div>
       <div class="suit">♠</div>
       <div class="info">13 & 14<br>juin 2026</div>
       <div class="corner br">A<br>♠</div>
     </div>
 
-    <!-- Carte 2 : ♥ Lieu — entre par en haut à droite, sort par la gauche -->
-    <div class="fly-card black" id="c2">
-      <div class="corner tl">A<br>♥</div>
+    <div class="fly-card fn" id="c2">
+      <div class="corner tl" style="color:#f5c842">A<br>♥</div>
       <div class="suit" style="color:#f5c842">♥</div>
-      <div class="info">Le 109<br>Nice</div>
-      <div class="corner br">A<br>♥</div>
+      <div class="info" style="color:#f5c842">Le 109<br>Nice</div>
+      <div class="corner br" style="color:#f5c842">A<br>♥</div>
     </div>
 
-    <!-- Carte 3 : ♦ Format — entre par la droite, sort par en haut à gauche -->
-    <div class="fly-card yellow" id="c3">
+    <div class="fly-card fy" id="c3">
       <div class="corner tl">A<br>♦</div>
       <div class="suit">♦</div>
       <div class="info">Doublette<br>· 20€ ·</div>
       <div class="corner br">A<br>♦</div>
     </div>
 
-    <!-- Carte 4 : ♣ Ambiance — entre par en bas, sort par la droite -->
-    <div class="fly-card black" id="c4">
-      <div class="corner tl">A<br>♣</div>
+    <div class="fly-card fn" id="c4">
+      <div class="corner tl" style="color:#f5c842">A<br>♣</div>
       <div class="suit" style="color:#f5c842">♣</div>
-      <div class="info">DJ Set<br>Buvette</div>
-      <div class="corner br">A<br>♣</div>
+      <div class="info" style="color:#f5c842">DJ Set<br>Buvette</div>
+      <div class="corner br" style="color:#f5c842">A<br>♣</div>
     </div>
 
   </div>
 
   <div id="vignette"></div>
-
-  <div id="progress-dots">
-    <div class="dot" id="dot1"></div>
-    <div class="dot" id="dot2"></div>
-    <div class="dot" id="dot3"></div>
-    <div class="dot" id="dot4"></div>
+  <div id="dots">
+    <div class="dot" id="d1"></div>
+    <div class="dot" id="d2"></div>
+    <div class="dot" id="d3"></div>
+    <div class="dot" id="d4"></div>
   </div>
-
-  <div id="section-label">C'EST COINCHÉ · Nice · 1ère édition</div>
+  <div id="label">C'EST COINCHÉ · Nice · 1ère édition</div>
 </section>
 
 <div class="spacer">La suite du site ↓</div>
 
-<!-- ===== GSAP ===== -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
-const W = window.innerWidth;
-const H = window.innerHeight;
+const VW = window.innerWidth;
+const VH = window.innerHeight;
 
-// La section est pinnée pendant 4x la hauteur de la fenêtre
 const tl = gsap.timeline({
   scrollTrigger: {
     trigger: '#cards-section',
     start: 'top top',
-    end: '+=400%',
-    scrub: 1.2,
+    end: '+=500%',
+    scrub: 1.4,
     pin: true,
     anticipatePin: 1,
-    onUpdate: self => updateDots(self.progress),
+    onUpdate: self => {
+      const p = self.progress;
+      [
+        [0.10, 0.32],
+        [0.33, 0.55],
+        [0.56, 0.77],
+        [0.78, 0.98],
+      ].forEach(([a, b], i) => {
+        document.getElementById('d'+(i+1)).classList.toggle('on', p >= a && p <= b);
+      });
+    }
   }
 });
 
-// ---- Carte 1 : entre gauche, lisible au centre, sort droite ----
-tl.set('#c1', { x: -W * 1.1, y: H * 0.08, z: 0, rotateX: 0, rotateY: -60, rotateZ: -25, opacity: 0 })
-  .to('#c1', {
-    x: -W * 1.1, y: H * 0.08, z: 0, rotateX: 0, rotateY: -60, rotateZ: -25, opacity: 0,
-    duration: 0.01
-  })
-  // Arrive au centre avec spin
-  .to('#c1', {
-    x: 0, y: 0, z: 0,
-    rotateX: 0, rotateY: 0, rotateZ: -3,
-    opacity: 1,
-    duration: 0.22, ease: 'power2.out'
-  })
-  // Pause lisible
-  .to('#c1', { duration: 0.14 })
-  // Sort par la droite avec spin
-  .to('#c1', {
-    x: W * 1.1, y: -H * 0.1, z: 0,
-    rotateX: 10, rotateY: 50, rotateZ: 18,
-    opacity: 0,
-    duration: 0.22, ease: 'power2.in'
-  })
+/* ---- Durées ---- */
+const fly   = 0.20;   // vol jusqu'au centre
+const read  = 0.18;   // pause lisible
+const leave = 0.20;   // départ
 
-// ---- Carte 2 : entre haut-droite, sort bas-gauche ----
-  .set('#c2', { x: W * 0.7, y: -H * 0.9, z: 200, rotateX: -40, rotateY: 30, rotateZ: 25, opacity: 0 })
-  .to('#c2', {
-    x: 0, y: 0, z: 0,
-    rotateX: 0, rotateY: 0, rotateZ: 4,
-    opacity: 1,
-    duration: 0.22, ease: 'power2.out'
-  })
-  .to('#c2', { duration: 0.14 })
-  .to('#c2', {
-    x: -W * 0.9, y: H * 0.7, z: -100,
-    rotateX: 30, rotateY: -40, rotateZ: -20,
-    opacity: 0,
-    duration: 0.22, ease: 'power2.in'
-  })
+/* Carte 1 — vient de gauche en tournant sur X+Z, repart à droite en dessous */
+tl
+  .fromTo('#c1',
+    { x:-VW*1.2, y: VH*0.3,  z:-500, rotateX: 80, rotateY:-40, rotateZ:-200, opacity:0 },
+    { x: 0,      y: 0,        z: 0,   rotateX:  0, rotateY:  0, rotateZ: -4,  opacity:1, duration:fly, ease:'power2.out' })
+  .to('#c1', { duration:read })
+  .to('#c1',
+    { x: VW*1.2, y: VH*0.25, z:-300, rotateX:-50, rotateY: 60, rotateZ: 180, opacity:0, duration:leave, ease:'power2.in' })
 
-// ---- Carte 3 : entre droite avec plongée Z, sort gauche ----
-  .set('#c3', { x: W * 1.2, y: H * 0.05, z: -600, rotateX: 20, rotateY: 60, rotateZ: 30, opacity: 0 })
-  .to('#c3', {
-    x: 0, y: 0, z: 0,
-    rotateX: 0, rotateY: 0, rotateZ: -5,
-    opacity: 1,
-    duration: 0.22, ease: 'power2.out'
-  })
-  .to('#c3', { duration: 0.14 })
-  .to('#c3', {
-    x: -W * 1.1, y: H * 0.05, z: 0,
-    rotateX: -10, rotateY: -55, rotateZ: -22,
-    opacity: 0,
-    duration: 0.22, ease: 'power2.in'
-  })
+/* Carte 2 — vient d'en haut à droite avec spin Y complet, repart bas-gauche */
+  .fromTo('#c2',
+    { x: VW*0.9, y:-VH*1.1, z:-400, rotateX:-120, rotateY: 200, rotateZ: 60, opacity:0 },
+    { x: 0,      y: 0,       z: 0,   rotateX:   0, rotateY:   0, rotateZ:  5, opacity:1, duration:fly, ease:'power2.out' })
+  .to('#c2', { duration:read })
+  .to('#c2',
+    { x:-VW*1.0, y: VH*0.9, z:-200, rotateX: 70, rotateY:-180, rotateZ:-140, opacity:0, duration:leave, ease:'power2.in' })
 
-// ---- Carte 4 : entre bas avec spin complet, sort haut-droite ----
-  .set('#c4', { x: -W * 0.3, y: H * 1.0, z: -300, rotateX: 60, rotateY: -30, rotateZ: -40, opacity: 0 })
-  .to('#c4', {
-    x: 0, y: 0, z: 0,
-    rotateX: 0, rotateY: 0, rotateZ: 3,
-    opacity: 1,
-    duration: 0.22, ease: 'power2.out'
-  })
-  .to('#c4', { duration: 0.18 })
-  .to('#c4', {
-    x: W * 0.8, y: -H * 0.8, z: 0,
-    rotateX: -40, rotateY: 45, rotateZ: 28,
-    opacity: 0,
-    duration: 0.22, ease: 'power2.in'
-  });
+/* Carte 3 — vient de droite en plongée Z + spin X, repart en haut à gauche */
+  .fromTo('#c3',
+    { x: VW*1.1, y:-VH*0.2, z:-900, rotateX: 160, rotateY: 60, rotateZ: 120, opacity:0 },
+    { x: 0,      y: 0,       z: 0,   rotateX:   0, rotateY:  0, rotateZ:  -3, opacity:1, duration:fly, ease:'power3.out' })
+  .to('#c3', { duration:read })
+  .to('#c3',
+    { x:-VW*0.9, y:-VH*0.8, z:-200, rotateX:-100, rotateY:-80, rotateZ:-160, opacity:0, duration:leave, ease:'power2.in' })
 
-// ---- Points de progression ----
-function updateDots(progress) {
-  const steps = [0.12, 0.37, 0.62, 0.87];
-  steps.forEach((threshold, i) => {
-    const dot = document.getElementById('dot' + (i+1));
-    const isActive = progress >= threshold - 0.15 && progress <= threshold + 0.15;
-    dot.classList.toggle('active', isActive);
-  });
-}
+/* Carte 4 — vient d'en bas à gauche avec triple spin, repart droite */
+  .fromTo('#c4',
+    { x:-VW*0.5, y: VH*1.2, z:-600, rotateX: 220, rotateY:-160, rotateZ:-80, opacity:0 },
+    { x: 0,      y: 0,       z: 0,   rotateX:   0, rotateY:   0, rotateZ:  4, opacity:1, duration:fly, ease:'power3.out' })
+  .to('#c4', { duration:read })
+  .to('#c4',
+    { x: VW*1.2, y:-VH*0.3, z:-100, rotateX: 60, rotateY: 140, rotateZ: 200, opacity:0, duration:leave, ease:'power2.in' });
 </script>
 </body>
 </html>
