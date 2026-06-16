@@ -8,35 +8,39 @@
 <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/site.css">
 <style>
-#cards-section { position:relative; height:100vh; overflow:hidden; background:#07090a; }
+/* Rules section becomes the animation container */
+.rules { position:relative; overflow:visible !important; }
+
+/* Stage overlay — covers the whole viewport when pinned */
 #stage {
-  position:absolute; inset:0;
+  position:absolute;
+  top:0; left:50%; transform:translateX(-50%);
+  width:100vw; height:100%;
   perspective:850px; perspective-origin:50% 50%;
+  pointer-events:none;
+  z-index:200;
 }
+
+/* Animated playing cards */
 .fc {
   position:absolute; left:50%; top:50%;
-  width:160px; height:224px; margin-left:-80px; margin-top:-112px;
+  width:180px; height:252px; margin-left:-90px; margin-top:-126px;
   border-radius:14px; border:3px solid;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
   opacity:0; will-change:transform,opacity;
 }
 .fy { background:#f5c842; border-color:#1a1a1a; color:#1a1a1a; }
 .fn { background:#1a1a1a; border-color:#f5c842; color:#f5c842; }
-.fc .cn { position:absolute; font-size:12px; font-weight:800; line-height:1.2; text-align:center; }
+.fc .cn { position:absolute; font-size:13px; font-weight:800; line-height:1.2; text-align:center; }
 .cn.tl { top:9px; left:11px; }
 .cn.br { bottom:9px; right:11px; transform:rotate(180deg); }
-.fc .suit { font-size:52px; line-height:1; }
+.fc .suit { font-size:48px; line-height:1; }
+.fc .num  { font-family:var(--cc-ff-display,sans-serif); font-size:36px; font-weight:900; line-height:1; }
 .fc .info { font-size:11px; font-weight:800; text-align:center; line-height:1.4; padding:0 10px; text-transform:uppercase; letter-spacing:.05em; }
-#vignette {
-  position:absolute; inset:0;
-  background:radial-gradient(ellipse 90% 80% at 50% 50%, transparent 20%, #07090a 100%);
-  pointer-events:none; z-index:10;
-}
-#label {
-  position:absolute; bottom:22px; left:50%; transform:translateX(-50%);
-  font-size:9px; letter-spacing:.24em; color:rgba(255,255,255,.15);
-  text-transform:uppercase; z-index:20; white-space:nowrap;
-}
+
+/* Rules content hidden during animation, revealed after */
+#rules-content { opacity:0; transition:opacity .4s ease; }
+#rules-content.visible { opacity:1; }
 </style>
 </head>
 <body>
@@ -91,45 +95,43 @@
   </div>
 </section>
 
-<!-- ---- Cards animation ---- -->
-<section id="cards-section">
+<!-- ---- Rules + animation intégrée ---- -->
+<section class="rules" id="rules">
+
+  <!-- Stage animé — les cartes volent ici -->
   <div id="stage">
-    <!-- 01 Équipe de 2 -->
     <div class="fc fy" id="c1">
       <div class="cn tl">01<br>♠</div>
       <div class="suit">♠</div>
+      <div class="num">01</div>
       <div class="info">Équipe<br>de 2</div>
       <div class="cn br">01<br>♠</div>
     </div>
-    <!-- 02 Les annonces -->
     <div class="fc fn" id="c2">
       <div class="cn tl" style="color:#f5c842">02<br>♥</div>
       <div class="suit" style="color:#f5c842">♥</div>
+      <div class="num" style="color:#f5c842">02</div>
       <div class="info" style="color:#f5c842">Les<br>annonces</div>
       <div class="cn br" style="color:#f5c842">02<br>♥</div>
     </div>
-    <!-- 03 Coinche / Surcoinche -->
     <div class="fc fy" id="c3">
       <div class="cn tl">03<br>♦</div>
       <div class="suit">♦</div>
+      <div class="num">03</div>
       <div class="info">Coinche /<br>Surcoinche</div>
       <div class="cn br">03<br>♦</div>
     </div>
-    <!-- 04 Belote & Dix de der -->
     <div class="fc fn" id="c4">
       <div class="cn tl" style="color:#f5c842">04<br>♣</div>
       <div class="suit" style="color:#f5c842">♣</div>
+      <div class="num" style="color:#f5c842">04</div>
       <div class="info" style="color:#f5c842">Belote &<br>Dix de der</div>
       <div class="cn br" style="color:#f5c842">04<br>♣</div>
     </div>
   </div>
-  <div id="vignette"></div>
-  <div id="label">C'EST COINCHÉ · Nice · 1ère édition</div>
-</section>
 
-<!-- ---- Rules ---- -->
-<section class="rules" id="rules">
-  <div class="wrap">
+  <!-- Contenu statique — révélé après animation -->
+  <div class="wrap" id="rules-content">
     <div class="rules-head">
       <div>
         <span class="eyebrow">La coinche en 3 minutes</span>
@@ -373,51 +375,71 @@
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
-const tl = gsap.timeline({
-  scrollTrigger: {
-    trigger: '#cards-section',
-    start: 'top top',
-    end: '+=700%',
-    scrub: 1.4,
-    pin: true,
-    anticipatePin: 1,
+window.addEventListener('load', () => {
+  const stage        = document.getElementById('stage');
+  const ruleCards    = [...document.querySelectorAll('.rule')];
+  const rulesContent = document.getElementById('rules-content');
+
+  // Mesure la position de chaque carte règle par rapport au centre du stage
+  function getTargets() {
+    const sr = stage.getBoundingClientRect();
+    const cx = sr.left + sr.width  / 2;
+    const cy = sr.top  + sr.height / 2;
+    return ruleCards.map(el => {
+      const r = el.getBoundingClientRect();
+      return {
+        x:      (r.left + r.width  / 2) - cx,
+        y:      (r.top  + r.height / 2) - cy,
+        scaleX: r.width  / 180,
+        scaleY: r.height / 252,
+      };
+    });
   }
+
+  const T = getTargets();
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#rules',
+      start: 'top top',
+      end: '+=700%',
+      scrub: 1.4,
+      pin: true,
+      anticipatePin: 1,
+      onLeave:     () => rulesContent.classList.add('visible'),
+      onEnterBack: () => rulesContent.classList.remove('visible'),
+    }
+  });
+
+  // FLY-IN : une carte par une, depuis le fond, trajectoires diagonales
+  tl
+  .set('#c1', { x:-800, y: 400, z:-7000,  rotateX:  50, rotateY:-150, rotateZ: -80, scaleX:1, scaleY:1, opacity:0 })
+  .to( '#c1', { x: 250, y:-100, z:  200,  rotateX: -80, rotateY: 120, rotateZ: 100, scaleX:1, scaleY:1, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.00)
+
+  .set('#c2', { x: 700, y:-500, z:-11000, rotateX: -80, rotateY: 200, rotateZ: 100, scaleX:1, scaleY:1, opacity:0 })
+  .to( '#c2', { x:-200, y: 150, z:   200, rotateX: 100, rotateY:-160, rotateZ: -80, scaleX:1, scaleY:1, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.14)
+
+  .set('#c3', { x: 900, y: 100, z: -5500, rotateX:  80, rotateY:  60, rotateZ: -50, scaleX:1, scaleY:1, opacity:0 })
+  .to( '#c3', { x:-100, y:-200, z:   200, rotateX: -60, rotateY: -80, rotateZ:  80, scaleX:1, scaleY:1, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.28)
+
+  .set('#c4', { x: 600, y: 600, z: -8500, rotateX:-100, rotateY:-180, rotateZ: 120, scaleX:1, scaleY:1, opacity:0 })
+  .to( '#c4', { x:-300, y: 200, z:   200, rotateX:  80, rotateY:  80, rotateZ:-100, scaleX:1, scaleY:1, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.42)
+
+  // CONVERGENCE : atterrissage sur les cartes règles statiques
+  .to('#c1', { x:T[0].x, y:T[0].y, z:0, rotateX:0, rotateY:0, rotateZ:-2, scaleX:T[0].scaleX, scaleY:T[0].scaleY, duration:0.10, ease:'power2.inOut' }, 0.57)
+  .to('#c2', { x:T[1].x, y:T[1].y, z:0, rotateX:0, rotateY:0, rotateZ: 1, scaleX:T[1].scaleX, scaleY:T[1].scaleY, duration:0.10, ease:'power2.inOut' }, 0.57)
+  .to('#c3', { x:T[2].x, y:T[2].y, z:0, rotateX:0, rotateY:0, rotateZ:-1, scaleX:T[2].scaleX, scaleY:T[2].scaleY, duration:0.10, ease:'power2.inOut' }, 0.57)
+  .to('#c4', { x:T[3].x, y:T[3].y, z:0, rotateX:0, rotateY:0, rotateZ: 2, scaleX:T[3].scaleX, scaleY:T[3].scaleY, duration:0.10, ease:'power2.inOut' }, 0.57)
+
+  // VITRINE courte
+  .to(['#c1','#c2','#c3','#c4'], { duration:0.08, ease:'none' }, 0.67)
+
+  // DÉPART explosif — les cartes s'envolent, les cartes statiques se révèlent via onLeave
+  .to('#c1', { x:-1200, y:-600, z: 800, rotateX:-150, rotateY: 220, rotateZ:-200, scaleX:1, scaleY:1, opacity:0, duration:0.16, ease:'power3.in' }, 0.75)
+  .to('#c2', { x:  600, y: 800, z:1000, rotateX: 180, rotateY:-160, rotateZ: 180, scaleX:1, scaleY:1, opacity:0, duration:0.16, ease:'power3.in' }, 0.75)
+  .to('#c3', { x: -500, y:-800, z: 900, rotateX:-200, rotateY: 120, rotateZ:-170, scaleX:1, scaleY:1, opacity:0, duration:0.16, ease:'power3.in' }, 0.75)
+  .to('#c4', { x: 1200, y: 500, z:1100, rotateX: 120, rotateY:-240, rotateZ: 220, scaleX:1, scaleY:1, opacity:0, duration:0.16, ease:'power3.in' }, 0.75);
 });
-
-// c1 : bas-gauche loin
-tl
-.set('#c1', { x:-800, y:400,  z:-7000, rotateX: 50, rotateY:-150, rotateZ:-80, opacity:0 })
-.to( '#c1', { x: 250, y:-100, z: 200,  rotateX:-80, rotateY: 120, rotateZ: 100, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.00)
-
-// c2 : haut-droite très loin
-.set('#c2', { x: 700, y:-500, z:-11000, rotateX:-80, rotateY:200, rotateZ:100, opacity:0 })
-.to( '#c2', { x:-200, y: 150, z:  200,  rotateX: 100, rotateY:-160, rotateZ:-80, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.14)
-
-// c3 : droite loin
-.set('#c3', { x: 900, y: 100, z:-5500, rotateX: 80, rotateY: 60, rotateZ:-50, opacity:0 })
-.to( '#c3', { x:-100, y:-200, z:  200, rotateX:-60, rotateY:-80, rotateZ: 80, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.28)
-
-// c4 : bas-droite
-.set('#c4', { x: 600, y: 600, z:-8500, rotateX:-100, rotateY:-180, rotateZ:120, opacity:0 })
-.to( '#c4', { x:-300, y: 200, z:  200, rotateX:  80, rotateY:  80, rotateZ:-100, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.42)
-
-// CONVERGENCE
-.to('#c1', { x:-285, y:0, z:0, rotateX:0, rotateY:0, rotateZ:-4, duration:0.10, ease:'power2.inOut' }, 0.57)
-.to('#c2', { x: -95, y:0, z:0, rotateX:0, rotateY:0, rotateZ: 2, duration:0.10, ease:'power2.inOut' }, 0.57)
-.to('#c3', { x:  95, y:0, z:0, rotateX:0, rotateY:0, rotateZ:-2, duration:0.10, ease:'power2.inOut' }, 0.57)
-.to('#c4', { x: 285, y:0, z:0, rotateX:0, rotateY:0, rotateZ: 5, duration:0.10, ease:'power2.inOut' }, 0.57)
-
-// VITRINE courte
-.to('#c1', { x:-285, y:0, z:0, rotateZ:-4, duration:0.10, ease:'none' }, 0.67)
-.to('#c2', { x: -95, y:0, z:0, rotateZ: 2, duration:0.10, ease:'none' }, 0.67)
-.to('#c3', { x:  95, y:0, z:0, rotateZ:-2, duration:0.10, ease:'none' }, 0.67)
-.to('#c4', { x: 285, y:0, z:0, rotateZ: 5, duration:0.10, ease:'none' }, 0.67)
-
-// DÉPART explosif
-.to('#c1', { x:-1100, y:-500, z:800,  rotateX:-150, rotateY: 220, rotateZ:-200, opacity:0, duration:0.16, ease:'power3.in' }, 0.77)
-.to('#c2', { x:  500, y: 700, z:1000, rotateX: 180, rotateY:-160, rotateZ: 180, opacity:0, duration:0.16, ease:'power3.in' }, 0.77)
-.to('#c3', { x: -400, y:-700, z: 900, rotateX:-200, rotateY: 120, rotateZ:-170, opacity:0, duration:0.16, ease:'power3.in' }, 0.77)
-.to('#c4', { x: 1100, y: 400, z:1100, rotateX: 120, rotateY:-240, rotateZ: 220, opacity:0, duration:0.16, ease:'power3.in' }, 0.77);
 </script>
 </body>
 </html>
