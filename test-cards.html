@@ -23,6 +23,8 @@
 }
 /* Rules — fournit l'espace de scroll pour l'animation */
 .rules { min-height:350vh !important; }
+/* En-tête de la section — reste visible pendant le scroll de l'animation */
+.rules-head-wrap { position:sticky; top:80px; z-index:300; }
 
 /* Dealer silhouette */
 #dealer {
@@ -473,7 +475,7 @@ window.addEventListener('load', () => {
 
   const DEAL = 0.13;
   const FLIP = 0.06;
-  const GAP  = 0.17;
+  const GAP  = 0.09;
 
   CARDS.forEach((id, i) => {
     const f     = FAN[i];
