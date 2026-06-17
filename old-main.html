@@ -7,93 +7,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/site.css">
-<style>
-/* Rules section — transparent pour le fondu avec sections adjacentes */
-.rules { position:relative; overflow:visible !important; min-height:100vh; background:transparent; }
-
-/* Stage — fixed, survole tout pendant l'animation */
-#stage {
-  position:fixed;
-  top:0; left:0;
-  width:100vw; height:100vh;
-  perspective:900px; perspective-origin:50% 60%;
-  pointer-events:none;
-  z-index:400;
-  opacity:0;
-}
-/* Rules — fournit l'espace de scroll pour l'animation */
-.rules { min-height:230vh !important; }
-/* En-tête : suit le bas du hero, colle en haut pendant l'animation */
-.rules-head-wrap {
-  position:sticky;
-  top:70px;
-  z-index:300;
-  background:var(--cc-creme, #f5f0e8);
-}
-
-/* Dealer silhouette */
-#dealer {
-  position:absolute;
-  right:clamp(20px,5.5vw,80px); bottom:clamp(30px,4.2vw,60px);
-  width:clamp(30px,3.6vw,52px); height:clamp(45px,5.4vw,78px);
-  opacity:0;
-}
-
-/* Card wrapper — taille responsive, marges set par JS */
-.fc {
-  position:absolute; left:50%; top:50%;
-  width:clamp(140px,21.6vw,312px); height:clamp(196px,30.3vw,437px);
-  border-radius:clamp(8px,1.1vw,16px);
-  opacity:0;
-}
-
-/* Back & face superposés */
-.fc-back,
-.fc-face {
-  position:absolute; inset:0;
-  border-radius:clamp(6px,0.9vw,12px);
-  border:3px solid #1a1a1a;
-}
-
-/* Card back */
-.fc-back {
-  background:#f5c842;
-  display:flex; align-items:center; justify-content:center;
-}
-.fc-back .logo {
-  font-family:var(--cc-ff-display,sans-serif);
-  font-size:clamp(22px,3.6vw,52px); font-weight:900; color:#1a1a1a;
-  text-align:center; line-height:1.15; letter-spacing:-0.5px;
-  text-transform:uppercase;
-}
-
-/* Card face */
-.fc-face {
-  background:#f0ede6;
-  display:flex; flex-direction:column;
-  align-items:flex-start; justify-content:flex-start;
-  padding:clamp(12px,1.9vw,28px) clamp(10px,1.7vw,24px);
-  opacity:0;
-}
-.fc-face .fc-num {
-  font-family:var(--cc-ff-display,sans-serif);
-  font-size:clamp(38px,6.1vw,88px); font-weight:900; color:#1a1a1a;
-  line-height:1; margin-bottom:clamp(4px,0.6vw,8px);
-}
-.fc-face .fc-title {
-  font-size:clamp(8px,1.2vw,17px); font-weight:900; text-transform:uppercase;
-  letter-spacing:.06em; color:#1a1a1a; line-height:1.2;
-  margin-bottom:clamp(8px,1.2vw,18px);
-}
-.fc-face .fc-desc {
-  font-size:clamp(7px,1.05vw,15px); line-height:1.6; color:#1a1a1a;
-  font-weight:600;
-}
-
-/* Rules content hidden during animation, revealed after */
-#rules-content { opacity:0; transition:opacity .5s ease; }
-#rules-content.visible { opacity:1; }
-</style>
 </head>
 <body>
 
@@ -147,11 +60,9 @@
   </div>
 </section>
 
-<!-- ---- Rules — animation dealer remplace les boxes ---- -->
+<!-- ---- Rules ---- -->
 <section class="rules" id="rules">
-
-  <!-- En-tête : suit le bas du hero, colle en haut, s'envole avec les cartes -->
-  <div class="wrap rules-head-wrap">
+  <div class="wrap">
     <div class="rules-head">
       <div>
         <span class="eyebrow">La coinche en 3 minutes</span>
@@ -159,57 +70,29 @@
       </div>
       <a class="btn ghost" href="reglement.html">LIRE LE RÈGLEMENT COMPLET →</a>
     </div>
+    <div class="rules-grid">
+      <div class="rule">
+        <div class="num">01</div>
+        <h3>Équipe de 2</h3>
+        <p>Tu joues en binôme, face à une autre doublette. 4 joueurs autour d'une table, 32 cartes, point barre.</p>
+      </div>
+      <div class="rule">
+        <div class="num">02</div>
+        <h3>Les annonces</h3>
+        <p>Tu annonces la couleur d'atout et le nombre minimum de points que tu comptes faire. 80, 90, 100, capot…</p>
+      </div>
+      <div class="rule">
+        <div class="num">03</div>
+        <h3>Coinche / surcoinche</h3>
+        <p>Si tes adversaires pensent que t'y arriveras pas, ils coinchent. Tu y crois encore ? Surcoinche. Les points doublent, triplent.</p>
+      </div>
+      <div class="rule">
+        <div class="num">04</div>
+        <h3>Belote &amp; dix de der</h3>
+        <p>Roi + Dame d'atout dans la même main = 20 pts. Dernier pli = 10 pts. La belote, c'est sacré.</p>
+      </div>
+    </div>
   </div>
-
-  <!-- Stage animé — dealer + cartes -->
-  <div id="stage">
-
-    <svg id="dealer" viewBox="0 0 52 78" xmlns="http://www.w3.org/2000/svg">
-      <ellipse cx="26" cy="13" rx="10" ry="11" fill="#1a1a1a"/>
-      <rect x="22" y="22" width="8" height="7" rx="3" fill="#1a1a1a"/>
-      <path d="M6 34 Q26 27 46 34 L50 72 Q26 78 2 72 Z" fill="#1a1a1a"/>
-      <path d="M8 38 Q0 50 4 64" stroke="#1a1a1a" stroke-width="7" stroke-linecap="round" fill="none"/>
-      <path d="M44 38 Q52 50 48 64" stroke="#1a1a1a" stroke-width="7" stroke-linecap="round" fill="none"/>
-    </svg>
-
-    <div class="fc" id="c1">
-      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
-      <div class="fc-face">
-        <div class="fc-num">01</div>
-        <div class="fc-title">Équipe de 2</div>
-        <div class="fc-desc">Tu joues en binôme, face à une autre doublette. 4 joueurs autour d'une table, 32 cartes, point barre.</div>
-      </div>
-    </div>
-
-    <div class="fc" id="c2">
-      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
-      <div class="fc-face">
-        <div class="fc-num">02</div>
-        <div class="fc-title">Les annonces</div>
-        <div class="fc-desc">Tu annonces la couleur d'atout et le nombre minimum de points que tu comptes faire. 80, 90, 100, capot…</div>
-      </div>
-    </div>
-
-    <div class="fc" id="c3">
-      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
-      <div class="fc-face">
-        <div class="fc-num">03</div>
-        <div class="fc-title">Coinche / Surcoinche</div>
-        <div class="fc-desc">Si tes adversaires pensent que t'y arriveras pas, ils coinchent. Tu y crois encore ? Surcoinche. Les points doublent, triplent.</div>
-      </div>
-    </div>
-
-    <div class="fc" id="c4">
-      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
-      <div class="fc-face">
-        <div class="fc-num">04</div>
-        <div class="fc-title">Belote &amp; Dix de der</div>
-        <div class="fc-desc">Roi + Dame d'atout dans la même main = 20 pts. Dernier pli = 10 pts. La belote, c'est sacré.</div>
-      </div>
-    </div>
-
-  </div>
-
 </section>
 
 <!-- ---- Program ---- -->
@@ -333,7 +216,7 @@
       </details>
       <details class="faq-item">
         <summary><span>Je viens seul, comment je trouve un binôme ?</span><span class="ic">+</span></summary>
-        <p>Coche la case "cherche un binôme" sur le formulaire, on te met en contact avec d'autres joueurs solo. On a aussi un canal Discord pour s'organiser avant.</p>
+        <p>Coche la case "cherche un binôme" sur le formulaire, on te met en contact avec d'autres joueurs solo via l'espace binôme.</p>
       </details>
       <details class="faq-item">
         <summary><span>Ça finit à quelle heure ?</span><span class="ic">+</span></summary>
@@ -417,128 +300,5 @@
 <script src="js/auth.js"></script>
 <script src="js/player.js"></script>
 <script src="js/main.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script>
-gsap.registerPlugin(ScrollTrigger);
-
-window.addEventListener('load', () => {
-  const stage        = document.getElementById('stage');
-  const dealer       = document.getElementById('dealer');
-  const rulesContent = document.getElementById('rules-content');
-
-  // Position du dealer (centre) relative au centre du stage
-  function getDealerPos() {
-    const sr = stage.getBoundingClientRect();
-    const dr = dealer.getBoundingClientRect();
-    const cx = sr.left + sr.width  / 2;
-    const cy = sr.top  + sr.height / 2;
-    return {
-      x: (dr.left + dr.width  / 2) - cx,
-      y: (dr.top  + dr.height / 2) - cy,
-    };
-  }
-
-  const D = getDealerPos();
-
-  // Marges dynamiques basées sur la taille réelle des cartes (clamp CSS)
-  const cardEl = document.getElementById('c1');
-  const cardW  = cardEl.offsetWidth;
-  const cardH  = cardEl.offsetHeight;
-  document.querySelectorAll('.fc').forEach(el => {
-    el.style.marginLeft = (-cardW / 2) + 'px';
-    el.style.marginTop  = (-cardH / 2) + 'px';
-  });
-
-  // FAN responsive : spread proportionnel à la largeur du viewport
-  const vw      = window.innerWidth;
-  const spread  = Math.min(180, vw * 0.125);
-  const FAN = [
-    { x: -spread,       y: spread * 0.17, rotZ: -12, z: 1 },
-    { x: -spread / 3,   y: spread * 0.08, rotZ:  -4, z: 2 },
-    { x:  spread / 3,   y: spread * 0.08, rotZ:   4, z: 3 },
-    { x:  spread,       y: spread * 0.17, rotZ:  12, z: 4 },
-  ];
-
-  const CARDS = ['#c1','#c2','#c3','#c4'];
-
-  // Init : toutes les cartes au dealer, dos visible, petites ; header masqué
-  CARDS.forEach((id, i) => {
-    gsap.set(id, { x: D.x - 30, y: D.y, rotateZ: 0, rotateY: 0, scale: 0.05, opacity: 0, zIndex: FAN[i].z });
-    gsap.set(id + ' .fc-face', { opacity: 0 });
-    gsap.set(id + ' .fc-back', { opacity: 1 });
-  });
-  gsap.set('.rules-head-wrap', { opacity: 0 });
-
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: '#hero',
-      start: '25% top',
-      end: '+=300%',
-      scrub: 1.2,
-    }
-  });
-
-  // FONDU ENTRÉE du stage + header en fondu depuis le fond beige
-  tl.to('#stage', { opacity: 1, duration: 0.10, ease: 'power1.in' }, 0);
-  tl.to('.rules-head-wrap', { opacity: 1, duration: 0.15, ease: 'power1.out' }, 0.05);
-
-  // DEALER apparaît dès le début, avant la première carte
-  tl.to(dealer, { opacity: 1, duration: 0.06, ease: 'none' }, 0);
-
-  const DEAL = 0.18;
-  const GAP  = 0.09;
-
-  CARDS.forEach((id, i) => {
-    const f     = FAN[i];
-    const start = 0.07 + i * GAP;
-
-    // Apparition minuscule au dealer
-    tl.to(id, { opacity: 1, duration: 0.03, ease: 'power1.out' }, start);
-
-    // Trajet vers la position finale (position + scale)
-    tl.to(id, { x: f.x, y: f.y, rotateZ: f.rotZ, scale: 1, duration: DEAL, ease: 'power2.out' }, start + 0.03);
-
-    // Flip pendant le trajet : 0→90° en première moitié, bascule au milieu, 90→0° en seconde moitié
-    tl.to(id, { rotateY: 90, duration: DEAL * 0.5, ease: 'power1.in' }, start + 0.03);
-    tl.to(id + ' .fc-back', { opacity: 0, duration: 0.01 }, start + 0.03 + DEAL * 0.5);
-    tl.to(id + ' .fc-face', { opacity: 1, duration: 0.01 }, start + 0.03 + DEAL * 0.5);
-    tl.to(id, { rotateY: 0, duration: DEAL * 0.5, ease: 'power1.out' }, start + 0.03 + DEAL * 0.5);
-  });
-
-  const lastFlipEnd = 0.07 + (CARDS.length - 1) * GAP + 0.03 + DEAL;
-
-  // Dealer disparaît pendant le trajet/flip de c4 (index 3)
-  const c4TravelStart = 0.07 + 3 * GAP + 0.03;
-  tl.to(dealer, { opacity: 0, duration: DEAL, ease: 'power1.in' }, c4TravelStart);
-
-  const exitStart = lastFlipEnd;
-
-  // ENVOL — directions proportionnelles au viewport
-  const flyX = Math.min(500, vw * 0.35);
-  const flyY = -window.innerHeight * 0.95;
-  const exitDirs = [
-    { x: -flyX,        y: flyY, rotZ: -70 },
-    { x: -flyX * 0.3,  y: flyY * 1.05, rotZ:  15 },
-    { x:  flyX * 0.3,  y: flyY * 1.05, rotZ: -15 },
-    { x:  flyX,        y: flyY, rotZ:  70 },
-  ];
-  CARDS.forEach((id, i) => {
-    tl.to(id, {
-      x: exitDirs[i].x, y: exitDirs[i].y,
-      rotateZ: FAN[i].rotZ + exitDirs[i].rotZ,
-      opacity: 0, duration: 0.17, ease: 'power2.in',
-    }, exitStart + i * 0.02);
-  });
-
-  // ENVOL du header en même temps que les cartes
-  tl.to('.rules-head-wrap', { y: -180, opacity: 0, duration: 0.17, ease: 'power2.in' }, exitStart);
-
-  // FONDU SORTIE du stage
-  const exitEnd = exitStart + 0.17 + (CARDS.length - 1) * 0.02;
-  tl.to('#stage', { opacity: 0, duration: 0.10, ease: 'power1.out' }, exitEnd);
-});
-</script>
 </body>
 </html>
