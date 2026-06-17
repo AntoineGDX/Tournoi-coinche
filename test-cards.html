@@ -500,10 +500,31 @@ window.addEventListener('load', () => {
     tl.to(id, { rotateZ: f.rotZ, rotateY: 0, duration: FLIP * 0.5, ease: 'power1.out' }, flipStart + FLIP * 0.5);
   });
 
-  // Pause vitrine — cartes restent affichées, dealer disparaît doucement
+  // Pause vitrine
   const lastFlipEnd = 0.07 + (CARDS.length - 1) * GAP + 0.03 + DEAL + FLIP;
   tl.to(CARDS, { duration: 0.15, ease: 'none' }, lastFlipEnd);
   tl.to(dealer, { opacity: 0, duration: 0.08, ease: 'power1.in' }, lastFlipEnd);
+
+  const exitStart = lastFlipEnd + 0.15;
+
+  // ENVOL — chaque carte part vers le haut
+  const exitDirs = [
+    { x: -500, y: -850, rotZ: -70 },
+    { x: -150, y: -900, rotZ:  15 },
+    { x:  150, y: -900, rotZ: -15 },
+    { x:  500, y: -850, rotZ:  70 },
+  ];
+  CARDS.forEach((id, i) => {
+    tl.to(id, {
+      x: exitDirs[i].x, y: exitDirs[i].y,
+      rotateZ: FAN[i].rotZ + exitDirs[i].rotZ,
+      opacity: 0, duration: 0.17, ease: 'power2.in',
+    }, exitStart + i * 0.02);
+  });
+
+  // FONDU SORTIE du stage
+  const exitEnd = exitStart + 0.17 + (CARDS.length - 1) * 0.02;
+  tl.to('#stage', { opacity: 0, duration: 0.10, ease: 'power1.out' }, exitEnd);
 });
 </script>
 </body>
