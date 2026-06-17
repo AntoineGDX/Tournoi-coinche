@@ -11,11 +11,11 @@
 /* Rules section — transparent pour le fondu avec sections adjacentes */
 .rules { position:relative; overflow:visible !important; min-height:100vh; background:transparent; }
 
-/* Stage overlay — covers the whole viewport when pinned */
+/* Stage overlay — position fixed pour survoler tout le site (hero inclus) */
 #stage {
-  position:absolute;
-  top:0; left:50%; transform:translateX(-50%);
-  width:100vw; height:100%;
+  position:fixed;
+  top:0; left:0;
+  width:100vw; height:100vh;
   perspective:900px; perspective-origin:50% 60%;
   pointer-events:none;
   z-index:200;
@@ -56,7 +56,7 @@
 }
 .fc-back .logo {
   font-family:var(--cc-ff-display,sans-serif);
-  font-size:32px; font-weight:900; color:#1a1a1a;
+  font-size:52px; font-weight:900; color:#1a1a1a;
   text-align:center; line-height:1.15; letter-spacing:-0.5px;
   text-transform:uppercase;
 }
@@ -141,67 +141,62 @@
   </div>
 </section>
 
+<!-- Stage animé — position fixed, survole hero + rules -->
+<div id="stage">
+
+  <!-- Silhouette dealer minimaliste (vue légèrement plongeante) -->
+  <svg id="dealer" viewBox="0 0 52 78" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="26" cy="13" rx="10" ry="11" fill="#1a1a1a"/>
+    <rect x="22" y="22" width="8" height="7" rx="3" fill="#1a1a1a"/>
+    <path d="M6 34 Q26 27 46 34 L50 72 Q26 78 2 72 Z" fill="#1a1a1a"/>
+    <path d="M8 38 Q0 50 4 64" stroke="#1a1a1a" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <path d="M44 38 Q52 50 48 64" stroke="#1a1a1a" stroke-width="7" stroke-linecap="round" fill="none"/>
+  </svg>
+
+  <!-- Carte 1 — Équipe de 2 -->
+  <div class="fc" id="c1">
+    <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
+    <div class="fc-face">
+      <div class="fc-num">01</div>
+      <div class="fc-title">Équipe de 2</div>
+      <div class="fc-desc">Tu joues en binôme, face à une autre doublette. 4 joueurs autour d'une table, 32 cartes, point barre.</div>
+    </div>
+  </div>
+
+  <!-- Carte 2 — Les annonces -->
+  <div class="fc" id="c2">
+    <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
+    <div class="fc-face">
+      <div class="fc-num">02</div>
+      <div class="fc-title">Les annonces</div>
+      <div class="fc-desc">Tu annonces la couleur d'atout et le nombre minimum de points que tu comptes faire. 80, 90, 100, capot…</div>
+    </div>
+  </div>
+
+  <!-- Carte 3 — Coinche / Surcoinche -->
+  <div class="fc" id="c3">
+    <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
+    <div class="fc-face">
+      <div class="fc-num">03</div>
+      <div class="fc-title">Coinche / Surcoinche</div>
+      <div class="fc-desc">Si tes adversaires pensent que t'y arriveras pas, ils coinchent. Tu y crois encore ? Surcoinche. Les points doublent, triplent.</div>
+    </div>
+  </div>
+
+  <!-- Carte 4 — Belote & Dix de der -->
+  <div class="fc" id="c4">
+    <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
+    <div class="fc-face">
+      <div class="fc-num">04</div>
+      <div class="fc-title">Belote &amp; Dix de der</div>
+      <div class="fc-desc">Roi + Dame d'atout dans la même main = 20 pts. Dernier pli = 10 pts. La belote, c'est sacré.</div>
+    </div>
+  </div>
+
+</div>
+
 <!-- ---- Rules + animation intégrée ---- -->
 <section class="rules" id="rules">
-
-  <!-- Stage animé — dealer + cartes -->
-  <div id="stage">
-
-    <!-- Silhouette dealer minimaliste (vue légèrement plongeante) -->
-    <svg id="dealer" viewBox="0 0 52 78" xmlns="http://www.w3.org/2000/svg">
-      <!-- tête -->
-      <ellipse cx="26" cy="13" rx="10" ry="11" fill="#1a1a1a"/>
-      <!-- cou -->
-      <rect x="22" y="22" width="8" height="7" rx="3" fill="#1a1a1a"/>
-      <!-- torse -->
-      <path d="M6 34 Q26 27 46 34 L50 72 Q26 78 2 72 Z" fill="#1a1a1a"/>
-      <!-- bras gauche -->
-      <path d="M8 38 Q0 50 4 64" stroke="#1a1a1a" stroke-width="7" stroke-linecap="round" fill="none"/>
-      <!-- bras droit -->
-      <path d="M44 38 Q52 50 48 64" stroke="#1a1a1a" stroke-width="7" stroke-linecap="round" fill="none"/>
-    </svg>
-
-    <!-- Carte 1 — Équipe de 2 -->
-    <div class="fc" id="c1">
-      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
-      <div class="fc-face">
-        <div class="fc-num">01</div>
-        <div class="fc-title">Équipe de 2</div>
-        <div class="fc-desc">Tu joues en binôme, face à une autre doublette. 4 joueurs autour d'une table, 32 cartes, point barre.</div>
-      </div>
-    </div>
-
-    <!-- Carte 2 — Les annonces -->
-    <div class="fc" id="c2">
-      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
-      <div class="fc-face">
-        <div class="fc-num">02</div>
-        <div class="fc-title">Les annonces</div>
-        <div class="fc-desc">Tu annonces la couleur d'atout et le nombre minimum de points que tu comptes faire. 80, 90, 100, capot…</div>
-      </div>
-    </div>
-
-    <!-- Carte 3 — Coinche / Surcoinche -->
-    <div class="fc" id="c3">
-      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
-      <div class="fc-face">
-        <div class="fc-num">03</div>
-        <div class="fc-title">Coinche / Surcoinche</div>
-        <div class="fc-desc">Si tes adversaires pensent que t'y arriveras pas, ils coinchent. Tu y crois encore ? Surcoinche. Les points doublent, triplent.</div>
-      </div>
-    </div>
-
-    <!-- Carte 4 — Belote & Dix de der -->
-    <div class="fc" id="c4">
-      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
-      <div class="fc-face">
-        <div class="fc-num">04</div>
-        <div class="fc-title">Belote &amp; Dix de der</div>
-        <div class="fc-desc">Roi + Dame d'atout dans la même main = 20 pts. Dernier pli = 10 pts. La belote, c'est sacré.</div>
-      </div>
-    </div>
-
-  </div>
 
   <!-- Contenu statique — révélé après animation -->
   <div class="wrap" id="rules-content">
@@ -486,9 +481,9 @@ window.addEventListener('load', () => {
 
   const tl = gsap.timeline({
     scrollTrigger: {
-      trigger: '#rules',
-      start: 'top 60%',
-      end: '+=700%',
+      trigger: '#hero',
+      start: 'top top',
+      end: '+=1500%',
       scrub: 1.2,
       pin: true,
       anticipatePin: 1,
