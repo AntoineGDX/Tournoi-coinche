@@ -249,6 +249,43 @@ async function handlePaymentConfirmed(teamId: string, authHeader: string) {
   return new Response(JSON.stringify({ ok: true }), { headers: CORS_HEADERS });
 }
 
+// ---- Email : séparation de binôme -----------------------------------------
+
+async function handlePartnerSplit(myTeamId: string, partnerTeamId: string, authHeader: string) {
+  const userClient = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, { global: { headers: { Authorization: authHeader } } });
+  const { data: userData } = await userClient.auth.getUser();
+  if (!userData?.user) return new Response(JSON.stringify({ error: "Non authentifié" }), { status: 401, headers: CORS_HEADERS });
+
+  const admin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+  const { data: teams } = await admin
+    .from("teams")
+    .select("id, user_id, team_name, player1_name, email, notify_binome_requests")
+    .in("id", [myTeamId, partnerTeamId]);
+
+  if (!teams) return new Response(JSON.stringify({ error: "Équipe introuvable" }), { status: 404, headers: CORS_HEADERS });
+
+  const myTeam      = teams.find((t) => t.id === myTeamId);
+  const partnerTeam = teams.find((t) => t.id === partnerTeamId);
+  if (!myTeam || !partnerTeam) return new Response(JSON.stringify({ error: "Équipe introuvable" }), { status: 404, headers: CORS_HEADERS });
+
+  if (myTeam.user_id !== userData.user.id) return new Response(JSON.stringify({ error: "Non autorisé" }), { status: 403, headers: CORS_HEADERS });
+
+  if (partnerTeam.notify_binome_requests) {
+    await sendEmail(
+      partnerTeam.email,
+      `C'est Coinché ! — Votre doublette s'est séparée`,
+      emailTemplate(
+        h2("Retour en solo.") +
+        p(`Salut ${partnerTeam.player1_name},`) +
+        p(`<b>${myTeam.player1_name}</b> et toi ne formez plus une doublette. Tu es de nouveau inscrit·e en solo et disponible dans l'espace binôme pour trouver un·e nouveau·elle partenaire.`) +
+        btn("Trouver un binôme", "https://cestcoinche.fr/binome.html"),
+      ),
+    );
+  }
+
+  return new Response(JSON.stringify({ ok: true }), { headers: CORS_HEADERS });
+}
+
 // ---- Serveur --------------------------------------------------------------
 
 Deno.serve(async (req) => {
@@ -271,6 +308,10 @@ Deno.serve(async (req) => {
 
     if (event === "payment_confirmed") {
       return await handlePaymentConfirmed(body.teamId, authHeader);
+    }
+
+    if (event === "partner_split") {
+      return await handlePartnerSplit(body.myTeamId, body.partnerTeamId, authHeader);
     }
 
     return new Response(JSON.stringify({ error: "Événement inconnu" }), { status: 400, headers: CORS_HEADERS });

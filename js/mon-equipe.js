@@ -142,6 +142,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (!confirm("Confirmer : vous repassez chacun en solo, votre association est annulée et vous apparaissez dans l'espace binôme pour trouver un·e nouveau·elle partenaire. Continuer ?")) return;
       becomeSoloBtn.disabled = true;
       ({ error } = await ccAuth.client.rpc('split_partner_team'));
+      if (!error) {
+        ccAuth.client.functions.invoke('partner-notify', {
+          body: { event: 'partner_split', myTeamId: team.id, partnerTeamId: team.partner_team_id }
+        });
+      }
     } else {
       if (!confirm("Confirmer : ton équipe repasse en solo, les infos de ton binôme actuel sont retirées et tu apparais dans l'espace binôme. Continuer ?")) return;
       becomeSoloBtn.disabled = true;
