@@ -437,19 +437,19 @@ window.addEventListener('load', () => {
   const D = getDealerPos();
 
   // Éventail serré — c1 derrière, c4 devant (chaque carte distribuée cache la précédente)
-  // Ligne horizontale — espacées comme les 4 anciennes boxes, pas de rotation
+  // Main de joueur — éventail avec rotation
   const FAN = [
-    { x: -483, y: 20, rotZ: 0, z: 1 },
-    { x: -161, y: 20, rotZ: 0, z: 2 },
-    { x:  161, y: 20, rotZ: 0, z: 3 },
-    { x:  483, y: 20, rotZ: 0, z: 4 },
+    { x: -180, y: 30, rotZ: -12, z: 1 },
+    { x:  -60, y: 15, rotZ:  -4, z: 2 },
+    { x:   60, y: 15, rotZ:   4, z: 3 },
+    { x:  180, y: 30, rotZ:  12, z: 4 },
   ];
 
   const CARDS = ['#c1','#c2','#c3','#c4'];
 
   // Init : toutes les cartes au dealer, dos visible, petites
   CARDS.forEach((id, i) => {
-    gsap.set(id, { x: D.x, y: D.y, rotateZ: 0, rotateY: 0, scale: 0.5, opacity: 0, zIndex: FAN[i].z });
+    gsap.set(id, { x: D.x, y: D.y, rotateZ: 0, rotateY: 0, scale: 0.17, opacity: 0, zIndex: FAN[i].z });
     gsap.set(id + ' .fc-face', { opacity: 0 });
     gsap.set(id + ' .fc-back', { opacity: 1 });
   });
@@ -482,7 +482,7 @@ window.addEventListener('load', () => {
     tl.to(id, { opacity: 1, scale: 1, duration: 0.03, ease: 'power1.out' }, start);
 
     tl.to(id, {
-      x: f.x, y: f.y, rotateZ: f.rotZ,
+      x: f.x, y: f.y, rotateZ: f.rotZ, scale: 1,
       duration: DEAL, ease: 'power2.out',
     }, start + 0.03);
 
