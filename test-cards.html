@@ -23,12 +23,12 @@
 }
 /* Rules — fournit l'espace de scroll pour l'animation */
 .rules { min-height:230vh !important; }
-/* En-tête dans le stage — positionné en haut du viewport pendant l'animation */
-#stage .rules-head-wrap {
-  position:absolute;
-  top:80px; left:0; right:0;
-  z-index:10;
-  pointer-events:auto;
+/* En-tête : suit le bas du hero, colle en haut pendant l'animation */
+.rules-head-wrap {
+  position:sticky;
+  top:70px;
+  z-index:300;
+  background:var(--cc-creme, #f5f0e8);
 }
 
 /* Dealer silhouette */
@@ -153,19 +153,19 @@
 <!-- ---- Rules — animation dealer remplace les boxes ---- -->
 <section class="rules" id="rules">
 
-  <!-- Stage animé — les cartes remplacent les boxes -->
-  <div id="stage">
-
-    <!-- En-tête intégré au stage : reste visible pendant toute l'animation -->
-    <div class="wrap rules-head-wrap">
-      <div class="rules-head">
-        <div>
-          <span class="eyebrow">La coinche en 3 minutes</span>
-          <h2>Tu connais pas ? On t'explique.</h2>
-        </div>
-        <a class="btn ghost" href="reglement.html">LIRE LE RÈGLEMENT COMPLET →</a>
+  <!-- En-tête : suit le bas du hero, colle en haut, s'envole avec les cartes -->
+  <div class="wrap rules-head-wrap">
+    <div class="rules-head">
+      <div>
+        <span class="eyebrow">La coinche en 3 minutes</span>
+        <h2>Tu connais pas ? On t'explique.</h2>
       </div>
+      <a class="btn ghost" href="reglement.html">LIRE LE RÈGLEMENT COMPLET →</a>
     </div>
+  </div>
+
+  <!-- Stage animé — dealer + cartes -->
+  <div id="stage">
 
     <svg id="dealer" viewBox="0 0 52 78" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="26" cy="13" rx="10" ry="11" fill="#1a1a1a"/>
@@ -462,7 +462,7 @@ window.addEventListener('load', () => {
     gsap.set(id + ' .fc-face', { opacity: 0 });
     gsap.set(id + ' .fc-back', { opacity: 1 });
   });
-  gsap.set('#stage .rules-head-wrap', { opacity: 0 });
+  gsap.set('.rules-head-wrap', { opacity: 0 });
 
   const tl = gsap.timeline({
     scrollTrigger: {
@@ -475,7 +475,7 @@ window.addEventListener('load', () => {
 
   // FONDU ENTRÉE du stage + header en fondu depuis le fond beige
   tl.to('#stage', { opacity: 1, duration: 0.10, ease: 'power1.in' }, 0);
-  tl.to('#stage .rules-head-wrap', { opacity: 1, duration: 0.15, ease: 'power1.out' }, 0.05);
+  tl.to('.rules-head-wrap', { opacity: 1, duration: 0.15, ease: 'power1.out' }, 0.05);
 
   // DEALER apparaît
   tl.to(dealer, { opacity: 1, duration: 0.04, ease: 'none' }, 0.12);
@@ -523,7 +523,7 @@ window.addEventListener('load', () => {
   });
 
   // ENVOL du header en même temps que les cartes
-  tl.to('#stage .rules-head-wrap', { y: -180, opacity: 0, duration: 0.17, ease: 'power2.in' }, exitStart);
+  tl.to('.rules-head-wrap', { y: -180, opacity: 0, duration: 0.17, ease: 'power2.in' }, exitStart);
 
   // FONDU SORTIE du stage
   const exitEnd = exitStart + 0.17 + (CARDS.length - 1) * 0.02;
