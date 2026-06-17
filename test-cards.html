@@ -8,8 +8,8 @@
 <link rel="icon" href="assets/logo-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/site.css">
 <style>
-/* Rules section becomes the animation container */
-.rules { position:relative; overflow:visible !important; min-height:100vh; }
+/* Rules section — transparent pour le fondu avec sections adjacentes */
+.rules { position:relative; overflow:visible !important; min-height:100vh; background:transparent; }
 
 /* Stage overlay — covers the whole viewport when pinned */
 #stage {
@@ -19,6 +19,7 @@
   perspective:900px; perspective-origin:50% 60%;
   pointer-events:none;
   z-index:200;
+  opacity:0; /* géré par GSAP — fondu entrée/sortie */
 }
 
 /* Dealer silhouette */
@@ -32,9 +33,9 @@
 /* Card wrapper — preserve-3d for the flip */
 .fc {
   position:absolute; left:50%; top:50%;
-  width:120px; height:168px;
-  margin-left:-60px; margin-top:-84px;
-  border-radius:12px;
+  width:155px; height:217px;
+  margin-left:-77px; margin-top:-108px;
+  border-radius:13px;
   transform-style:preserve-3d;
   opacity:0;
   will-change:transform,opacity;
@@ -44,49 +45,49 @@
 .fc-back,
 .fc-face {
   position:absolute; inset:0;
-  border-radius:10px;
+  border-radius:11px;
   backface-visibility:hidden;
   -webkit-backface-visibility:hidden;
-  display:flex; flex-direction:column;
-  align-items:center; justify-content:center;
-  gap:5px;
 }
 
-/* Card back — dark with subtle hatch */
+/* Card back — fond jaune, texte noir "C'EST COINCHÉ" */
 .fc-back {
-  background:#1a1a1a;
-  background-image:
-    repeating-linear-gradient(-45deg,
-      rgba(245,200,66,.1) 0, rgba(245,200,66,.1) 1px,
-      transparent 0, transparent 9px);
-  border:2.5px solid #f5c842;
-  transform:rotateY(0deg); /* visible when parent is at rotateY(180) */
+  background:#f5c842;
+  border:3px solid #1a1a1a;
+  transform:rotateY(0deg);
+  display:flex; align-items:center; justify-content:center;
 }
 .fc-back .logo {
   font-family:var(--cc-ff-display,sans-serif);
-  font-size:13px; font-weight:900;
-  color:rgba(245,200,66,.35);
-  letter-spacing:-0.3px; text-align:center; line-height:1.2;
+  font-size:17px; font-weight:900; color:#1a1a1a;
+  text-align:center; line-height:1.15; letter-spacing:-0.5px;
+  text-transform:uppercase;
 }
 
-/* Card face — yellow or black theme */
+/* Card face — fond crème, style règle */
 .fc-face {
-  transform:rotateY(180deg); /* visible when parent flips to rotateY(0) */
-  border:2.5px solid;
+  transform:rotateY(180deg);
+  background:#f0ede6;
+  border:3px solid #1a1a1a;
+  display:flex; flex-direction:column;
+  align-items:flex-start; justify-content:flex-start;
+  padding:16px 14px 14px;
+  gap:0;
 }
-.fc-face.fy { background:#f5c842; border-color:#1a1a1a; color:#1a1a1a; }
-.fc-face.fn { background:#1a1a1a; border-color:#f5c842; color:#f5c842; }
-
-.fc-face .cn {
-  position:absolute; font-size:11px; font-weight:800;
-  line-height:1.2; text-align:center;
+.fc-face .fc-num {
+  font-family:var(--cc-ff-display,sans-serif);
+  font-size:52px; font-weight:900; color:#1a1a1a;
+  line-height:1; margin-bottom:4px;
 }
-.cn.tl { top:7px; left:9px; }
-.cn.br { bottom:7px; right:9px; transform:rotate(180deg); }
-.fc-face .suit { font-size:38px; line-height:1; }
-.fc-face .num  { font-family:var(--cc-ff-display,sans-serif); font-size:28px; font-weight:900; line-height:1; }
-.fc-face .info { font-size:9.5px; font-weight:800; text-align:center; line-height:1.4;
-                 padding:0 8px; text-transform:uppercase; letter-spacing:.05em; }
+.fc-face .fc-title {
+  font-size:10.5px; font-weight:900; text-transform:uppercase;
+  letter-spacing:.06em; color:#1a1a1a; line-height:1.2;
+  margin-bottom:10px;
+}
+.fc-face .fc-desc {
+  font-size:9px; line-height:1.55; color:#f5c842;
+  font-weight:700;
+}
 
 /* Rules content hidden during animation, revealed after */
 #rules-content { opacity:0; transition:opacity .5s ease; }
@@ -167,49 +168,41 @@
 
     <!-- Carte 1 — Équipe de 2 -->
     <div class="fc" id="c1">
-      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ</div></div>
-      <div class="fc-face fy">
-        <div class="cn tl">01<br>♠</div>
-        <div class="suit">♠</div>
-        <div class="num">01</div>
-        <div class="info">Équipe<br>de 2</div>
-        <div class="cn br">01<br>♠</div>
+      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
+      <div class="fc-face">
+        <div class="fc-num">01</div>
+        <div class="fc-title">Équipe de 2</div>
+        <div class="fc-desc">Tu joues en binôme, face à une autre doublette. 4 joueurs autour d'une table, 32 cartes, point barre.</div>
       </div>
     </div>
 
     <!-- Carte 2 — Les annonces -->
     <div class="fc" id="c2">
-      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ</div></div>
-      <div class="fc-face fn">
-        <div class="cn tl" style="color:#f5c842">02<br>♥</div>
-        <div class="suit" style="color:#f5c842">♥</div>
-        <div class="num" style="color:#f5c842">02</div>
-        <div class="info" style="color:#f5c842">Les<br>annonces</div>
-        <div class="cn br" style="color:#f5c842">02<br>♥</div>
+      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
+      <div class="fc-face">
+        <div class="fc-num">02</div>
+        <div class="fc-title">Les annonces</div>
+        <div class="fc-desc">Tu annonces la couleur d'atout et le nombre minimum de points que tu comptes faire. 80, 90, 100, capot…</div>
       </div>
     </div>
 
     <!-- Carte 3 — Coinche / Surcoinche -->
     <div class="fc" id="c3">
-      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ</div></div>
-      <div class="fc-face fy">
-        <div class="cn tl">03<br>♦</div>
-        <div class="suit">♦</div>
-        <div class="num">03</div>
-        <div class="info">Coinche /<br>Surcoinche</div>
-        <div class="cn br">03<br>♦</div>
+      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
+      <div class="fc-face">
+        <div class="fc-num">03</div>
+        <div class="fc-title">Coinche / Surcoinche</div>
+        <div class="fc-desc">Si tes adversaires pensent que t'y arriveras pas, ils coinchent. Tu y crois encore ? Surcoinche. Les points doublent, triplent.</div>
       </div>
     </div>
 
     <!-- Carte 4 — Belote & Dix de der -->
     <div class="fc" id="c4">
-      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ</div></div>
-      <div class="fc-face fn">
-        <div class="cn tl" style="color:#f5c842">04<br>♣</div>
-        <div class="suit" style="color:#f5c842">♣</div>
-        <div class="num" style="color:#f5c842">04</div>
-        <div class="info" style="color:#f5c842">Belote &amp;<br>Dix de der</div>
-        <div class="cn br" style="color:#f5c842">04<br>♣</div>
+      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ !</div></div>
+      <div class="fc-face">
+        <div class="fc-num">04</div>
+        <div class="fc-title">Belote &amp; Dix de der</div>
+        <div class="fc-desc">Roi + Dame d'atout dans la même main = 20 pts. Dernier pli = 10 pts. La belote, c'est sacré.</div>
       </div>
     </div>
 
@@ -504,16 +497,15 @@ window.addEventListener('load', () => {
       pin: true,
       anticipatePin: 1,
       onLeave:     () => rulesContent.classList.add('visible'),
-      onEnterBack: () => {
-        rulesContent.classList.remove('visible');
-        // Cache le dealer quand on re-entre
-        gsap.set(dealer, { opacity: 1 });
-      },
+      onEnterBack: () => rulesContent.classList.remove('visible'),
     }
   });
 
-  // DEALER apparaît
-  tl.to(dealer, { opacity: 1, duration: 0.04, ease: 'none' }, 0);
+  // FONDU ENTRÉE — stage transparent → opaque (overlap avec hero)
+  tl.to('#stage', { opacity: 1, duration: 0.10, ease: 'power1.in' }, 0);
+
+  // DEALER apparaît juste après le fondu
+  tl.to(dealer, { opacity: 1, duration: 0.04, ease: 'none' }, 0.08);
 
   // DISTRIBUTION : chaque carte glisse du dealer vers sa position en éventail (face cachée)
   // puis se retourne pour révéler la règle
@@ -574,6 +566,10 @@ window.addEventListener('load', () => {
       ease: 'power2.in',
     }, exitStart + i * 0.02);
   });
+
+  // FONDU SORTIE — stage opaque → transparent (overlap avec section suivante)
+  const exitEnd = exitStart + 0.18 + (CARDS.length - 1) * 0.02;
+  tl.to('#stage', { opacity: 0, duration: 0.12, ease: 'power1.out' }, exitEnd);
 });
 </script>
 </body>
