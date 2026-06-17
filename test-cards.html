@@ -196,7 +196,7 @@
 </div>
 
 <!-- Spacer de scroll pour l'animation (1500vh, invisible) -->
-<div id="anim-space" style="height:1500vh;pointer-events:none"></div>
+<div id="anim-space" style="height:400vh;pointer-events:none"></div>
 
 <!-- ---- Rules + animation intégrée ---- -->
 <section class="rules" id="rules">
@@ -467,10 +467,10 @@ window.addEventListener('load', () => {
 
   // Éventail serré — c1 derrière, c4 devant (chaque carte distribuée cache la précédente)
   const FAN = [
-    { x: -180, y: 155, rotZ: -12, z: 1 },
-    { x:  -60, y: 130, rotZ:  -4, z: 2 },
-    { x:   60, y: 130, rotZ:   4, z: 3 },
-    { x:  180, y: 155, rotZ:  12, z: 4 },
+    { x: -180, y: 30, rotZ: -12, z: 1 },
+    { x:  -60, y: 15, rotZ:  -4, z: 2 },
+    { x:   60, y: 15, rotZ:   4, z: 3 },
+    { x:  180, y: 30, rotZ:  12, z: 4 },
   ];
 
   const CARDS = ['#c1','#c2','#c3','#c4'];
@@ -486,7 +486,7 @@ window.addEventListener('load', () => {
     scrollTrigger: {
       trigger: '#hero',
       start: 'top top',
-      end: '+=1500%',
+      end: '+=400%',
       scrub: 1.2,
       onLeave:     () => rulesContent.classList.add('visible'),
       onEnterBack: () => rulesContent.classList.remove('visible'),
