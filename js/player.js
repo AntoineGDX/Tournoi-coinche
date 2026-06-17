@@ -103,9 +103,13 @@ document.addEventListener('DOMContentLoaded', () => {
     audio.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
   }
 
+  const playingPref = localStorage.getItem('cc-music-playing');
+
   if (wasPlaying) {
+    // L'utilisateur écoutait → on reprend
     startAudio();
-  } else {
+  } else if (playingPref === null) {
+    // Première visite → autoplay, fallback sur première interaction
     const onFirstInteraction = () => {
       document.removeEventListener('click', onFirstInteraction);
       document.removeEventListener('keydown', onFirstInteraction);
@@ -118,4 +122,5 @@ document.addEventListener('DOMContentLoaded', () => {
       document.addEventListener('touchstart', onFirstInteraction);
     });
   }
+  // playingPref === 'false' → l'utilisateur a mis pause → on ne démarre pas
 });
