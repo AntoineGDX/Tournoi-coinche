@@ -22,7 +22,7 @@
   opacity:0;
 }
 /* Rules — fournit l'espace de scroll pour l'animation */
-.rules { min-height:210vh !important; }
+.rules { min-height:230vh !important; }
 /* En-tête dans le stage — positionné en haut du viewport pendant l'animation */
 #stage .rules-head-wrap {
   position:absolute;
@@ -456,27 +456,29 @@ window.addEventListener('load', () => {
 
   const CARDS = ['#c1','#c2','#c3','#c4'];
 
-  // Init : toutes les cartes au dealer, dos visible, petites
+  // Init : toutes les cartes au dealer, dos visible, petites ; header masqué
   CARDS.forEach((id, i) => {
     gsap.set(id, { x: D.x, y: D.y, rotateZ: 0, rotateY: 0, scale: 0.17, opacity: 0, zIndex: FAN[i].z });
     gsap.set(id + ' .fc-face', { opacity: 0 });
     gsap.set(id + ' .fc-back', { opacity: 1 });
   });
+  gsap.set('#stage .rules-head-wrap', { opacity: 0 });
 
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: '#hero',
-      start: 'top top',
+      start: '25% top',
       end: '+=300%',
       scrub: 1.2,
     }
   });
 
-  // FONDU ENTRÉE du stage
+  // FONDU ENTRÉE du stage + header en fondu depuis le fond beige
   tl.to('#stage', { opacity: 1, duration: 0.10, ease: 'power1.in' }, 0);
+  tl.to('#stage .rules-head-wrap', { opacity: 1, duration: 0.15, ease: 'power1.out' }, 0.05);
 
   // DEALER apparaît
-  tl.to(dealer, { opacity: 1, duration: 0.04, ease: 'none' }, 0.08);
+  tl.to(dealer, { opacity: 1, duration: 0.04, ease: 'none' }, 0.12);
 
   const DEAL = 0.18;
   const GAP  = 0.09;
@@ -519,6 +521,9 @@ window.addEventListener('load', () => {
       opacity: 0, duration: 0.17, ease: 'power2.in',
     }, exitStart + i * 0.02);
   });
+
+  // ENVOL du header en même temps que les cartes
+  tl.to('#stage .rules-head-wrap', { y: -180, opacity: 0, duration: 0.17, ease: 'power2.in' }, exitStart);
 
   // FONDU SORTIE du stage
   const exitEnd = exitStart + 0.17 + (CARDS.length - 1) * 0.02;
