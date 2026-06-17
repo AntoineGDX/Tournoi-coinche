@@ -34,61 +34,59 @@
 /* Dealer silhouette */
 #dealer {
   position:absolute;
-  right:80px; bottom:60px;
-  width:52px; height:78px;
+  right:clamp(20px,5.5vw,80px); bottom:clamp(30px,4.2vw,60px);
+  width:clamp(30px,3.6vw,52px); height:clamp(45px,5.4vw,78px);
   opacity:0;
 }
 
-/* Card wrapper */
+/* Card wrapper — taille responsive, marges set par JS */
 .fc {
   position:absolute; left:50%; top:50%;
-  width:312px; height:437px;
-  margin-left:-156px; margin-top:-218px;
-  border-radius:16px;
+  width:clamp(140px,21.6vw,312px); height:clamp(196px,30.3vw,437px);
+  border-radius:clamp(8px,1.1vw,16px);
   opacity:0;
 }
 
-/* Back & face superposés — flip géré par opacity GSAP (plus fiable que backface-visibility) */
+/* Back & face superposés */
 .fc-back,
 .fc-face {
   position:absolute; inset:0;
-  border-radius:12px;
+  border-radius:clamp(6px,0.9vw,12px);
   border:3px solid #1a1a1a;
 }
 
-/* Card back — fond jaune, "C'EST COINCHÉ !" en noir */
+/* Card back */
 .fc-back {
   background:#f5c842;
   display:flex; align-items:center; justify-content:center;
-  /* opacity:1 par défaut → visible au départ */
 }
 .fc-back .logo {
   font-family:var(--cc-ff-display,sans-serif);
-  font-size:52px; font-weight:900; color:#1a1a1a;
+  font-size:clamp(22px,3.6vw,52px); font-weight:900; color:#1a1a1a;
   text-align:center; line-height:1.15; letter-spacing:-0.5px;
   text-transform:uppercase;
 }
 
-/* Card face — fond crème, style règle */
+/* Card face */
 .fc-face {
   background:#f0ede6;
   display:flex; flex-direction:column;
   align-items:flex-start; justify-content:flex-start;
-  padding:28px 24px 24px;
-  opacity:0; /* caché au départ, révélé par GSAP au retournement */
+  padding:clamp(12px,1.9vw,28px) clamp(10px,1.7vw,24px);
+  opacity:0;
 }
 .fc-face .fc-num {
   font-family:var(--cc-ff-display,sans-serif);
-  font-size:88px; font-weight:900; color:#1a1a1a;
-  line-height:1; margin-bottom:8px;
+  font-size:clamp(38px,6.1vw,88px); font-weight:900; color:#1a1a1a;
+  line-height:1; margin-bottom:clamp(4px,0.6vw,8px);
 }
 .fc-face .fc-title {
-  font-size:17px; font-weight:900; text-transform:uppercase;
+  font-size:clamp(8px,1.2vw,17px); font-weight:900; text-transform:uppercase;
   letter-spacing:.06em; color:#1a1a1a; line-height:1.2;
-  margin-bottom:18px;
+  margin-bottom:clamp(8px,1.2vw,18px);
 }
 .fc-face .fc-desc {
-  font-size:15px; line-height:1.6; color:#1a1a1a;
+  font-size:clamp(7px,1.05vw,15px); line-height:1.6; color:#1a1a1a;
   font-weight:600;
 }
 
@@ -444,13 +442,23 @@ window.addEventListener('load', () => {
 
   const D = getDealerPos();
 
-  // Éventail serré — c1 derrière, c4 devant (chaque carte distribuée cache la précédente)
-  // Main de joueur — éventail avec rotation
+  // Marges dynamiques basées sur la taille réelle des cartes (clamp CSS)
+  const cardEl = document.getElementById('c1');
+  const cardW  = cardEl.offsetWidth;
+  const cardH  = cardEl.offsetHeight;
+  document.querySelectorAll('.fc').forEach(el => {
+    el.style.marginLeft = (-cardW / 2) + 'px';
+    el.style.marginTop  = (-cardH / 2) + 'px';
+  });
+
+  // FAN responsive : spread proportionnel à la largeur du viewport
+  const vw      = window.innerWidth;
+  const spread  = Math.min(180, vw * 0.125);
   const FAN = [
-    { x: -180, y: 30, rotZ: -12, z: 1 },
-    { x:  -60, y: 15, rotZ:  -4, z: 2 },
-    { x:   60, y: 15, rotZ:   4, z: 3 },
-    { x:  180, y: 30, rotZ:  12, z: 4 },
+    { x: -spread,       y: spread * 0.17, rotZ: -12, z: 1 },
+    { x: -spread / 3,   y: spread * 0.08, rotZ:  -4, z: 2 },
+    { x:  spread / 3,   y: spread * 0.08, rotZ:   4, z: 3 },
+    { x:  spread,       y: spread * 0.17, rotZ:  12, z: 4 },
   ];
 
   const CARDS = ['#c1','#c2','#c3','#c4'];
@@ -507,12 +515,14 @@ window.addEventListener('load', () => {
 
   const exitStart = lastFlipEnd;
 
-  // ENVOL — chaque carte part vers le haut
+  // ENVOL — directions proportionnelles au viewport
+  const flyX = Math.min(500, vw * 0.35);
+  const flyY = -window.innerHeight * 0.95;
   const exitDirs = [
-    { x: -500, y: -850, rotZ: -70 },
-    { x: -150, y: -900, rotZ:  15 },
-    { x:  150, y: -900, rotZ: -15 },
-    { x:  500, y: -850, rotZ:  70 },
+    { x: -flyX,        y: flyY, rotZ: -70 },
+    { x: -flyX * 0.3,  y: flyY * 1.05, rotZ:  15 },
+    { x:  flyX * 0.3,  y: flyY * 1.05, rotZ: -15 },
+    { x:  flyX,        y: flyY, rotZ:  70 },
   ];
   CARDS.forEach((id, i) => {
     tl.to(id, {
