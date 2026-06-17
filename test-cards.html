@@ -195,6 +195,9 @@
 
 </div>
 
+<!-- Spacer de scroll pour l'animation (1500vh, invisible) -->
+<div id="anim-space" style="height:1500vh;pointer-events:none"></div>
+
 <!-- ---- Rules + animation intégrée ---- -->
 <section class="rules" id="rules">
 
@@ -485,8 +488,6 @@ window.addEventListener('load', () => {
       start: 'top top',
       end: '+=1500%',
       scrub: 1.2,
-      pin: true,
-      anticipatePin: 1,
       onLeave:     () => rulesContent.classList.add('visible'),
       onEnterBack: () => rulesContent.classList.remove('visible'),
     }
