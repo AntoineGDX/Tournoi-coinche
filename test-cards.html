@@ -30,62 +30,57 @@
   opacity:0;
 }
 
-/* Card wrapper — preserve-3d for the flip */
+/* Card wrapper */
 .fc {
   position:absolute; left:50%; top:50%;
-  width:155px; height:217px;
-  margin-left:-77px; margin-top:-108px;
-  border-radius:13px;
-  transform-style:preserve-3d;
+  width:178px; height:249px;
+  margin-left:-89px; margin-top:-124px;
+  border-radius:14px;
   opacity:0;
   will-change:transform,opacity;
 }
 
-/* Back & face share the same footprint */
+/* Back & face superposés — flip géré par opacity GSAP (plus fiable que backface-visibility) */
 .fc-back,
 .fc-face {
   position:absolute; inset:0;
-  border-radius:11px;
-  backface-visibility:hidden;
-  -webkit-backface-visibility:hidden;
+  border-radius:12px;
+  border:3px solid #1a1a1a;
 }
 
-/* Card back — fond jaune, texte noir "C'EST COINCHÉ" */
+/* Card back — fond jaune, "C'EST COINCHÉ !" en noir */
 .fc-back {
   background:#f5c842;
-  border:3px solid #1a1a1a;
-  transform:rotateY(0deg);
   display:flex; align-items:center; justify-content:center;
+  /* opacity:1 par défaut → visible au départ */
 }
 .fc-back .logo {
   font-family:var(--cc-ff-display,sans-serif);
-  font-size:17px; font-weight:900; color:#1a1a1a;
+  font-size:18px; font-weight:900; color:#1a1a1a;
   text-align:center; line-height:1.15; letter-spacing:-0.5px;
   text-transform:uppercase;
 }
 
 /* Card face — fond crème, style règle */
 .fc-face {
-  transform:rotateY(180deg);
   background:#f0ede6;
-  border:3px solid #1a1a1a;
   display:flex; flex-direction:column;
   align-items:flex-start; justify-content:flex-start;
-  padding:16px 14px 14px;
-  gap:0;
+  padding:18px 16px 16px;
+  opacity:0; /* caché au départ, révélé par GSAP au retournement */
 }
 .fc-face .fc-num {
   font-family:var(--cc-ff-display,sans-serif);
-  font-size:52px; font-weight:900; color:#1a1a1a;
-  line-height:1; margin-bottom:4px;
+  font-size:58px; font-weight:900; color:#1a1a1a;
+  line-height:1; margin-bottom:5px;
 }
 .fc-face .fc-title {
-  font-size:10.5px; font-weight:900; text-transform:uppercase;
+  font-size:11px; font-weight:900; text-transform:uppercase;
   letter-spacing:.06em; color:#1a1a1a; line-height:1.2;
-  margin-bottom:10px;
+  margin-bottom:12px;
 }
 .fc-face .fc-desc {
-  font-size:9px; line-height:1.55; color:#f5c842;
+  font-size:9.5px; line-height:1.6; color:#f5c842;
   font-weight:700;
 }
 
@@ -472,20 +467,22 @@ window.addEventListener('load', () => {
 
   const D = getDealerPos();
 
-  // Positions en éventail "main de joueur" — bas centre, cartes inclinées
-  const fanScale = Math.min(1, window.innerWidth / 820);
+  // Éventail serré — cartes qui se chevauchent comme une vraie main (~65% superposition)
+  // c1 devant (z-index le plus haut), c4 derrière
   const FAN = [
-    { x: -230 * fanScale, y: 150, rotZ: -18 },
-    { x:  -78 * fanScale, y: 110, rotZ:  -6 },
-    { x:   78 * fanScale, y: 110, rotZ:   6 },
-    { x:  230 * fanScale, y: 150, rotZ:  18 },
+    { x: -108, y: 155, rotZ: -12, z: 4 },
+    { x:  -36, y: 135, rotZ:  -4, z: 3 },
+    { x:   36, y: 135, rotZ:   4, z: 2 },
+    { x:  108, y: 155, rotZ:  12, z: 1 },
   ];
 
   const CARDS = ['#c1','#c2','#c3','#c4'];
 
-  // Init : toutes les cartes au dealer, face cachée (rotateY 180 = dos visible)
-  CARDS.forEach(id => {
-    gsap.set(id, { x: D.x, y: D.y, rotateY: 180, rotateZ: 0, scale: 0.55, opacity: 0 });
+  // Init : toutes les cartes au dealer, dos visible, petites
+  CARDS.forEach((id, i) => {
+    gsap.set(id, { x: D.x, y: D.y, rotateZ: 0, scale: 0.5, opacity: 0, zIndex: FAN[i].z });
+    gsap.set(id + ' .fc-face', { opacity: 0 });
+    gsap.set(id + ' .fc-back', { opacity: 1 });
   });
 
   const tl = gsap.timeline({
@@ -501,44 +498,37 @@ window.addEventListener('load', () => {
     }
   });
 
-  // FONDU ENTRÉE — stage transparent → opaque (overlap avec hero)
+  // FONDU ENTRÉE du stage
   tl.to('#stage', { opacity: 1, duration: 0.10, ease: 'power1.in' }, 0);
 
-  // DEALER apparaît juste après le fondu
+  // DEALER apparaît
   tl.to(dealer, { opacity: 1, duration: 0.04, ease: 'none' }, 0.08);
 
-  // DISTRIBUTION : chaque carte glisse du dealer vers sa position en éventail (face cachée)
-  // puis se retourne pour révéler la règle
   const DEAL = 0.13;  // durée du glissement
-  const FLIP = 0.07;  // durée du retournement
-  const GAP  = 0.18;  // décalage entre chaque carte
+  const FLIP = 0.06;  // durée du retournement (crossfade)
+  const GAP  = 0.17;  // décalage entre chaque carte
 
   CARDS.forEach((id, i) => {
     const f     = FAN[i];
-    const start = 0.06 + i * GAP;
+    const start = 0.07 + i * GAP;
 
-    // Apparition au dealer
+    // Apparition au dealer (petite, dos visible)
     tl.to(id, { opacity: 1, scale: 1, duration: 0.03, ease: 'power1.out' }, start);
 
-    // Glissement vers la position éventail, face cachée
+    // Glissement vers la position éventail — dos jaune visible pendant le trajet
     tl.to(id, {
-      x: f.x, y: f.y,
-      rotateZ: f.rotZ,
-      rotateY: 180,        // reste face cachée pendant le voyage
-      duration: DEAL,
-      ease: 'power2.out',
+      x: f.x, y: f.y, rotateZ: f.rotZ,
+      duration: DEAL, ease: 'power2.out',
     }, start + 0.03);
 
-    // Retournement — révèle la face (règle)
-    tl.to(id, {
-      rotateY: 0,
-      duration: FLIP,
-      ease: 'power1.inOut',
-    }, start + 0.03 + DEAL);
+    // Retournement : crossfade dos → face (+ légère rotation pour l'effet)
+    tl.to(id + ' .fc-back', { opacity: 0, duration: FLIP, ease: 'power1.in'  }, start + 0.03 + DEAL);
+    tl.to(id + ' .fc-face', { opacity: 1, duration: FLIP, ease: 'power1.out' }, start + 0.03 + DEAL);
+    tl.to(id, { rotateZ: f.rotZ, rotateY: 0, duration: FLIP }, start + 0.03 + DEAL);
   });
 
-  // Calcul du moment où toutes les cartes sont retournées
-  const lastFlipEnd = 0.06 + (CARDS.length - 1) * GAP + 0.03 + DEAL + FLIP;
+  // Moment où toutes les cartes sont retournées
+  const lastFlipEnd = 0.07 + (CARDS.length - 1) * GAP + 0.03 + DEAL + FLIP;
 
   // VITRINE — pause pour lire les règles
   tl.to(CARDS, { duration: 0.18, ease: 'none' }, lastFlipEnd);
@@ -546,29 +536,25 @@ window.addEventListener('load', () => {
   const exitStart = lastFlipEnd + 0.18;
 
   // DEALER disparaît
-  tl.to(dealer, { opacity: 0, duration: 0.08, ease: 'power1.in' }, exitStart);
+  tl.to(dealer, { opacity: 0, duration: 0.06, ease: 'power1.in' }, exitStart);
 
-  // ENVOL — les cartes s'envolent vers le haut
+  // ENVOL — chaque carte part vers le haut dans sa direction
   const exitDirs = [
-    { x: -600, y: -900, rotZ: -80  },
-    { x: -200, y: -950, rotZ:  20  },
-    { x:  200, y: -950, rotZ: -20  },
-    { x:  600, y: -900, rotZ:  80  },
+    { x: -500, y: -850, rotZ: -70 },
+    { x: -150, y: -900, rotZ:  15 },
+    { x:  150, y: -900, rotZ: -15 },
+    { x:  500, y: -850, rotZ:  70 },
   ];
   CARDS.forEach((id, i) => {
-    const e = exitDirs[i];
     tl.to(id, {
-      x: e.x, y: e.y,
-      rotateZ: FAN[i].rotZ + e.rotZ,
-      rotateY: i % 2 === 0 ? 180 : -180,
-      opacity: 0,
-      duration: 0.18,
-      ease: 'power2.in',
+      x: exitDirs[i].x, y: exitDirs[i].y,
+      rotateZ: FAN[i].rotZ + exitDirs[i].rotZ,
+      opacity: 0, duration: 0.17, ease: 'power2.in',
     }, exitStart + i * 0.02);
   });
 
-  // FONDU SORTIE — stage opaque → transparent (overlap avec section suivante)
-  const exitEnd = exitStart + 0.18 + (CARDS.length - 1) * 0.02;
+  // FONDU SORTIE du stage
+  const exitEnd = exitStart + 0.17 + (CARDS.length - 1) * 0.02;
   tl.to('#stage', { opacity: 0, duration: 0.12, ease: 'power1.out' }, exitEnd);
 });
 </script>
