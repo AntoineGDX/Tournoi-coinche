@@ -476,8 +476,8 @@ window.addEventListener('load', () => {
   tl.to('#stage', { opacity: 1, duration: 0.10, ease: 'power1.in' }, 0);
   tl.to('.rules-head-wrap', { opacity: 1, duration: 0.15, ease: 'power1.out' }, 0.05);
 
-  // DEALER apparaît
-  tl.to(dealer, { opacity: 1, duration: 0.04, ease: 'none' }, 0.12);
+  // DEALER apparaît dès le début, avant la première carte
+  tl.to(dealer, { opacity: 1, duration: 0.06, ease: 'none' }, 0);
 
   const DEAL = 0.18;
   const GAP  = 0.09;
