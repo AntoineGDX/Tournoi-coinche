@@ -33,9 +33,9 @@
 /* Card wrapper */
 .fc {
   position:absolute; left:50%; top:50%;
-  width:178px; height:249px;
-  margin-left:-89px; margin-top:-124px;
-  border-radius:14px;
+  width:208px; height:291px;
+  margin-left:-104px; margin-top:-145px;
+  border-radius:16px;
   opacity:0;
   will-change:transform,opacity;
 }
@@ -80,8 +80,8 @@
   margin-bottom:12px;
 }
 .fc-face .fc-desc {
-  font-size:9.5px; line-height:1.6; color:#f5c842;
-  font-weight:700;
+  font-size:10px; line-height:1.6; color:#1a1a1a;
+  font-weight:600;
 }
 
 /* Rules content hidden during animation, revealed after */
@@ -467,20 +467,19 @@ window.addEventListener('load', () => {
 
   const D = getDealerPos();
 
-  // Éventail serré — cartes qui se chevauchent comme une vraie main (~65% superposition)
-  // c1 devant (z-index le plus haut), c4 derrière
+  // Éventail serré — c1 derrière, c4 devant (chaque carte distribuée cache la précédente)
   const FAN = [
-    { x: -108, y: 155, rotZ: -12, z: 4 },
-    { x:  -36, y: 135, rotZ:  -4, z: 3 },
-    { x:   36, y: 135, rotZ:   4, z: 2 },
-    { x:  108, y: 155, rotZ:  12, z: 1 },
+    { x: -108, y: 155, rotZ: -12, z: 1 },
+    { x:  -36, y: 135, rotZ:  -4, z: 2 },
+    { x:   36, y: 135, rotZ:   4, z: 3 },
+    { x:  108, y: 155, rotZ:  12, z: 4 },
   ];
 
   const CARDS = ['#c1','#c2','#c3','#c4'];
 
   // Init : toutes les cartes au dealer, dos visible, petites
   CARDS.forEach((id, i) => {
-    gsap.set(id, { x: D.x, y: D.y, rotateZ: 0, scale: 0.5, opacity: 0, zIndex: FAN[i].z });
+    gsap.set(id, { x: D.x, y: D.y, rotateZ: 0, rotateY: 0, scale: 0.5, opacity: 0, zIndex: FAN[i].z });
     gsap.set(id + ' .fc-face', { opacity: 0 });
     gsap.set(id + ' .fc-back', { opacity: 1 });
   });
@@ -521,10 +520,12 @@ window.addEventListener('load', () => {
       duration: DEAL, ease: 'power2.out',
     }, start + 0.03);
 
-    // Retournement : crossfade dos → face (+ légère rotation pour l'effet)
-    tl.to(id + ' .fc-back', { opacity: 0, duration: FLIP, ease: 'power1.in'  }, start + 0.03 + DEAL);
-    tl.to(id + ' .fc-face', { opacity: 1, duration: FLIP, ease: 'power1.out' }, start + 0.03 + DEAL);
-    tl.to(id, { rotateZ: f.rotZ, rotateY: 0, duration: FLIP }, start + 0.03 + DEAL);
+    // Retournement : swing rotateY 0→90 (tranche) puis 90→0, bascule des faces à mi-chemin
+    const flipStart = start + 0.03 + DEAL;
+    tl.to(id, { rotateY: 90, duration: FLIP * 0.5, ease: 'power1.in' }, flipStart);
+    tl.to(id + ' .fc-back', { opacity: 0, duration: 0.01 }, flipStart + FLIP * 0.5);
+    tl.to(id + ' .fc-face', { opacity: 1, duration: 0.01 }, flipStart + FLIP * 0.5);
+    tl.to(id, { rotateZ: f.rotZ, rotateY: 0, duration: FLIP * 0.5, ease: 'power1.out' }, flipStart + FLIP * 0.5);
   });
 
   // Moment où toutes les cartes sont retournées
