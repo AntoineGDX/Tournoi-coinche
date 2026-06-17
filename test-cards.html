@@ -22,7 +22,7 @@
   opacity:0;
 }
 /* Rules — fournit l'espace de scroll pour l'animation */
-.rules { min-height:350vh !important; }
+.rules { min-height:210vh !important; }
 /* En-tête dans le stage — positionné en haut du viewport pendant l'animation */
 #stage .rules-head-wrap {
   position:absolute;
@@ -478,30 +478,28 @@ window.addEventListener('load', () => {
   // DEALER apparaît
   tl.to(dealer, { opacity: 1, duration: 0.04, ease: 'none' }, 0.08);
 
-  const DEAL = 0.13;
-  const FLIP = 0.06;
+  const DEAL = 0.18;
   const GAP  = 0.09;
 
   CARDS.forEach((id, i) => {
     const f     = FAN[i];
     const start = 0.07 + i * GAP;
 
+    // Apparition minuscule au dealer
     tl.to(id, { opacity: 1, duration: 0.03, ease: 'power1.out' }, start);
 
-    tl.to(id, {
-      x: f.x, y: f.y, rotateZ: f.rotZ, scale: 1,
-      duration: DEAL, ease: 'power2.out',
-    }, start + 0.03);
+    // Trajet vers la position finale (position + scale)
+    tl.to(id, { x: f.x, y: f.y, rotateZ: f.rotZ, scale: 1, duration: DEAL, ease: 'power2.out' }, start + 0.03);
 
-    const flipStart = start + 0.03 + DEAL;
-    tl.to(id, { rotateY: 90, duration: FLIP * 0.5, ease: 'power1.in' }, flipStart);
-    tl.to(id + ' .fc-back', { opacity: 0, duration: 0.01 }, flipStart + FLIP * 0.5);
-    tl.to(id + ' .fc-face', { opacity: 1, duration: 0.01 }, flipStart + FLIP * 0.5);
-    tl.to(id, { rotateZ: f.rotZ, rotateY: 0, duration: FLIP * 0.5, ease: 'power1.out' }, flipStart + FLIP * 0.5);
+    // Flip pendant le trajet : 0→90° en première moitié, bascule au milieu, 90→0° en seconde moitié
+    tl.to(id, { rotateY: 90, duration: DEAL * 0.5, ease: 'power1.in' }, start + 0.03);
+    tl.to(id + ' .fc-back', { opacity: 0, duration: 0.01 }, start + 0.03 + DEAL * 0.5);
+    tl.to(id + ' .fc-face', { opacity: 1, duration: 0.01 }, start + 0.03 + DEAL * 0.5);
+    tl.to(id, { rotateY: 0, duration: DEAL * 0.5, ease: 'power1.out' }, start + 0.03 + DEAL * 0.5);
   });
 
   // Pause vitrine
-  const lastFlipEnd = 0.07 + (CARDS.length - 1) * GAP + 0.03 + DEAL + FLIP;
+  const lastFlipEnd = 0.07 + (CARDS.length - 1) * GAP + 0.03 + DEAL;
   tl.to(CARDS, { duration: 0.15, ease: 'none' }, lastFlipEnd);
   tl.to(dealer, { opacity: 0, duration: 0.08, ease: 'power1.in' }, lastFlipEnd);
 
