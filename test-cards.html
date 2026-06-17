@@ -23,8 +23,13 @@
 }
 /* Rules — fournit l'espace de scroll pour l'animation */
 .rules { min-height:350vh !important; }
-/* En-tête de la section — reste visible pendant le scroll de l'animation */
-.rules-head-wrap { position:sticky; top:80px; z-index:300; }
+/* En-tête dans le stage — positionné en haut du viewport pendant l'animation */
+#stage .rules-head-wrap {
+  position:absolute;
+  top:80px; left:0; right:0;
+  z-index:10;
+  pointer-events:auto;
+}
 
 /* Dealer silhouette */
 #dealer {
@@ -148,19 +153,19 @@
 <!-- ---- Rules — animation dealer remplace les boxes ---- -->
 <section class="rules" id="rules">
 
-  <!-- En-tête toujours visible -->
-  <div class="wrap rules-head-wrap">
-    <div class="rules-head">
-      <div>
-        <span class="eyebrow">La coinche en 3 minutes</span>
-        <h2>Tu connais pas ? On t'explique.</h2>
-      </div>
-      <a class="btn ghost" href="reglement.html">LIRE LE RÈGLEMENT COMPLET →</a>
-    </div>
-  </div>
-
   <!-- Stage animé — les cartes remplacent les boxes -->
   <div id="stage">
+
+    <!-- En-tête intégré au stage : reste visible pendant toute l'animation -->
+    <div class="wrap rules-head-wrap">
+      <div class="rules-head">
+        <div>
+          <span class="eyebrow">La coinche en 3 minutes</span>
+          <h2>Tu connais pas ? On t'explique.</h2>
+        </div>
+        <a class="btn ghost" href="reglement.html">LIRE LE RÈGLEMENT COMPLET →</a>
+      </div>
+    </div>
 
     <svg id="dealer" viewBox="0 0 52 78" xmlns="http://www.w3.org/2000/svg">
       <ellipse cx="26" cy="13" rx="10" ry="11" fill="#1a1a1a"/>
