@@ -9,37 +9,87 @@
 <link rel="stylesheet" href="css/site.css">
 <style>
 /* Rules section becomes the animation container */
-.rules { position:relative; overflow:visible !important; }
+.rules { position:relative; overflow:visible !important; min-height:100vh; }
 
 /* Stage overlay — covers the whole viewport when pinned */
 #stage {
   position:absolute;
   top:0; left:50%; transform:translateX(-50%);
   width:100vw; height:100%;
-  perspective:850px; perspective-origin:50% 50%;
+  perspective:900px; perspective-origin:50% 60%;
   pointer-events:none;
   z-index:200;
 }
 
-/* Animated playing cards */
+/* Dealer silhouette */
+#dealer {
+  position:absolute;
+  right:80px; bottom:60px;
+  width:52px; height:78px;
+  opacity:0;
+}
+
+/* Card wrapper — preserve-3d for the flip */
 .fc {
   position:absolute; left:50%; top:50%;
-  width:180px; height:252px; margin-left:-90px; margin-top:-126px;
-  border-radius:14px; border:3px solid;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
-  opacity:0; will-change:transform,opacity;
+  width:120px; height:168px;
+  margin-left:-60px; margin-top:-84px;
+  border-radius:12px;
+  transform-style:preserve-3d;
+  opacity:0;
+  will-change:transform,opacity;
 }
-.fy { background:#f5c842; border-color:#1a1a1a; color:#1a1a1a; }
-.fn { background:#1a1a1a; border-color:#f5c842; color:#f5c842; }
-.fc .cn { position:absolute; font-size:13px; font-weight:800; line-height:1.2; text-align:center; }
-.cn.tl { top:9px; left:11px; }
-.cn.br { bottom:9px; right:11px; transform:rotate(180deg); }
-.fc .suit { font-size:48px; line-height:1; }
-.fc .num  { font-family:var(--cc-ff-display,sans-serif); font-size:36px; font-weight:900; line-height:1; }
-.fc .info { font-size:11px; font-weight:800; text-align:center; line-height:1.4; padding:0 10px; text-transform:uppercase; letter-spacing:.05em; }
+
+/* Back & face share the same footprint */
+.fc-back,
+.fc-face {
+  position:absolute; inset:0;
+  border-radius:10px;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:5px;
+}
+
+/* Card back — dark with subtle hatch */
+.fc-back {
+  background:#1a1a1a;
+  background-image:
+    repeating-linear-gradient(-45deg,
+      rgba(245,200,66,.1) 0, rgba(245,200,66,.1) 1px,
+      transparent 0, transparent 9px);
+  border:2.5px solid #f5c842;
+  transform:rotateY(0deg); /* visible when parent is at rotateY(180) */
+}
+.fc-back .logo {
+  font-family:var(--cc-ff-display,sans-serif);
+  font-size:13px; font-weight:900;
+  color:rgba(245,200,66,.35);
+  letter-spacing:-0.3px; text-align:center; line-height:1.2;
+}
+
+/* Card face — yellow or black theme */
+.fc-face {
+  transform:rotateY(180deg); /* visible when parent flips to rotateY(0) */
+  border:2.5px solid;
+}
+.fc-face.fy { background:#f5c842; border-color:#1a1a1a; color:#1a1a1a; }
+.fc-face.fn { background:#1a1a1a; border-color:#f5c842; color:#f5c842; }
+
+.fc-face .cn {
+  position:absolute; font-size:11px; font-weight:800;
+  line-height:1.2; text-align:center;
+}
+.cn.tl { top:7px; left:9px; }
+.cn.br { bottom:7px; right:9px; transform:rotate(180deg); }
+.fc-face .suit { font-size:38px; line-height:1; }
+.fc-face .num  { font-family:var(--cc-ff-display,sans-serif); font-size:28px; font-weight:900; line-height:1; }
+.fc-face .info { font-size:9.5px; font-weight:800; text-align:center; line-height:1.4;
+                 padding:0 8px; text-transform:uppercase; letter-spacing:.05em; }
 
 /* Rules content hidden during animation, revealed after */
-#rules-content { opacity:0; transition:opacity .4s ease; }
+#rules-content { opacity:0; transition:opacity .5s ease; }
 #rules-content.visible { opacity:1; }
 </style>
 </head>
@@ -98,36 +148,71 @@
 <!-- ---- Rules + animation intégrée ---- -->
 <section class="rules" id="rules">
 
-  <!-- Stage animé — les cartes volent ici -->
+  <!-- Stage animé — dealer + cartes -->
   <div id="stage">
-    <div class="fc fy" id="c1">
-      <div class="cn tl">01<br>♠</div>
-      <div class="suit">♠</div>
-      <div class="num">01</div>
-      <div class="info">Équipe<br>de 2</div>
-      <div class="cn br">01<br>♠</div>
+
+    <!-- Silhouette dealer minimaliste (vue légèrement plongeante) -->
+    <svg id="dealer" viewBox="0 0 52 78" xmlns="http://www.w3.org/2000/svg">
+      <!-- tête -->
+      <ellipse cx="26" cy="13" rx="10" ry="11" fill="#1a1a1a"/>
+      <!-- cou -->
+      <rect x="22" y="22" width="8" height="7" rx="3" fill="#1a1a1a"/>
+      <!-- torse -->
+      <path d="M6 34 Q26 27 46 34 L50 72 Q26 78 2 72 Z" fill="#1a1a1a"/>
+      <!-- bras gauche -->
+      <path d="M8 38 Q0 50 4 64" stroke="#1a1a1a" stroke-width="7" stroke-linecap="round" fill="none"/>
+      <!-- bras droit -->
+      <path d="M44 38 Q52 50 48 64" stroke="#1a1a1a" stroke-width="7" stroke-linecap="round" fill="none"/>
+    </svg>
+
+    <!-- Carte 1 — Équipe de 2 -->
+    <div class="fc" id="c1">
+      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ</div></div>
+      <div class="fc-face fy">
+        <div class="cn tl">01<br>♠</div>
+        <div class="suit">♠</div>
+        <div class="num">01</div>
+        <div class="info">Équipe<br>de 2</div>
+        <div class="cn br">01<br>♠</div>
+      </div>
     </div>
-    <div class="fc fn" id="c2">
-      <div class="cn tl" style="color:#f5c842">02<br>♥</div>
-      <div class="suit" style="color:#f5c842">♥</div>
-      <div class="num" style="color:#f5c842">02</div>
-      <div class="info" style="color:#f5c842">Les<br>annonces</div>
-      <div class="cn br" style="color:#f5c842">02<br>♥</div>
+
+    <!-- Carte 2 — Les annonces -->
+    <div class="fc" id="c2">
+      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ</div></div>
+      <div class="fc-face fn">
+        <div class="cn tl" style="color:#f5c842">02<br>♥</div>
+        <div class="suit" style="color:#f5c842">♥</div>
+        <div class="num" style="color:#f5c842">02</div>
+        <div class="info" style="color:#f5c842">Les<br>annonces</div>
+        <div class="cn br" style="color:#f5c842">02<br>♥</div>
+      </div>
     </div>
-    <div class="fc fy" id="c3">
-      <div class="cn tl">03<br>♦</div>
-      <div class="suit">♦</div>
-      <div class="num">03</div>
-      <div class="info">Coinche /<br>Surcoinche</div>
-      <div class="cn br">03<br>♦</div>
+
+    <!-- Carte 3 — Coinche / Surcoinche -->
+    <div class="fc" id="c3">
+      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ</div></div>
+      <div class="fc-face fy">
+        <div class="cn tl">03<br>♦</div>
+        <div class="suit">♦</div>
+        <div class="num">03</div>
+        <div class="info">Coinche /<br>Surcoinche</div>
+        <div class="cn br">03<br>♦</div>
+      </div>
     </div>
-    <div class="fc fn" id="c4">
-      <div class="cn tl" style="color:#f5c842">04<br>♣</div>
-      <div class="suit" style="color:#f5c842">♣</div>
-      <div class="num" style="color:#f5c842">04</div>
-      <div class="info" style="color:#f5c842">Belote &<br>Dix de der</div>
-      <div class="cn br" style="color:#f5c842">04<br>♣</div>
+
+    <!-- Carte 4 — Belote & Dix de der -->
+    <div class="fc" id="c4">
+      <div class="fc-back"><div class="logo">C'EST<br>COINCHÉ</div></div>
+      <div class="fc-face fn">
+        <div class="cn tl" style="color:#f5c842">04<br>♣</div>
+        <div class="suit" style="color:#f5c842">♣</div>
+        <div class="num" style="color:#f5c842">04</div>
+        <div class="info" style="color:#f5c842">Belote &amp;<br>Dix de der</div>
+        <div class="cn br" style="color:#f5c842">04<br>♣</div>
+      </div>
     </div>
+
   </div>
 
   <!-- Contenu statique — révélé après animation -->
@@ -377,68 +462,118 @@ gsap.registerPlugin(ScrollTrigger);
 
 window.addEventListener('load', () => {
   const stage        = document.getElementById('stage');
-  const ruleCards    = [...document.querySelectorAll('.rule')];
+  const dealer       = document.getElementById('dealer');
   const rulesContent = document.getElementById('rules-content');
 
-  // Mesure la position de chaque carte règle par rapport au centre du stage
-  function getTargets() {
+  // Position du dealer (centre) relative au centre du stage
+  function getDealerPos() {
     const sr = stage.getBoundingClientRect();
+    const dr = dealer.getBoundingClientRect();
     const cx = sr.left + sr.width  / 2;
     const cy = sr.top  + sr.height / 2;
-    return ruleCards.map(el => {
-      const r = el.getBoundingClientRect();
-      return {
-        x:      (r.left + r.width  / 2) - cx,
-        y:      (r.top  + r.height / 2) - cy,
-        scaleX: r.width  / 180,
-        scaleY: r.height / 252,
-      };
-    });
+    return {
+      x: (dr.left + dr.width  / 2) - cx,
+      y: (dr.top  + dr.height / 2) - cy,
+    };
   }
 
-  const T = getTargets();
+  const D = getDealerPos();
+
+  // Positions en éventail "main de joueur" — bas centre, cartes inclinées
+  const fanScale = Math.min(1, window.innerWidth / 820);
+  const FAN = [
+    { x: -230 * fanScale, y: 150, rotZ: -18 },
+    { x:  -78 * fanScale, y: 110, rotZ:  -6 },
+    { x:   78 * fanScale, y: 110, rotZ:   6 },
+    { x:  230 * fanScale, y: 150, rotZ:  18 },
+  ];
+
+  const CARDS = ['#c1','#c2','#c3','#c4'];
+
+  // Init : toutes les cartes au dealer, face cachée (rotateY 180 = dos visible)
+  CARDS.forEach(id => {
+    gsap.set(id, { x: D.x, y: D.y, rotateY: 180, rotateZ: 0, scale: 0.55, opacity: 0 });
+  });
 
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: '#rules',
       start: 'top top',
       end: '+=700%',
-      scrub: 1.4,
+      scrub: 1.2,
       pin: true,
       anticipatePin: 1,
       onLeave:     () => rulesContent.classList.add('visible'),
-      onEnterBack: () => rulesContent.classList.remove('visible'),
+      onEnterBack: () => {
+        rulesContent.classList.remove('visible');
+        // Cache le dealer quand on re-entre
+        gsap.set(dealer, { opacity: 1 });
+      },
     }
   });
 
-  // FLY-IN : une carte par une, depuis le fond, trajectoires diagonales
-  tl
-  .set('#c1', { x:-800, y: 400, z:-7000,  rotateX:  50, rotateY:-150, rotateZ: -80, scaleX:1, scaleY:1, opacity:0 })
-  .to( '#c1', { x: 250, y:-100, z:  200,  rotateX: -80, rotateY: 120, rotateZ: 100, scaleX:1, scaleY:1, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.00)
+  // DEALER apparaît
+  tl.to(dealer, { opacity: 1, duration: 0.04, ease: 'none' }, 0);
 
-  .set('#c2', { x: 700, y:-500, z:-11000, rotateX: -80, rotateY: 200, rotateZ: 100, scaleX:1, scaleY:1, opacity:0 })
-  .to( '#c2', { x:-200, y: 150, z:   200, rotateX: 100, rotateY:-160, rotateZ: -80, scaleX:1, scaleY:1, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.14)
+  // DISTRIBUTION : chaque carte glisse du dealer vers sa position en éventail (face cachée)
+  // puis se retourne pour révéler la règle
+  const DEAL = 0.13;  // durée du glissement
+  const FLIP = 0.07;  // durée du retournement
+  const GAP  = 0.18;  // décalage entre chaque carte
 
-  .set('#c3', { x: 900, y: 100, z: -5500, rotateX:  80, rotateY:  60, rotateZ: -50, scaleX:1, scaleY:1, opacity:0 })
-  .to( '#c3', { x:-100, y:-200, z:   200, rotateX: -60, rotateY: -80, rotateZ:  80, scaleX:1, scaleY:1, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.28)
+  CARDS.forEach((id, i) => {
+    const f     = FAN[i];
+    const start = 0.06 + i * GAP;
 
-  .set('#c4', { x: 600, y: 600, z: -8500, rotateX:-100, rotateY:-180, rotateZ: 120, scaleX:1, scaleY:1, opacity:0 })
-  .to( '#c4', { x:-300, y: 200, z:   200, rotateX:  80, rotateY:  80, rotateZ:-100, scaleX:1, scaleY:1, opacity:1, duration:0.18, ease:'power1.inOut' }, 0.42)
+    // Apparition au dealer
+    tl.to(id, { opacity: 1, scale: 1, duration: 0.03, ease: 'power1.out' }, start);
 
-  // CONVERGENCE : atterrissage sur les cartes règles statiques
-  .to('#c1', { x:T[0].x, y:T[0].y, z:0, rotateX:0, rotateY:0, rotateZ:-2, scaleX:T[0].scaleX, scaleY:T[0].scaleY, duration:0.10, ease:'power2.inOut' }, 0.57)
-  .to('#c2', { x:T[1].x, y:T[1].y, z:0, rotateX:0, rotateY:0, rotateZ: 1, scaleX:T[1].scaleX, scaleY:T[1].scaleY, duration:0.10, ease:'power2.inOut' }, 0.57)
-  .to('#c3', { x:T[2].x, y:T[2].y, z:0, rotateX:0, rotateY:0, rotateZ:-1, scaleX:T[2].scaleX, scaleY:T[2].scaleY, duration:0.10, ease:'power2.inOut' }, 0.57)
-  .to('#c4', { x:T[3].x, y:T[3].y, z:0, rotateX:0, rotateY:0, rotateZ: 2, scaleX:T[3].scaleX, scaleY:T[3].scaleY, duration:0.10, ease:'power2.inOut' }, 0.57)
+    // Glissement vers la position éventail, face cachée
+    tl.to(id, {
+      x: f.x, y: f.y,
+      rotateZ: f.rotZ,
+      rotateY: 180,        // reste face cachée pendant le voyage
+      duration: DEAL,
+      ease: 'power2.out',
+    }, start + 0.03);
 
-  // VITRINE courte
-  .to(['#c1','#c2','#c3','#c4'], { duration:0.08, ease:'none' }, 0.67)
+    // Retournement — révèle la face (règle)
+    tl.to(id, {
+      rotateY: 0,
+      duration: FLIP,
+      ease: 'power1.inOut',
+    }, start + 0.03 + DEAL);
+  });
 
-  // DÉPART explosif — les cartes s'envolent, les cartes statiques se révèlent via onLeave
-  .to('#c1', { x:-1200, y:-600, z: 800, rotateX:-150, rotateY: 220, rotateZ:-200, scaleX:1, scaleY:1, opacity:0, duration:0.16, ease:'power3.in' }, 0.75)
-  .to('#c2', { x:  600, y: 800, z:1000, rotateX: 180, rotateY:-160, rotateZ: 180, scaleX:1, scaleY:1, opacity:0, duration:0.16, ease:'power3.in' }, 0.75)
-  .to('#c3', { x: -500, y:-800, z: 900, rotateX:-200, rotateY: 120, rotateZ:-170, scaleX:1, scaleY:1, opacity:0, duration:0.16, ease:'power3.in' }, 0.75)
-  .to('#c4', { x: 1200, y: 500, z:1100, rotateX: 120, rotateY:-240, rotateZ: 220, scaleX:1, scaleY:1, opacity:0, duration:0.16, ease:'power3.in' }, 0.75);
+  // Calcul du moment où toutes les cartes sont retournées
+  const lastFlipEnd = 0.06 + (CARDS.length - 1) * GAP + 0.03 + DEAL + FLIP;
+
+  // VITRINE — pause pour lire les règles
+  tl.to(CARDS, { duration: 0.18, ease: 'none' }, lastFlipEnd);
+
+  const exitStart = lastFlipEnd + 0.18;
+
+  // DEALER disparaît
+  tl.to(dealer, { opacity: 0, duration: 0.08, ease: 'power1.in' }, exitStart);
+
+  // ENVOL — les cartes s'envolent vers le haut
+  const exitDirs = [
+    { x: -600, y: -900, rotZ: -80  },
+    { x: -200, y: -950, rotZ:  20  },
+    { x:  200, y: -950, rotZ: -20  },
+    { x:  600, y: -900, rotZ:  80  },
+  ];
+  CARDS.forEach((id, i) => {
+    const e = exitDirs[i];
+    tl.to(id, {
+      x: e.x, y: e.y,
+      rotateZ: FAN[i].rotZ + e.rotZ,
+      rotateY: i % 2 === 0 ? 180 : -180,
+      opacity: 0,
+      duration: 0.18,
+      ease: 'power2.in',
+    }, exitStart + i * 0.02);
+  });
 });
 </script>
 </body>
