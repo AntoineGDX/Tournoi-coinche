@@ -114,6 +114,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           btn.disabled = false;
           return;
         }
+        // Email de confirmation de paiement uniquement quand on passe à "paid"
+        if (newStatus === 'paid') {
+          ccAuth.client.functions.invoke('partner-notify', {
+            body: { event: 'payment_confirmed', teamId: id }
+          });
+        }
         await loadTeams();
       });
     });

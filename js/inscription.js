@@ -68,6 +68,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const email2 = isSolo ? null : (form.email2.value.trim() || null);
     const password = form.password.value;
 
+    // Validations
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (player1.length < 2) {
+      status.textContent = 'Le prénom et nom du joueur 1 doit contenir au moins 2 caractères.';
+      submitBtn.disabled = false; return;
+    }
+    if (!isSolo && player2 && player2.length < 2) {
+      status.textContent = 'Le prénom et nom du joueur 2 doit contenir au moins 2 caractères.';
+      submitBtn.disabled = false; return;
+    }
+    if (!emailRegex.test(email)) {
+      status.textContent = 'L\'adresse email du joueur 1 n\'est pas valide.';
+      submitBtn.disabled = false; return;
+    }
+    if (email2 && !emailRegex.test(email2)) {
+      status.textContent = 'L\'adresse email du joueur 2 n\'est pas valide.';
+      submitBtn.disabled = false; return;
+    }
+    if (createAccount && password.length < 8) {
+      status.textContent = 'Le mot de passe doit contenir au moins 8 caractères.';
+      submitBtn.disabled = false; return;
+    }
+
     let teamname = form.teamname.value.trim();
     if (!teamname) teamname = player1;
 
@@ -110,6 +133,17 @@ document.addEventListener('DOMContentLoaded', () => {
       status.textContent = (createAccount ? "Compte créé, mais l'enregistrement de l'inscription a échoué : " : "L'enregistrement de l'inscription a échoué : ") + teamError.message;
       return;
     }
+
+    // Email de confirmation d'inscription
+    ccAuth.client.functions.invoke('partner-notify', {
+      body: {
+        event: 'inscription_created',
+        email,
+        player1Name: player1,
+        teamName: teamname,
+        registrationType: regType,
+      }
+    });
 
     window.location.href = 'merci.html?type=' + regType;
   });
