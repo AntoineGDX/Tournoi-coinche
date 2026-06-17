@@ -500,12 +500,13 @@ window.addEventListener('load', () => {
     tl.to(id, { rotateY: 0, duration: DEAL * 0.5, ease: 'power1.out' }, start + 0.03 + DEAL * 0.5);
   });
 
-  // Pause vitrine
   const lastFlipEnd = 0.07 + (CARDS.length - 1) * GAP + 0.03 + DEAL;
-  tl.to(CARDS, { duration: 0.05, ease: 'none' }, lastFlipEnd);
-  tl.to(dealer, { opacity: 0, duration: 0.08, ease: 'power1.in' }, lastFlipEnd);
 
-  const exitStart = lastFlipEnd + 0.15;
+  // Dealer disparaît pendant le trajet/flip de c4 (index 3)
+  const c4TravelStart = 0.07 + 3 * GAP + 0.03;
+  tl.to(dealer, { opacity: 0, duration: DEAL, ease: 'power1.in' }, c4TravelStart);
+
+  const exitStart = lastFlipEnd;
 
   // ENVOL — chaque carte part vers le haut
   const exitDirs = [
