@@ -18,7 +18,7 @@
   width:100vw; height:100vh;
   perspective:900px; perspective-origin:50% 60%;
   pointer-events:none;
-  z-index:200;
+  z-index:400;
   opacity:0;
 }
 /* Rules — fournit l'espace de scroll pour l'animation */
@@ -502,7 +502,7 @@ window.addEventListener('load', () => {
 
   // Pause vitrine
   const lastFlipEnd = 0.07 + (CARDS.length - 1) * GAP + 0.03 + DEAL;
-  tl.to(CARDS, { duration: 0.15, ease: 'none' }, lastFlipEnd);
+  tl.to(CARDS, { duration: 0.05, ease: 'none' }, lastFlipEnd);
   tl.to(dealer, { opacity: 0, duration: 0.08, ease: 'power1.in' }, lastFlipEnd);
 
   const exitStart = lastFlipEnd + 0.15;
