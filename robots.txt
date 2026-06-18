@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /compte.html
+Disallow: /mon-equipe.html
+Disallow: /arbre.html
+Disallow: /binome.html
+Disallow: /merci.html
+
+Sitemap: https://cestcoinche.fr/sitemap.xml
