@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
       userId = data.user && data.user.id;
       if (!userId) {
         submitBtn.disabled = false;
-        status.textContent = "Impossible de créer le compte pour le moment. Réessaie ou écris-nous à antoine.goudinoux37@gmail.com.";
+        status.textContent = "Impossible de créer le compte pour le moment. Réessaie ou écris-nous à hello@cestcoinche.fr.";
         return;
       }
     }

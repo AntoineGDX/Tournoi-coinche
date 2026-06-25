@@ -57,7 +57,7 @@ const ccCart = {
     if (items.length === 0) return;
     const lines = items.map(i => `- ${i.name} (taille ${i.size || 'unique'}) × ${i.qty} — ${i.price * i.qty}€`);
     const body = `Commande shop C'est Coinché !\n\n${lines.join('\n')}\n\nTotal : ${this.total()}€\n\nMerci d'indiquer ton nom et tes coordonnées pour la livraison / le retrait.`;
-    const mailto = `mailto:antoine.goudinoux37@gmail.com?subject=${encodeURIComponent("Commande shop — C'est Coinché !")}&body=${encodeURIComponent(body)}`;
+    const mailto = `mailto:hello@cestcoinche.fr?subject=${encodeURIComponent("Commande shop — C'est Coinché !")}&body=${encodeURIComponent(body)}`;
     window.location.href = mailto;
   }
 };
