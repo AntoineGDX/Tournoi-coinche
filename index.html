@@ -197,6 +197,11 @@
       <a class="btn lg" href="inscription.html">INSCRIS TA DOUBLETTE</a>
       <button class="btn lg inverse" data-nav="program">VOIR LE PROGRAMME</button>
     </div>
+    <form class="nl-form" style="justify-content:center;max-width:500px;margin:14px auto 0">
+      <input class="nl-email" type="email" placeholder="ton@email.fr — on te prévient dès que les dates sont confirmées" required>
+      <button class="nl-btn" type="submit">ÊTRE INFORMÉ·E</button>
+      <span class="nl-status" hidden></span>
+    </form>
   </div>
 </section>
 
@@ -437,6 +442,14 @@
       </ul>
     </div>
   </div>
+  <div class="foot-nl">
+    <span>Dates &amp; lieu TBD — sois informé·e :</span>
+    <form class="nl-form">
+      <input class="nl-email" type="email" placeholder="ton@email.fr" required>
+      <button class="nl-btn" type="submit">OK</button>
+      <span class="nl-status" hidden></span>
+    </form>
+  </div>
   <div class="foot-legal">
     <span>© 2026 C'est Coinché · Nice</span>
     <span><a href="mentions-legales.html">Mentions légales</a> · <a href="cgv.html">CGV</a> · <a href="rgpd.html">RGPD</a></span>
@@ -571,5 +584,6 @@ window.addEventListener('load', () => {
   tl.to('#stage', { opacity: 0, duration: 0.10, ease: 'power1.out' }, exitEnd);
 });
 </script>
+<script src="js/newsletter.js"></script>
 </body>
 </html>

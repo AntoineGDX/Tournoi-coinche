@@ -35,6 +35,20 @@ img{display:block;max-width:100%}
 .btn.sm{padding:9px 14px;font-size:11px;box-shadow:2px 2px 0 var(--cc-noir)}
 .btn.lg{padding:18px 30px;font-size:16px}
 
+/* ---- Newsletter ---- */
+.nl-form{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px}
+.nl-email{font-family:var(--cc-ff-headline);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:12px 16px;border:2.5px solid var(--cc-noir);background:transparent;outline:none;min-width:220px;flex:1}
+.nl-email::placeholder{opacity:.5}
+.nl-btn{font-family:var(--cc-ff-headline);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:12px 20px;background:var(--cc-noir);color:var(--cc-jaune);border:2.5px solid var(--cc-noir);cursor:pointer;transition:opacity .15s}
+.nl-btn:hover{opacity:.8}
+.nl-btn:disabled{opacity:.5;cursor:default}
+.nl-status{font-family:var(--cc-ff-headline);font-size:12px;font-weight:700;letter-spacing:.06em;width:100%}
+.nl-status.ok{color:var(--cc-noir)}
+.nl-status.err{color:var(--cc-rouge)}
+.foot-nl{border-top:2px solid rgba(0,0,0,.15);padding-top:20px;margin-top:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.foot-nl>span{font-family:var(--cc-ff-headline);font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.7;white-space:nowrap}
+.foot-nl .nl-form{margin-top:0}
+
 /* ---- Sections ---- */
 section{padding:80px 24px;border-bottom:2.5px solid var(--cc-noir)}
 .wrap{max-width:1280px;margin:0 auto}
